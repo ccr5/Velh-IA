@@ -1,0 +1,72 @@
+Passo a Passo
+
+# Criar a pasta do projeto
+mkdir <nome do projeto>
+
+# Cria uma virtualenv dentro do projeto
+vitualenv --python='caminho do python' <nome da pasta venv>
+
+# Ativa e desativar o virtualenv
+ativar = source /venv/bin/activate
+desativar = deactivate
+
+# Instalar o django
+ativa o django
+pip install Django=='Versão do django'
+
+# Cria o projeto django
+acessa a pasta raiz do projeto
+django-admin startproject <nome do projeto>
+
+# Criar um bd
+python manage.py migrate
+** Ele cria um banco de dados conforme está programado no arquivo settings
+
+# Criar um superusuario do servidor
+python manage.py createsuperuser
+** Usuario para mexer no banco de dados
+
+# Rodar o servidor local
+python manage.py runserver
+
+
+
+Fundamentos
+
+# Jinja
+A linguagem Jinja é a usada para integrar o python em uma página html no Django
+
+# Django Startproject
+O comando quando dado cria os arquivos bases para o framework como:
+settings - Onde estão configurando o banco, validadores, aplicativos, middleware, template e outros
+urls - os direcionamentos e urls do projeto
+
+# manage.py
+Arquivo onde estão as principais ferramentas administrativas como:
+criar um superusuario
+rodar o servidor local
+criar e atualizar o banco
+
+# Django StartApp
+Quando você cria um aplicativo ele cria alguns scripts python como:
+admin - onde você usa algumas funções admins para mexer com o banco de dados (Ex: Inserir as classes do model no banco)
+models - Arquivo que você cria novas classes para fazer a integração com o banco (novas tabelas, etc)
+views - Onde estão as funções que chamam os templates e você envia os parametros
+
+# Templates
+Arquivos HTML 
+
+
+
+Outros comandos
+
+# Criar um app
+python manage.py startapp <nome do app>
+** Após criar uma app é necessário acrescnetar no arquivo settings
+
+# Atualizar as mudanças feitas no model para o banco de dados
+python manage.py makemigrations
+python manage.py migrate
+
+
+
