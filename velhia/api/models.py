@@ -4,117 +4,125 @@ from django.contrib.postgres.fields import ArrayField, HStoreField
 
 class Regions(models.Model):
     Id = models.AutoField(primary_key=True, verbose_name="region")
-    Name = models.TextField(null=False, blank=False)
+    Name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.Name
 
     class Meta:
-        verbose_name_plural = 'Region'
+        verbose_name_plural = 'Regions'
 
 
 class Languages(models.Model):
     Id = models.AutoField(primary_key=True, verbose_name="language")
-    Name = models.TextField(null=False, blank=False)
+    Name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.Name
 
     class Meta:
-        verbose_name_plural = 'Language'
+        verbose_name_plural = 'Languages'
 
 
 class Currencies(models.Model):
     Id = models.AutoField(primary_key=True, verbose_name="currency")
-    Name = models.TextField(null=False, blank=False)
+    Name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.Name
 
     class Meta:
-        verbose_name_plural = 'Currency'
+        verbose_name_plural = 'Currencies'
 
 
 class Countries(models.Model):
     Id = models.AutoField(primary_key=True, verbose_name="country")
-    Name = models.TextField(null=False, blank=False)
-    Country_code = models.TextField(null=False, blank=False, unique=True)
-    Region = models.ForeignKey(Regions, null=False, blank=False, on_delete=models.CASCADE)
-    Language = models.ForeignKey(Languages, null=False, blank=False, on_delete=models.CASCADE)
-    Currency = models.ForeignKey(Currencies, null=False, blank=False, on_delete=models.CASCADE)
+    Name = models.CharField(max_length=50)
+    Country_code = models.CharField(unique=True, max_length=3)
+    Region = models.ForeignKey(Regions, related_name='Region', on_delete=models.CASCADE)
+    Language = models.ForeignKey(Languages, related_name='Language', on_delete=models.CASCADE)
+    Currency = models.ForeignKey(Currencies, related_name='Currency', on_delete=models.CASCADE)
     
     def __str__(self):
         return self.Name
 
     class Meta:
-        verbose_name_plural = 'Country'
+        verbose_name_plural = 'Countries'
 
 
 class Players(models.Model):
     Id = models.AutoField(primary_key=True, null=False, blank=False, verbose_name="player")
-    Name = models.TextField(null=False, blank=False)
-    Lastname = models.TextField(null=False, blank=False)
-    Email = models.EmailField(null=False, blank=False, unique=True)
-    Country = models.ForeignKey(Countries, null=False, blank=False, on_delete=models.CASCADE)
-    Genre = models.TextField(null=False, blank=False)
-    Age = models.IntegerField(null=False, blank=False)
+    Name = models.CharField(max_length=50)
+    Lastname = models.CharField(max_length=50)
+    Email = models.EmailField(unique=True)
+    Country = models.ForeignKey(Countries, related_name='Country', on_delete=models.CASCADE)
+    Genre = models.CharField(max_length=50)
+    Age = models.IntegerField()
 
     def __str__(self):
         return self.Name
 
     class Meta:
-        verbose_name_plural = 'Player'
+        verbose_name_plural = 'Players'
 
 
 class Games(models.Model):
-    Id = models.AutoField(primary_key=True, null=False, blank=False, verbose_name="Game")
-    Name = models.TextField(null=False, blank=False)
+    Id = models.AutoField(primary_key=True, verbose_name="game")
+    Name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.Name
 
     class Meta:
-        verbose_name_plural = 'Game'
+        verbose_name_plural = 'Games'
 
 
 class Symbols(models.Model):
-    Id = models.AutoField(primary_key=True, null=False, blank=False, verbose_name="Symbol")
-    Character = models.TextField(null=False, blank=False, unique=True)
+    Id = models.AutoField(primary_key=True, null=False, blank=False, verbose_name="symbol")
+    Character = models.CharField(max_length=1)
 
     def __str__(self):
         return self.Character
 
     class Meta:
-        verbose_name_plural = 'Symbol'
+        verbose_name_plural = 'Symbols'
 
 
 class Positions(models.Model):
-    Id = models.IntegerField(primary_key=True, null=False, blank=False, unique=True, verbose_name="Position")
-    Description = models.TextField(null=False, blank=False)
+    Id = models.IntegerField(primary_key=True, unique=True, verbose_name="position")
+    Name = models.CharField(max_length=4)
 
     def __str__(self):
-        return self.Id
+        return self.Name
 
     class Meta:
-        verbose_name_plural = 'Position'
+        verbose_name_plural = 'Positions'
+        ordering = ['Id']
+
+
+class Moves(models.Model):
+    Id = models.AutoField(primary_key=True, verbose_name="Move")
+    Player = models.ForeignKey(Players, related_name='Player', on_delete=models.CASCADE)
+    Position = models.ForeignKey(Positions, related_name='Position', on_delete=models.CASCADE)
+    Symbol = models.ForeignKey(Symbols, related_name='Symbol', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.Player + '/' + self.Position + '/' + self.Symbol 
+
+    class Meta:
+        verbose_name_plural = 'Moves'
+        ordering = ['Id']
+
 
 class Matchs(models.Model):
-    Id = models.AutoField(primary_key=True, null=False, blank=False, verbose_name="Match")
-    Game = models.ForeignKey(Games, null=False, blank=False, on_delete=models.CASCADE)
-    Plays = ArrayField(
-        models.IntegerField(),
-        size = 2
-    )
-    Moves = ArrayField(
-        ArrayField(
-            models.IntegerField(),
-            size=3
-        ),
-        size = 9
-    )
+    Id = models.AutoField(primary_key=True, verbose_name="Match")
+    Game = models.ForeignKey(Games, related_name='Game', on_delete=models.CASCADE)
+    Plays = models.ManyToManyField(Players)
+    Moves = models.ManyToManyField(Moves)
 
     def __str__(self):
         return 'Match'
 
     class Meta:
-        verbose_name_plural = 'Match'
+        verbose_name_plural = 'Matchs'
+        ordering = ['Id']

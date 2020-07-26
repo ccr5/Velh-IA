@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Regions, Countries, Currencies, Languages, Players, Games, Symbols, Positions, Matchs
+from .models import Regions, Countries, Currencies, Languages, Players, Games, Symbols, Positions, Matchs, Moves
 
 admin.site.register(Regions)
 admin.site.register(Languages)
@@ -10,3 +10,4 @@ admin.site.register(Games)
 admin.site.register(Symbols)
 admin.site.register(Positions)
 admin.site.register(Matchs)
+admin.site.register(Moves)
