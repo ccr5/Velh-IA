@@ -1,7 +1,7 @@
 FROM python:3
 ENV PYTHONUNBUFFERED 1
-WORKDIR /Arbitria
+WORKDIR /Velh-IA
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
-WORKDIR /Arbitria/velhia
+WORKDIR /Velh-IA/velhia

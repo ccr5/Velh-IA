@@ -11,15 +11,22 @@ services:
       - "5432:5432"
     volumes: 
       - velhia:/var/lib/postgresql/data
-  web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
+  api:
+    build: ./velhia.api
+    command: python manage.py runserver 0.0.0.0:5000
     volumes:
-      - .:/Arbitria
+      - .:/Velh-IA-api
     ports:
-      - "8000:8000"
+      - "5000:5000"
     depends_on:
       - db
+  web:
+    build: ./velhia.web
+    command: npm run serve
+    volumes:
+      - .:/Velha-IA-web
+    ports:
+      - "8080:8080"
 
 volumes: 
   velhia:
