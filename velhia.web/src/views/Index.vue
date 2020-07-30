@@ -1,12 +1,20 @@
 <template>
-  <div class="container">
-    <div class="buttons">
-      <b-button type="is-primary" expanded rounded>Player vs Player</b-button>
-      <b-button type="is-warning" expanded rounded>Player vs S.A</b-button>
-      <b-button type="is-info" expanded rounded>Player vs A.I</b-button>
-      <b-button type="is-danger" expanded rounded>S.A vs A.I</b-button>
+  <section class="hero is-light is-bold is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <div class="buttons is-centered">
+          <b-button type="is-dark" outlined rounded tag="router-link" :to="'/pvsp'">
+            Player vs Player
+          </b-button>
+          <b-button type="is-dark" outlined rounded>Player vs S.A</b-button>
+          <b-button type="is-dark" outlined rounded>Player vs A.I</b-button>
+          <b-button type="is-dark" outlined rounded>S.A vs A.I</b-button>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 </template>
 <script>
 </script>
+<style>
+</style>
