@@ -21,10 +21,11 @@ services:
     depends_on:
       - db
   web:
-    build: ./velhia.web
+    build:
+      context: ./velhia.web
     command: npm run serve
     volumes:
-      - .:/Velha-IA-web
+      - ./velhia.web:/app
     ports:
       - "8080:8080"
 
