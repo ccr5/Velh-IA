@@ -23,11 +23,11 @@ services:
   web:
     build:
       context: ./velhia.web
-    command: npm run serve
+    command: npm start
     volumes:
       - ./velhia.web:/app
     ports:
-      - "8080:8080"
+      - "3000:3000"
 
 volumes: 
   velhia:
