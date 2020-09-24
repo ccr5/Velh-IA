@@ -32,7 +32,7 @@ Copyright 2020 - Matheus Nobre Gomes
 License: [GNU General Public License v3.0 ](https://www.gnu.org/licenses/gpl-3.0.pt-br.html "GNU General Public License v3.0 ")
 
 ### Colaborations
-I invited you to help me in this project on Github and watch the development:
+I'm inviting you to help me in this project on Github and watch the development:
 * [Youtube Channel](https://www.youtube.com/channel/UCNBSO8r0BwMNQUaNy2UQN1g "Youtube Channel")
 * [Facebook Page](https://www.facebook.com/Pynatic "Facebook Page")
 
@@ -46,4 +46,4 @@ LinkedIn: https://www.linkedin.com/in/mattnobre/
 ------------
 ### Project Status
 
-**Create the front end:**View on a web page the match field, the results of each of the players such as their KPIs and other information that reinforce and allow to analyze the research results
+**Create the front end:** View on a web page the match field, the results of each of the players such as their KPIs and other information that reinforce and allow to analyze the research results
