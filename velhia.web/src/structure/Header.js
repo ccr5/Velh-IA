@@ -3,8 +3,8 @@ import './Header.css'
 
 function Header() {
 	return (
-		<nav className="navbar navbar-light bg-light">
-			<a class="navbar-brand" href="/">Velh-IA</a>
+		<nav className="navbar navbar-dark bg-dark">
+			<a className="navbar-brand" href="/">Velh-IA</a>
 		</nav>
 	)
 }
