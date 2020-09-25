@@ -1,5 +1,6 @@
 .square {
     border-style: solid;
+    border-color: white;
 }
 
 .col-4 {
@@ -7,6 +8,18 @@
     padding: 0px !important; 
 }
 
-.Camp {
-    margin-top: 30px;
+.sup {
+    border-top: none !important;
+}
+
+.inf {
+    border-bottom: none !important;
+}
+
+.right {
+    border-right: none !important;
+}
+
+.left {
+    border-left: none !important;
 }

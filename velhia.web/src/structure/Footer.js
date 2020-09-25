@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { Component } from 'react'
 import './Footer.css'
 
-function Footer() {
-	return (
-		<footer className="velhia-footer">
-			footer
-		</footer>
-	)
+class Footer extends Component {
+	render() {
+		return (
+			<footer className="velhia-footer">Copyright © - CCR5</footer>
+		)
+	}
 }
 
 export default Footer

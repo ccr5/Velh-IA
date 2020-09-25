@@ -1,6 +1,6 @@
 .velhia-footer {
-    background-color: slategray;
+    background-color:blue;
     color: blanchedalmond;
-    width: 100%;
-    height: 300px;
+    height: 30px;
+    text-align: center;
 }
