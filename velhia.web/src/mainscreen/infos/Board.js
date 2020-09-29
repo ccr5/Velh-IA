@@ -4,10 +4,10 @@ import './Board.css'
 class Board extends Component {
   render() {
     return (
-      <div className="container Board">
-        <div className="jumbotron">
-          <h5>General</h5>
-          <table class="table">
+      <div className="container board">
+        <div className="jumbotron infos">
+          <h5 className="title">General</h5>
+          <table class="table font">
             <thead>
               <tr>
                 <th scope="col">Begin</th>
@@ -16,14 +16,14 @@ class Board extends Component {
             </thead>
             <tbody>
               <tr>
-                <td>{}</td>
-                <td>{}</td>
+                <td>28/09/2020</td>
+                <td>2</td>
               </tr>
             </tbody>
           </table>
           <br />
-          <h5>Details</h5>
-          <table class="table">
+          <h5 className="title">Details</h5>
+          <table class="table font">
             <thead>
               <tr>
                 <th scope="col">Player</th>
@@ -34,10 +34,16 @@ class Board extends Component {
             </thead>
             <tbody>
               <tr>
-                <td>{}</td>
-                <td>{}</td>
-                <td>{}</td>
-                <td>{}</td>
+                <td>Matheus</td>
+                <td>1</td>
+                <td>28/09/2020</td>
+                <td>50%</td>
+              </tr>
+              <tr>
+                <td>Lucas</td>
+                <td>1</td>
+                <td>28/09/2020</td>
+                <td>50%</td>
               </tr>
             </tbody>
           </table>

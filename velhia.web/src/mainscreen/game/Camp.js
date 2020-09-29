@@ -5,7 +5,7 @@ class Camp extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div className="container camp">
         <div className="row">
           <div className="col-4">
             <div className="square sup left" style={{ height: this.props.height / 4 }} id="C1L1"></div>
