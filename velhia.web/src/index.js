@@ -1,13 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './index.css';
 import App from './App';
+import About from './about/About';
 import * as serviceWorker from './serviceWorker';
 
+
+
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <BrowserRouter>
+    <Switch>
+      <Route path="/" exact={true} component={App} />
+      <Route path="/about" component={About} />
+      {/* <Route path="/highlights"></Route>
+        <Route path="/pitch"></Route>
+        <Route path="/article"></Route>
+        <Route path="/collaborators"></Route>
+        <Route path="/partnerships"></Route>
+        <Route path="*">Erro</Route> */}
+    </Switch>
+  </BrowserRouter>,
   document.getElementById('root')
 );
 
