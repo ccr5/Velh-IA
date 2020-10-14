@@ -57,7 +57,7 @@ function Contact() {
             </div>
             <div className="jumbotron infos col-6">
               <p className="lead">
-                Fell free to call me. I'm waiting for you
+                Fell free to call me. I'm waiting you
               </p>
               <center><h5>Matheus Nobre Gomes</h5></center>
               <br />

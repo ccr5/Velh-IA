@@ -18,7 +18,6 @@ function About() {
             . The objective is analyze the interactions, behaviors and results of a multi-agent system with no goal,
             under an uncontrolled and unknown environment, applying sociological concepts.
           </p>
-          <h1 className="display-4">Introduction</h1>
           <p className="lead">
             Behind this website, two players are competing a Tic Tac Toe game: Statistical Algorithm and AI Network.
           </p>
@@ -39,62 +38,6 @@ function About() {
             </div>
           </div>
           <br /> <hr />
-          <h1 className="display-4">How SA works?</h1>
-          <div className="row">
-            <div className="col-6">
-              <p className="lead">
-                When SA receive the game status and a position to play, it will check if
-                there is some position to win or to protect itself. After that, it will calculate
-                which position has more chance to win and no lose.
-              </p>
-            </div>
-            <div className="col-6">
-              <img src={process.env.PUBLIC_URL + "SA-workflow.png"} alt=""></img>
-            </div>
-          </div>
-          <br /> <hr />
-          <h1 className="display-4">How MAS works?</h1>
-          <div className="row">
-            <div className="col-6">
-              <p className="lead">
-                The MAS was programmed with a <strong>agent</strong> to represent all society  and tree
-                establishment: <br /><br />
-                <strong>2. Family establishment:</strong> The leader is the father, who are learning is
-                the son and who died is the grandfather <br /><br />
-                <strong>3. Religion establishment:</strong> The leader is the priest, who are learning is
-                the follower and the group is the church <br /><br />
-                <strong>4. Education establishment</strong> The leader is the teacher, who are learning is
-                the student and the group is the school <br /><br />
-              </p>
-            </div>
-            <div className="col-6">
-              <img src={process.env.PUBLIC_URL + "MAS-infrastructure.png"} alt=""></img>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-6">
-              <p className="lead">
-                When MAS receive the game status and a position to play, the representative agent
-                will pass the game status and ask for each establishment leader what is the best position
-                to play. when all leaders return a position, it will check if has a common position to choose
-                if not, it will choose randomly.
-              </p>
-            </div>
-            <div className="col-6">
-              <img src={process.env.PUBLIC_URL + "MAS-workflow.png"} alt=""></img>
-            </div>
-          </div>
-          <br /> <hr />
-          <h1 className="display-4">Social concepts</h1>
-          <p className="lead">
-            The MAS was planned to use some social concepts like Social Fact and Functionalism theory and
-            haven't a goal to achieve so...
-          </p>
-          <h3>
-            How will the lack of purpose influence the evolution of SMA? <br />
-            Would SMA organizations and agents behave as in sociological concepts?
-          </h3>
-          <br />
           <p className="lead">
             The video below presents the whole
             concept in a simple and objective way. We suggest that you watch
@@ -102,7 +45,9 @@ function About() {
           </p>
           <center>
             <iframe title="Pitch" width={window.innerWidth * 0.8} height={window.innerHeight * 0.8}
-              src="https://www.youtube.com/embed/tgbNymZ7vqY">
+              src="https://www.youtube.com/embed/twTLAVTcxgs" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen>
             </iframe>
           </center>
         </div>
