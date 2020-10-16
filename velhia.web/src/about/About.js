@@ -3,6 +3,7 @@ import '../App.css';
 import './About.css'
 import Header from '../structure/Header'
 import Footer from '../structure/Footer'
+import { Link } from 'react-router-dom';
 
 
 function About() {
@@ -13,7 +14,7 @@ function About() {
         <div className="jumbotron field">
           <h1 className="display-2">What is Velh-IA?</h1>
           <p className="lead">
-            Velh-IA is environment of a scientific research called <strong> Artificial
+            Velh-IA is a part of a scientific research called <strong> Artificial
             Collective consciousness - Analysis of the Interactions between Artificial Intelligences</strong>
             . The objective is analyze the interactions, behaviors and results of a multi-agent system with no goal,
             under an uncontrolled and unknown environment, applying sociological concepts.
@@ -28,6 +29,9 @@ function About() {
                 Algorithm programmed based on all the rules and objectives of the
                 environment (tic-tac-toe) and plays using probability and statistics.
               </p>
+              <p className="lead">
+                <center><Link to="/SA">Click here</Link> to see more</center>
+              </p>
             </div>
             <div className="col-6">
               <h3 className="display-5" style={{ textAlign: "center" }}> Multi-Agent System (MAS) </h3>
@@ -35,11 +39,14 @@ function About() {
                 Network with AI organizations interacting and sharing informations, where a
                 representative agent plays based on previous experiences of the agents in the network (stored memory)
               </p>
+              <p className="lead">
+                <center><Link to="/MAS">Click here</Link> to see more</center>
+              </p>
             </div>
           </div>
           <br /> <hr />
           <p className="lead">
-            The video below presents the whole
+            The video below presents whole
             concept in a simple and objective way. We suggest that you watch
             before you move on to more specific approaches.
           </p>

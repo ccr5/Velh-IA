@@ -11,17 +11,28 @@ function SA() {
       <Header />
       <div className="container-fluid" style={{ minHeight: window.innerHeight - 110 }}>
         <div className="jumbotron field">
-          <h1 className="display-4">How SA works?</h1>
+          <h1 className="display-2">How SA works?</h1>
           <div className="row">
-            <div className="col-6">
+            <div className="col-12">
               <p className="lead">
-                When SA receive the game status and a position to play, it will check if
-                there is some position to win or to protect itself. After that, it will calculate
-                which position has more chance to win and no lose.
+                First, the SA will receive the game status from Velh-IA, a vector with the positions already chosed
+                and where it can play yet. It'll check if there is some position to win and if it find something,
+                will return this position to Velh-IA. The next step is check if there is some position where it
+                must to play to don't lose. if true, it will return this position.  Now everything is checked,
+                it can calculate what is the best position to win and not lose and return it for Velh-IA.
               </p>
-            </div>
-            <div className="col-6">
-              <img src={process.env.PUBLIC_URL + "SA-workflow.png"} alt=""></img>
+              <br /> <hr />
+              <p className="lead">
+                The video below presents whole
+                concept in a simple and objective way.
+              </p>
+              <center>
+                <iframe title="Pitch" width={window.innerWidth * 0.8} height={window.innerHeight * 0.8}
+                  src="https://www.youtube.com/embed/twTLAVTcxgs" frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen>
+                </iframe>
+              </center>
             </div>
           </div>
         </div>
