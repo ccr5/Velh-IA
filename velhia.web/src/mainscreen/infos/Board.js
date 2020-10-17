@@ -6,22 +6,6 @@ class Board extends Component {
     return (
       <div className="container board">
         <div className="jumbotron infos">
-          <h5 className="title">General</h5>
-          <table class="table font">
-            <thead>
-              <tr>
-                <th scope="col">Begin</th>
-                <th scope="col">Nº Matchs</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>28/09/2020</td>
-                <td>2</td>
-              </tr>
-            </tbody>
-          </table>
-          <br />
           <h5 className="title">Details</h5>
           <table class="table font">
             <thead>
@@ -47,6 +31,21 @@ class Board extends Component {
               </tr>
             </tbody>
           </table>
+          <br />
+          <h5 className="title">General</h5>
+          <table class="table font">
+            <tbody>
+              <tr>
+                <td>Begin</td>
+                <td>28/09/2020</td>
+              </tr>
+              <tr>
+                <td>Nº Matchs</td>
+                <td>2</td>
+              </tr>
+            </tbody>
+          </table>
+          <br />
         </div>
       </div>
     )

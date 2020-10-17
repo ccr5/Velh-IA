@@ -12,8 +12,15 @@ class Header extends Component {
 				</button>
 				<div className="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul className="navbar-nav mr-auto">
-						<li className="nav-item">
-							<Link className="nav-link" to="/about">What is Velh-IA</Link>
+						<li className="nav-item dropdown">
+							<a className="nav-link dropdown-toggle" href="/about" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								About
+        			</a>
+							<div className="dropdown-menu" aria-labelledby="navbarDropdown">
+								<Link className="dropdown-item" to="/about">What is Velh-IA</Link>
+								<Link className="dropdown-item" to="/SA">Statistical Algorithm</Link>
+								<Link className="dropdown-item" to="/MAS">Multi-Agent System</Link>
+							</div>
 						</li>
 						<li className="nav-item">
 							<Link className="nav-link" to="/highlights">Analysis</Link>
@@ -25,16 +32,11 @@ class Header extends Component {
 							<div className="dropdown-menu" aria-labelledby="navbarDropdown">
 								<Link className="dropdown-item" to="/pitch">Pitch</Link>
 								<Link className="dropdown-item" to="/article">Scientific Article</Link>
+								<Link className="dropdown-item" to="/code">Source Code</Link>
 							</div>
 						</li>
-						<li className="nav-item dropdown">
-							<a className="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								Community
-        				</a>
-							<div className="dropdown-menu" aria-labelledby="navbarDropdown">
-								<Link className="dropdown-item" to="/collaborators">Collaborators</Link>
-								<Link className="dropdown-item" to="/partnerships">Partnerships</Link>
-							</div>
+						<li className="nav-item">
+							<Link className="nav-link" to="/collaborators">Community</Link>
 						</li>
 						<li className="nav-item">
 							<Link className="nav-link" to="/contact">Contact us</Link>
