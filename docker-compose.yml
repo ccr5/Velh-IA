@@ -28,6 +28,13 @@ services:
       - ./velhia.web:/app
     ports:
       - "3000:3000"
+    depends_on: 
+      - api
+  play:
+    build: ./velhia.game
+    command: python main.py
+    depends_on: 
+      - api
 
 volumes: 
   velhia:
