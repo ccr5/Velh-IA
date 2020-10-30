@@ -1,0 +1,27 @@
+{
+  "id": "int",
+  "begin": "date",
+  "end": "date",
+  "players": {
+    "sa": {
+      "id": "int",
+      "symbol": "x"
+    },
+    "mas": {
+      "symbol": "o",
+      "family": ["id_1", "id_2"],
+      "religion": ["id_1"],
+      "education": ["id_1", "id_2", "id_3"]
+    }
+  },
+  "plays": [
+    {
+      "nr_seq": "int",
+      "player": "id",
+      "time": "int",
+      "position": "int"
+    }
+  ],
+  "status": "draw || winner || pendent",
+  "winner": "sa || mas"
+}
