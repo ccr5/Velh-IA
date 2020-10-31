@@ -19,8 +19,9 @@ interface IAgent extends Document {
 interface IAgentRepository {
   getAllAgent(): Promise<IAgent[] | null>
   getOneAgent(id: string): Promise<IAgent | null>
+  getLastAlgorithm(limit: number): Promise<IAgent[] | null>
   createAgent(data: IAgent[]): Promise<IAgent[]>
-  updateAgent(data: IAgent): Promise<IAgent>
+  updateAgent(data: IAgent): Promise<IAgent | null>
   deleteAgent(id: string): Promise<IAgent | null>
 }
 

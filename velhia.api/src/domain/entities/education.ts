@@ -29,6 +29,9 @@ const EducationSchema: Schema = new Schema<IAgent>(
     victories: { type: Number, required: true },
     defeats: { type: Number, required: true },
     draw: { type: Number, required: true }
+  },
+  {
+    timestamps: true
   }
 )
 

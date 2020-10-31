@@ -60,6 +60,9 @@ const matchSchema: Schema = new Schema<IMatch>(
       required: true,
       enum: Object.values(winner)
     }
+  },
+  {
+    timestamps: true
   }
 )
 

@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { inject, injectable } from 'tsyringe'
 import { IAlgorithmRepository, IAlgorithm } from '@interfaces/iAlgorithm'
 import { TYPES } from '@config/container/types'
+import { Algorithm } from '@entities/algorithm'
 
 @injectable()
 export class AlgorithmController {
@@ -12,12 +13,12 @@ export class AlgorithmController {
   }
 
   /**
-   * Receive a get request without id and
+   * Receive a get request and
    * return all Statistical Algorithm saved in the db
    * @param {Request} req request
    * @param {Response} res response
    * @example getAll()
-   * @returns {Promise<Response | void>} IAlgorithm[]
+   * @returns {Promise<Response | void>} IAlgorithm[] | 404 
    */
   async getAll(req: Request, res: Response): Promise<Response | void> {
     try {
@@ -33,11 +34,11 @@ export class AlgorithmController {
 
   /**
    * Receive a get request with id and
-   * return a Statistical Algorithm saved in the db
+   * return this Statistical Algorithm saved in the db
    * @param {Request} req request
    * @param {Response} res response
    * @example getOne('5f9db3a3fc7c860a3e316712')
-   * @returns {Promise<Response | void>} IAlgorithm
+   * @returns {Promise<Response | void>} IAlgorithm | 404
    */
   async getOne(req: Request, res: Response): Promise<Response | void> {
     try {
@@ -53,12 +54,33 @@ export class AlgorithmController {
   }
 
   /**
+   * receive a get request with limit X to get the  
+   * X latest Statistical Algorithm created in the db
+   * @param {Request} req request
+   * @param {Response} res response
+   * @example getLast(2)
+   * @returns {Promise<Response | void>} IAlgorithm[2] | 404
+   */
+  async getLast(req: Request, res: Response): Promise<Response | void> {
+    try {
+      const limit: number = +req.params.limit
+      const ret: IAlgorithm[] | null = await this.repository.getLastAlgorithm(limit)
+      if (ret == null) {
+        return res.sendStatus(404)
+      }
+      return res.send(ret)
+    } catch (error) {
+      res.sendStatus(400).send(error)
+    }
+  }
+
+  /**
    * receive a post request with data to insert a 
    * new Statistical Algorithm in the db
    * @param {Request} req request
    * @param {Response} res response
    * @example create(IAlgorithm[])
-   * @returns {Promise<Response | void>} IAlgorithm[] with id
+   * @returns {Promise<Response | void>} IAlgorithm[]
    */
   async create(req: Request, res: Response): Promise<Response | void> {
     try {
@@ -72,11 +94,11 @@ export class AlgorithmController {
 
   /**
    * receive a put request with a id to
-   * update a Statistical Algorithm in the db
+   * update this Statistical Algorithm in the db
    * @param {Request} req request
    * @param {Response} res response
-   * @example delete(IAlgorithm[])
-   * @returns {Promise<Response | void>} IAlgorithm
+   * @example update(IAlgorithm)
+   * @returns {Promise<Response | void>} IAlgorithm | 404
    */
   async update(req: Request, res: Response): Promise<Response | void> {
     try {
@@ -94,11 +116,11 @@ export class AlgorithmController {
 
   /**
    * receive a delete request with a id to
-   * delete a Statistical Algorithm in the db
+   * delete this Statistical Algorithm in the db
    * @param {Request} req request
    * @param {Response} res response
-   * @example delete(IAlgorithm[])
-   * @returns {Promise<Response | void>} IAlgorithm[] with id
+   * @example delete(IAlgorithm)
+   * @returns {Promise<Response | void>} IAlgorithm | 404
    */
   async delete(req: Request, res: Response): Promise<Response | void> {
     try {

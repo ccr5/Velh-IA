@@ -13,6 +13,7 @@ interface IAlgorithm extends Document {
 interface IAlgorithmRepository {
   getAllAlgorithm(): Promise<IAlgorithm[] | null>
   getOneAlgorithm(id: string): Promise<IAlgorithm | null>
+  getLastAlgorithm(limit: number): Promise<IAlgorithm[] | null>
   createAlgorithm(data: IAlgorithm[]): Promise<IAlgorithm[]>
   updateAlgorithm(id: string, data: IAlgorithm): Promise<IAlgorithm | null>
   deleteAlgorithm(id: string): Promise<IAlgorithm | null>
