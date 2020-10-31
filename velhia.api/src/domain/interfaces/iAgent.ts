@@ -2,7 +2,6 @@ import { Document } from 'mongoose'
 import { IMemory } from '@interfaces/iMemory'
 
 interface IAgent extends Document {
-  id: string,
   progenitor: string,
   birth: Date,
   becomeLeader: Date,
@@ -19,9 +18,9 @@ interface IAgent extends Document {
 interface IAgentRepository {
   getAllAgent(): Promise<IAgent[] | null>
   getOneAgent(id: string): Promise<IAgent | null>
-  getLastAlgorithm(limit: number): Promise<IAgent[] | null>
+  getLastAgent(limit: number): Promise<IAgent[] | null>
   createAgent(data: IAgent[]): Promise<IAgent[]>
-  updateAgent(data: IAgent): Promise<IAgent | null>
+  updateAgent(id: string, data: IAgent): Promise<IAgent | null>
   deleteAgent(id: string): Promise<IAgent | null>
 }
 

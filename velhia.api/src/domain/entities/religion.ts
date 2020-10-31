@@ -4,7 +4,6 @@ import { IAgent } from '@interfaces/iAgent'
 
 const ReligionSchema: Schema = new Schema<IAgent>(
   {
-    _id: String,
     progenitor: { type: String, required: true },
     birth: { type: Date, required: true },
     becomeLeader: { type: Date, required: true },

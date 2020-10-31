@@ -20,7 +20,7 @@ interface IMatch extends Document {
 interface IMatchRepository {
   getAllMatch(): Promise<IMatch[] | null>
   getOneMatch(id: string): Promise<IMatch | null>
-  getLastAlgorithm(limit: number): Promise<IMatch[] | null>
+  getLastMatch(limit: number): Promise<IMatch[] | null>
   createMatch(data: IMatch[]): Promise<IMatch[]>
   updateMatch(data: IMatch): Promise<IMatch | null>
   deleteMatch(id: string): Promise<IMatch | null>

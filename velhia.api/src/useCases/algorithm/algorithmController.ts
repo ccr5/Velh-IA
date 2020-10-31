@@ -2,7 +2,6 @@ import { Request, Response } from 'express'
 import { inject, injectable } from 'tsyringe'
 import { IAlgorithmRepository, IAlgorithm } from '@interfaces/iAlgorithm'
 import { TYPES } from '@config/container/types'
-import { Algorithm } from '@entities/algorithm'
 
 @injectable()
 export class AlgorithmController {
@@ -22,11 +21,11 @@ export class AlgorithmController {
    */
   async getAll(req: Request, res: Response): Promise<Response | void> {
     try {
-      const archive: IAlgorithm[] | null = await this.repository.getAllAlgorithm()
-      if (archive == null) {
+      const sa: IAlgorithm[] | null = await this.repository.getAllAlgorithm()
+      if (sa == null) {
         return res.sendStatus(404)
       }
-      return res.send(archive)
+      return res.send(sa)
     } catch (error) {
       res.sendStatus(400).send(error)
     }
@@ -42,12 +41,12 @@ export class AlgorithmController {
    */
   async getOne(req: Request, res: Response): Promise<Response | void> {
     try {
-      const archiveId: string = req.params.id
-      const archive: IAlgorithm | null = await this.repository.getOneAlgorithm(archiveId)
-      if (archive == null) {
+      const saId: string = req.params.id
+      const sa: IAlgorithm | null = await this.repository.getOneAlgorithm(saId)
+      if (sa == null) {
         return res.sendStatus(404)
       }
-      return res.send(archive)
+      return res.send(sa)
     } catch (error) {
       res.sendStatus(400).send(error)
     }
@@ -64,11 +63,11 @@ export class AlgorithmController {
   async getLast(req: Request, res: Response): Promise<Response | void> {
     try {
       const limit: number = +req.params.limit
-      const ret: IAlgorithm[] | null = await this.repository.getLastAlgorithm(limit)
-      if (ret == null) {
+      const sa: IAlgorithm[] | null = await this.repository.getLastAlgorithm(limit)
+      if (sa == null) {
         return res.sendStatus(404)
       }
-      return res.send(ret)
+      return res.send(sa)
     } catch (error) {
       res.sendStatus(400).send(error)
     }
@@ -84,9 +83,9 @@ export class AlgorithmController {
    */
   async create(req: Request, res: Response): Promise<Response | void> {
     try {
-      const archives: IAlgorithm[] = req.body
-      const ret: IAlgorithm[] = await this.repository.createAlgorithm(archives)
-      return res.json(ret)
+      const data: IAlgorithm[] = req.body
+      const sas: IAlgorithm[] = await this.repository.createAlgorithm(data)
+      return res.json(sas)
     } catch (error) {
       res.sendStatus(400).send(error)
     }
@@ -102,13 +101,13 @@ export class AlgorithmController {
    */
   async update(req: Request, res: Response): Promise<Response | void> {
     try {
-      const algorithmId: string = req.params.id
-      const algorithm: IAlgorithm = req.body
-      const ret: IAlgorithm | null = await this.repository.updateAlgorithm(algorithmId, algorithm)
-      if (ret == null) {
+      const saId: string = req.params.id
+      const data: IAlgorithm = req.body
+      const sa: IAlgorithm | null = await this.repository.updateAlgorithm(saId, data)
+      if (sa == null) {
         return res.sendStatus(404)
       }
-      return res.json(ret)
+      return res.json(sa)
     } catch (error) {
       res.sendStatus(400).send(error)
     }
@@ -124,12 +123,12 @@ export class AlgorithmController {
    */
   async delete(req: Request, res: Response): Promise<Response | void> {
     try {
-      const archiveId: string = req.params.id
-      const archive: IAlgorithm | null = await this.repository.deleteAlgorithm(archiveId)
-      if (archive == null) {
+      const saId: string = req.params.id
+      const sa: IAlgorithm | null = await this.repository.deleteAlgorithm(saId)
+      if (sa == null) {
         return res.sendStatus(404)
       }
-      return res.send(archive)
+      return res.send(sa)
     } catch (error) {
       res.sendStatus(400).send(error)
     }
