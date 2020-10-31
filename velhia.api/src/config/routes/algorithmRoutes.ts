@@ -5,10 +5,10 @@ import { AlgorithmController } from '@useCases/algorithm/algorithmController'
 const algorithmRoutes = Router()
 const algorithmController = container.resolve(AlgorithmController)
 
-algorithmRoutes.post('/', (req, res) => algorithmController.create(req, res))
 algorithmRoutes.get('/', (req, res) => algorithmController.getAll(req, res))
 algorithmRoutes.get('/:id', (req, res) => algorithmController.getOne(req, res))
-algorithmRoutes.put('/', (req, res) => { return res.json({ message: 'put' }) })
-algorithmRoutes.delete('/:id', (req, res) => { return res.json({ message: 'delete' }) })
+algorithmRoutes.post('/', (req, res) => algorithmController.create(req, res))
+algorithmRoutes.put('/:id', (req, res) => algorithmController.update(req, res))
+algorithmRoutes.delete('/:id', (req, res) => algorithmController.delete(req, res))
 
 export { algorithmRoutes }

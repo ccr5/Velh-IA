@@ -4,7 +4,6 @@ import { environmentReaction } from '@enums/environmentReaction'
 
 const AlgorithmSchema: Schema = new Schema<IAlgorithm>(
   {
-    _id: String,
     birth: { type: Date, required: true },
     memory: [{
       isLearner: { type: Boolean, required: true },

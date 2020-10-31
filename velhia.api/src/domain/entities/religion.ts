@@ -11,7 +11,7 @@ const ReligionSchema: Schema = new Schema<IAgent>(
     death: { type: Date, required: true },
     life: { type: Number, required: true },
     memory: [{
-      isLearner: { type: Boolean, required: true }s,
+      isLearner: { type: Boolean, required: true },
       choices: [{
         dateRequest: { type: Date, required: true },
         gameStatus: { type: Array, required: true },

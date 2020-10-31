@@ -2,7 +2,7 @@ import { IAlgorithmRepository, IAlgorithm } from '@interfaces/iAlgorithm'
 import { Algorithm } from 'src/domain/entities/algorithm'
 
 export class AlgorithmRepository implements IAlgorithmRepository {
-  async getAllAlgorithm (): Promise<IAlgorithm[] | null> {
+  async getAllAlgorithm(): Promise<IAlgorithm[] | null> {
     const ret = await Algorithm.find()
     return ret
   }
@@ -19,7 +19,7 @@ export class AlgorithmRepository implements IAlgorithmRepository {
    * }
    * @returns {Promise<IAlgorithm | null>} ret
    */
-  async getOneAlgorithm (id: string): Promise<IAlgorithm | null> {
+  async getOneAlgorithm(id: string): Promise<IAlgorithm | null> {
     const ret = await Algorithm.findById(id)
     return ret
   }
@@ -36,16 +36,19 @@ export class AlgorithmRepository implements IAlgorithmRepository {
    * })
    * @returns {Promise<IAlgorithm[]>} ret
    */
-  async createAlgorithm (data: IAlgorithm[]): Promise<IAlgorithm[]> {
+  async createAlgorithm(data: IAlgorithm[]): Promise<IAlgorithm[]> {
     const ret = await Algorithm.create(data)
     return ret
   }
 
-  async updateAlgorithm (data: IAlgorithm): Promise<IAlgorithm> {
-    throw new Error('Method not implemented.')
+
+  async updateAlgorithm(id: string, data: IAlgorithm): Promise<IAlgorithm | null> {
+    const ret = await Algorithm.findByIdAndUpdate(id, data)
+    return ret
   }
 
-  async deleteAlgorithm (id: string): Promise<IAlgorithm | null> {
-    throw new Error('Method not implemented.')
+  async deleteAlgorithm(id: string): Promise<IAlgorithm | null> {
+    const ret = await Algorithm.findByIdAndDelete(id)
+    return ret
   }
 }

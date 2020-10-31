@@ -2,7 +2,6 @@ import { Document } from 'mongoose'
 import { IMemory } from '@interfaces/iMemory'
 
 interface IAlgorithm extends Document {
-  id: string,
   birth: Date,
   memory: IMemory[]
   matchs: number,
@@ -15,7 +14,7 @@ interface IAlgorithmRepository {
   getAllAlgorithm(): Promise<IAlgorithm[] | null>
   getOneAlgorithm(id: string): Promise<IAlgorithm | null>
   createAlgorithm(data: IAlgorithm[]): Promise<IAlgorithm[]>
-  updateAlgorithm(data: IAlgorithm): Promise<IAlgorithm>
+  updateAlgorithm(id: string, data: IAlgorithm): Promise<IAlgorithm | null>
   deleteAlgorithm(id: string): Promise<IAlgorithm | null>
 }
 
