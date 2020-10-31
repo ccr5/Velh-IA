@@ -1,5 +1,5 @@
 import { Document } from 'mongoose'
-import { IPlayer } from './IPlayer'
+import { IPlayer } from './iPlayer'
 
 export interface IMultiAgentSystem extends Document {
   family: IPlayer[],

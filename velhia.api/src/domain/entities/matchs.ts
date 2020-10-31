@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { IMatch } from '@interfaces/IMatch'
+import { IMatch } from '@interfaces/iMatch'
 import { symbolEnvironment } from '@enums/symbols'
 import { status } from '@enums/status'
 import { winner } from '@enums/winners'

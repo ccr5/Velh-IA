@@ -1,6 +1,6 @@
 import { Document } from 'mongoose'
 import { environmentReaction } from '@enums/environmentReaction'
-import { IChoices } from './IChoices'
+import { IChoices } from './iChoices'
 
 export interface IMemory extends Document {
   isLearner: boolean,

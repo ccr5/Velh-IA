@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { IAlgorithm } from '@interfaces/IAlgorithm'
+import { IAlgorithm } from '@interfaces/iAlgorithm'
 import { environmentReaction } from '@enums/environmentReaction'
 
 const AlgorithmSchema: Schema = new Schema<IAlgorithm>(
