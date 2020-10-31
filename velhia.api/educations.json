@@ -1,16 +1,6 @@
 {
   "id": "int",
-  "progenitor": {
-    "id": "int",
-    "birth": "date",
-    "becomeLeader": "date",
-    "death": "date",
-    "life": "int",
-    "matchsAsLearner": "int", 
-    "matchsAsLeader": "int",
-    "victories": "int",
-    "defeats": "int"
-  }, 
+  "progenitor": "id",
   "birth": "date",
   "becomeLeader": "date",
   "death": "date",
@@ -29,8 +19,9 @@
       "environmentReaction": "draw || winner || loser"
     }
   ],
-  "matchsAsLearner": "int", 
+  "matchsAsLearner": "int",
   "matchsAsLeader": "int",
   "victories": "int",
-  "defeats": "int"
+  "defeats": "int",
+  "draw": "int"
 }

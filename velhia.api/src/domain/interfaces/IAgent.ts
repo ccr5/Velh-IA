@@ -1,14 +1,17 @@
 import { Document } from 'mongoose'
-import { IMemory } from './IMemory';
+import { IMemory } from '@interfaces/IMemory'
 
 export interface IAgent extends Document {
+  id: string,
+  progenitor: string,
   birth: Date,
   becomeLeader: Date,
   death: Date,
   life: number,
   memory: IMemory[],
-  matchsAsLearner: number, 
+  matchsAsLearner: number,
   matchsAsLeader: number,
   victories: number,
-  defeats: number
+  defeats: number,
+  draw: number
 }

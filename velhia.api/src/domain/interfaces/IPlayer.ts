@@ -1,7 +1,7 @@
 import { Document } from 'mongoose'
-import { symbolEnvironment } from '@enums/symbols';
+import { symbolEnvironment } from '@enums/symbols'
 
 export interface IPlayer extends Document {
-  id: number,
+  id: string,
   symbol: symbolEnvironment
 }

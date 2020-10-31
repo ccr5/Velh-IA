@@ -1,20 +1,17 @@
 import { Document } from 'mongoose'
 import { status } from '@enums/status'
 import { winner } from '@enums/winners'
-import { IPlayer } from './IPlayer'
-import { IPlay } from './IPlay'
+import { IPlay } from '@interfaces/IPlay'
+import { IMultiAgentSystem } from '@interfaces/IMultiAgentSystem'
+import { IPlayer } from '@interfaces/IPlayer'
 
 export interface IMatch extends Document {
+  id: string,
   begin: Date,
   end: Date,
-  players: {
-    sa: IPlayer,
-    mas: {
-      family: IPlayer[],
-      religion: IPlayer[],
-      education: IPlayer[]
-    }
-  },
+  time: number,
+  sa: IPlayer,
+  mas: IMultiAgentSystem
   plays: IPlay[],
   status: status,
   winner: winner
