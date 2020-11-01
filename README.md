@@ -6,7 +6,7 @@ A New Way To Study, Learn and Have A Fun!
 1. Description
 2. The Scientific Research
 3. Project Code
-4.Colaborations
+4. Colaborations
 5. Tools
 6. Usage
 7. Project Status
@@ -34,9 +34,9 @@ License: [GNU General Public License v3.0 ](https://www.gnu.org/licenses/gpl-3.0
 
 ### Project Code
 It has three microservice:
-velhia.api: Express project with all routes to save or get data. Use MongoDB
-velhia.game: Scripts, game control and all logic of this research.
-velhia.web: React website to tell about this project, follow the game and see analysis.
+* velhia.api: Express project with all routes to save or get data. Use MongoDB
+* velhia.game: Scripts, game control and all logic of this research.
+* velhia.web: React website to tell about this project, follow the game and see analysis.
 
 Each microservice has a readme document to explain how its works.
 
