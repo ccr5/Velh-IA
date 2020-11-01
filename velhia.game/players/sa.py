@@ -3,24 +3,33 @@ import random as r
 
 class StatisticalAlgorithm:
     """
-    :return He'll play Velh-IA thinking where he win or need to protect himself
-    and choose a position when he has more chance to win
+    Statistical Algorithm class
+    :param obj: `IAlgorithm` Algorithm object saved in MongoDB
+    :param my_char: `list` List with its number and symbol [1, 'X']
+    :param my_enemy: `list` List with its number and symbol [0, 'O']
     """
 
-    def __init__(self, my_char, my_enemy):
+    def __init__(self, obj, my_char, my_enemy):
+        self.info = obj
         self.char = my_char
         self.enemy = my_enemy
         self.empty = ['', 0]
-        self.moves = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
 
     def play(self, moves):
         """
-        :return: The number that he has more chance to win or not lose
-        """
-        self.moves = moves
+        Choose a position to play 
+        :param moves: List of the game status
+        :return: `int` int
 
-        winner = self.check_win()
-        loser = self.check_lose()
+        Usage
+        >>> from sa import StatisticalAlgorithm
+        >>> sa = StatisticalAlgorithm()
+        >>> position = sa.play([-1,0,1,0,-1,-1,-1,-1,-1])
+        >>> position
+        4
+        """
+        winner = self.check_win(moves)
+        loser = self.check_lose(moves)
 
         if winner is not None and loser is not None:
             return winner
@@ -32,25 +41,32 @@ class StatisticalAlgorithm:
             return loser
 
         elif winner is None and loser is None:
-            play = self.strategy_plan()
-            return play
-
+            position = self.strategy_plan(moves)
+            return position
         else:
             return 55
 
-    def strategy_plan(self):
+    def strategy_plan(self, moves):
         """
-        :return: The best position to play
+        Choose the best position to play using its own moves
+        :return: `int` int
+
+        Usage
+        >>> from sa import StatisticalAlgorithm
+        >>> sa = StatisticalAlgorithm(['X', 1], ['O', 0])
+        >>> sa.moves = [-1,1,1,0,0,0,-1,-1,-1]
+        >>> position = sa.strategy_plan()
+        >>> position
+        0
         """
 
         best_position = [-1, -10]
-        wins = 0
+        victory = 0
         defeats = 0
 
         for x in range(0, len(self.moves)):
             if self.moves[x] == -1:
                 self.moves[x] = self.char
-
                 matrix = self.create_matrix()
                 new_wins = self.count_wins(matrix)
                 new_defeats = self.count_defeats(matrix)
@@ -96,20 +112,34 @@ class StatisticalAlgorithm:
 
         return best_position[0]
 
-    def create_matrix(self):
+    def create_matrix(self, moves):
         """
-        :return: all possible variations into the moves received
+        all move list variations
+        :param moves: List of the game status
+        :return: `list` matrix
+
+        Usage
+        >>> from sa import StatisticalAlgorithm
+        >>> sa = StatisticalAlgorithm()
+        >>> matrix = sa.create_matrix([0,1,1,1,0,0,-1,-1,-1])
+        >>> matrix
+        [
+            [0,1,1,1,0,0,1,0,1],
+            [0,1,1,1,0,0,0,1,1],
+            [0,1,1,1,0,0,1,1,0]
+        ]
         """
         matrix = []
 
         for i in range(0, 100000):
             new_moves = []
 
-            for x in range(0, len(self.moves)):
-                if self.moves[x] == -1:
+            for x in range(0, len(moves)):
+
+                if moves[x] == -1:
                     new_moves.append(r.choice([0, 1]))
                 else:
-                    new_moves.append(self.moves[x])
+                    new_moves.append(moves[x])
 
             if new_moves in matrix:
                 del new_moves
@@ -119,23 +149,24 @@ class StatisticalAlgorithm:
 
         return matrix
 
-    def count_wins(self, matrix):
+    def count_victories(self, matrix):
         """
-        :return: count some wins he will have if choose this position
-        """
+        Count how many victories he will have in a matrix
+        :param matrix: matrix of all moves variations
+        :return: `int` int
 
+        Usage
+        >>> from sa import StatisticalAlgorithm
+        >>> sa = StatisticalAlgorithm()
+        >>> matrix = sa.create_matrix([0,1,1,1,0,0,-1,-1,-1])
+        >>> victories = sa.count_victories(matrix)
+        >>> victories
+        100
+        """
         result = 0
 
         for x in matrix:
-
-            checklist = [[x[0], x[1], x[2]],
-                         [x[3], x[4], x[5]],
-                         [x[6], x[7], x[8]],
-                         [x[0], x[3], x[6]],
-                         [x[1], x[4], x[7]],
-                         [x[2], x[5], x[8]],
-                         [x[0], x[4], x[8]],
-                         [x[2], x[4], x[6]]]
+            checklist = self.sequence_list(x)
 
             for y in checklist:
 
@@ -148,21 +179,22 @@ class StatisticalAlgorithm:
 
     def count_defeats(self, matrix):
         """
-        :return: count some defeats he will have if choose this position
-        """
+        Count how many defeats he will have in a matrix
+        :param matrix: matrix of all moves variations
+        :return: `int` int
 
+        Usage
+        >>> from sa import StatisticalAlgorithm
+        >>> sa = StatisticalAlgorithm()
+        >>> matrix = sa.create_matrix([0,1,1,1,0,0,-1,-1,-1])
+        >>> defeats = sa.count_defeats(matrix)
+        >>> defeats
+        3
+        """
         result = 0
 
         for x in matrix:
-
-            checklist = [[x[0], x[1], x[2]],
-                         [x[3], x[4], x[5]],
-                         [x[6], x[7], x[8]],
-                         [x[0], x[3], x[6]],
-                         [x[1], x[4], x[7]],
-                         [x[2], x[5], x[8]],
-                         [x[0], x[4], x[8]],
-                         [x[2], x[4], x[6]]]
+            checklist = self.sequence_list(x)
 
             for y in checklist:
 
@@ -173,48 +205,85 @@ class StatisticalAlgorithm:
 
         return result
 
-    def check_win(self):
+    def check_win(self, moves):
         """
-        :return: True if he win
+        Check and return a position to win
+        :param moves: List of the game status
+        :return: `int` int
+
+        Usage
+        >>> from sa import StatisticalAlgorithm
+        >>> sa = StatisticalAlgorithm()
+        >>> position = sa.check_win([-1,0,1,0,0,1,0,-1,-1])
+        >>> position
+        8
         """
-        for x in range(0, len(self.moves)):
-            if self.moves[x] == -1:
-                self.moves[x] = self.char[1]
-                checklist = [[self.moves[0], self.moves[1], self.moves[2]],
-                             [self.moves[3], self.moves[4], self.moves[5]],
-                             [self.moves[6], self.moves[7], self.moves[8]],
-                             [self.moves[0], self.moves[3], self.moves[6]],
-                             [self.moves[1], self.moves[4], self.moves[7]],
-                             [self.moves[2], self.moves[5], self.moves[8]],
-                             [self.moves[0], self.moves[4], self.moves[8]],
-                             [self.moves[2], self.moves[4], self.moves[6]]]
+        for x in range(0, len(moves)):
+
+            if moves[x] == -1:
+                moves[x] = self.char[1]
+                checklist = self.sequence_list(moves)
+
                 for y in checklist:
+
                     if y == [self.char[1], self.char[1], self.char[1]]:
                         return x
                     else:
-                        self.moves[x] = -1
+                        moves[x] = -1
             else:
                 pass
 
-    def check_lose(self):
+    def check_lose(self, moves):
         """
-        :return: True if he lose
+        Check and return a position to protect itself
+        :param moves: List of the game status
+        :return: `int` int
+
+        Usage
+        >>> from sa import StatisticalAlgorithm
+        >>> sa = StatisticalAlgorithm()
+        >>> position = sa.check_lose([-1,0,1,0,-1,1,0,-1,-1])
+        >>> position
+        0
         """
-        for x in range(0, len(self.moves)):
-            if self.moves[x] == -1:
-                self.moves[x] = self.enemy[1]
-                checklist = [[self.moves[0], self.moves[1], self.moves[2]],
-                             [self.moves[3], self.moves[4], self.moves[5]],
-                             [self.moves[6], self.moves[7], self.moves[8]],
-                             [self.moves[0], self.moves[3], self.moves[6]],
-                             [self.moves[1], self.moves[4], self.moves[7]],
-                             [self.moves[2], self.moves[5], self.moves[8]],
-                             [self.moves[0], self.moves[4], self.moves[8]],
-                             [self.moves[2], self.moves[4], self.moves[6]]]
+        for x in range(0, len(moves)):
+
+            if moves[x] == -1:
+                moves[x] = self.enemy[1]
+                checklist = self.sequence_list(moves)
+
                 for y in checklist:
+
                     if y == [self.enemy[1], self.enemy[1], self.enemy[1]]:
                         return x
                     else:
-                        self.moves[x] = -1
+                        moves[x] = -1
             else:
                 pass
+
+    def sequence_list(self, game_status):
+        """
+        All sequence to win 
+        :param game_status: List of the game status
+        :return: `list` matrix
+
+        Usage
+        >>> from sa import StatisticalAlgorithm
+        >>> sa = StatisticalAlgorithm()
+        >>> ret = sa.sequence_list([-1,0,1,0,-1,1,0,-1,-1])
+        >>> ret
+        [
+            [-1, 0, 1],     [0, -1, 1], 
+            [0, -1, -1],    [-1, 0, 0], 
+            [0, -1, -1],    [1, 1, -1],
+            [-1, -1, -1],   [1, -1, 0]
+        ]
+        """
+        return [[game_status[0], game_status[1], game_status[2]],
+                [game_status[3], game_status[4], game_status[5]],
+                [game_status[6], game_status[7], game_status[8]],
+                [game_status[0], game_status[3], game_status[6]],
+                [game_status[1], game_status[4], game_status[7]],
+                [game_status[2], game_status[5], game_status[8]],
+                [game_status[0], game_status[4], game_status[8]],
+                [game_status[2], game_status[4], game_status[6]]]
