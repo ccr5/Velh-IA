@@ -6,7 +6,6 @@ import { IMultiAgentSystem } from '@interfaces/iMultiAgentSystem'
 import { IPlayer } from '@interfaces/iPlayer'
 
 interface IMatch extends Document {
-  id: string,
   begin: Date,
   end: Date,
   time: number,
@@ -22,7 +21,7 @@ interface IMatchRepository {
   getOneMatch(id: string): Promise<IMatch | null>
   getLastMatch(limit: number): Promise<IMatch[] | null>
   createMatch(data: IMatch[]): Promise<IMatch[]>
-  updateMatch(data: IMatch): Promise<IMatch | null>
+  updateMatch(id: string, data: IMatch): Promise<IMatch | null>
   deleteMatch(id: string): Promise<IMatch | null>
 }
 

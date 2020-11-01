@@ -6,12 +6,11 @@ import { winner } from '@enums/winners'
 
 const matchSchema: Schema = new Schema<IMatch>(
   {
-    _id: String,
     begin: { type: Date, required: true },
     end: { type: Date, required: true },
     time: { type: Number, required: true },
     sa: {
-      id: { type: String, required: true },
+      playerId: { type: String, required: true },
       symbol: {
         type: String,
         required: true,
@@ -19,30 +18,30 @@ const matchSchema: Schema = new Schema<IMatch>(
       }
     },
     mas: {
-      family: {
-        id: { type: String, required: true },
+      family: [{
+        playerId: { type: String, required: true },
         symbol: {
           type: String,
           required: true,
           enum: Object.values(symbolEnvironment)
         }
-      },
-      religion: {
-        id: { type: String, required: true },
+      }],
+      religion: [{
+        playerId: { type: String, required: true },
         symbol: {
           type: String,
           required: true,
           enum: Object.values(symbolEnvironment)
         }
-      },
-      education: {
-        id: { type: String, required: true },
+      }],
+      education: [{
+        playerId: { type: String, required: true },
         symbol: {
           type: String,
           required: true,
           enum: Object.values(symbolEnvironment)
         }
-      }
+      }]
     },
     plays: [{
       seq: { type: Number, required: true },
@@ -57,7 +56,6 @@ const matchSchema: Schema = new Schema<IMatch>(
     },
     winner: {
       type: String,
-      required: true,
       enum: Object.values(winner)
     }
   },

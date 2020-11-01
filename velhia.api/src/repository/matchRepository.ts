@@ -2,6 +2,11 @@ import { IMatchRepository, IMatch } from '@interfaces/iMatch'
 import { Match } from '@entities/matchs'
 
 export class MatchRepository implements IMatchRepository {
+  /**
+   * Get All Matchs in the database
+   * @example getAllMatch()
+   * @returns {Promise<IMatch[] | null>} IMatch[] | null
+   */
   async getAllMatch(): Promise<IMatch[] | null> {
     const ret = await Match.find()
     return ret
@@ -9,47 +14,57 @@ export class MatchRepository implements IMatchRepository {
 
   /**
    * Get a Match in the database by id
-   * @param {string} id Education hash already saved in the database
-   * @example getOneEducation("11bf9688-699f-49a4-9d8e-b0cc57301bff") // {
-   *  id: hash
-   *  size: Education's size,
-   *  filePath: path where this file was saved,
-   *  name: Education's original name
-   *  format: Education's format (Ex: "PNG")
-   * }
-   * @returns {Promise<IEducation | null>} ret
+   * @param {string} id ObjectId
+   * @example getOneMatch("11bf9688-699f-49a4-9d8e-b0cc57301bff")
+   * @returns {Promise<IMatch | null>} IMatch | null
    */
   async getOneMatch(id: string): Promise<IMatch | null> {
     const ret = await Match.findById(id)
     return ret
   }
 
-  getLastMatch(limit: number): Promise<IMatch[] | null> {
-    throw new Error("Method not implemented.")
+  /**
+   * Get a limit X of Matchs in the database by id in desc order
+   * @param {number} limit number
+   * @example getLastMatch(2)
+   * @returns {Promise<IMatch[] | null>} IMatch[2] | null
+   */
+  async getLastMatch(limit: number): Promise<IMatch[] | null> {
+    const ret = await Match.find({}).sort({ createdAt: 'desc' }).limit(limit)
+    return ret
   }
 
   /**
-   * save a new Education in the database
-   * @param {IMatch[]} data IEducation array
-   * @example createEducation({
-   *  id: hash
-   *  size: Education's size,
-   *  filePath: path where this file was saved,
-   *  name: Education's original name
-   *  format: Education's format (Ex: "PNG")
-   * })
-   * @returns {Promise<IMatch[]>} ret
+   * save a new Match in the database
+   * @param {IMatch[]} data IMatch[]
+   * @example createMatch(IMatch[] "without id" )
+   * @returns {Promise<IMatch[]>} IMatch[] with id
    */
   async createMatch(data: IMatch[]): Promise<IMatch[]> {
     const ret = await Match.create(data)
     return ret
   }
 
-  async updateMatch(data: IMatch): Promise<IMatch> {
-    throw new Error('Method not implemented.')
+  /**
+   * update a saved Match in the database
+   * @param {string} id ObjectId
+   * @param {IMatch} data IMatch
+   * @example updateMatch("11bf9688-699f-49a4-9d8e-b0cc57301bff", IMatch)
+   * @returns {Promise<IMatch | null>} IMatch | null
+   */
+  async updateMatch(id: string, data: IMatch): Promise<IMatch | null> {
+    const ret = await Match.findByIdAndUpdate(id, data)
+    return ret
   }
 
+  /**
+   * delete a saved Match in the database
+   * @param {string} id ObjectId
+   * @example deleteMatch('11bf9688-699f-49a4-9d8e-b0cc57301bff')
+   * @returns {Promise<IMatch | null>} IMatch | null
+   */
   async deleteMatch(id: string): Promise<IMatch | null> {
-    throw new Error('Method not implemented.')
+    const ret = await Match.findByIdAndDelete(id)
+    return ret
   }
 }
