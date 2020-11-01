@@ -14,13 +14,13 @@ Where all data is saved
 This is a microservice to provide a web app to save and get data to show or make analysis.
 
 ### Structure
-tests: all project's test
-src: project's root directory
-config: all project configuration (Ex: Database Connection, Routes)
-domain: all entity, model, etc to organize and use (Ex: Interfaces, Enum, Entities)
-repository: all mongodb methods
-useCases/**entityFolder**: all logic entity files
-utils: others files
+* tests: all project's test
+* src: project's root directory
+* config: all project configuration (Ex: Database Connection, Routes)
+* domain: all entity, model, etc to organize and use (Ex: Interfaces, Enum, Entities)
+* repository: all mongodb methods
+* useCases/**entityFolder**: all logic entity files
+* utils: others files
 
 ### Language and Tools
 1. Typescript
