@@ -129,7 +129,7 @@ class StatisticalAlgorithm:
         empty_position = len([x for x in moves if x == -1])
         who_begin = self.enemy if len([x for x in moves if x == self.enemy[1]]) > len(
             [x for x in moves if x == self.char[1]]) else self.char
-        number_variations = 2 ^ (empty_position)
+        number_variations = 2 ** empty_position
 
         while len(matrix) != number_variations:
             new_moves = []
@@ -147,8 +147,8 @@ class StatisticalAlgorithm:
                 matrix.append(new_moves)
                 del new_moves
 
-        return [x for x in matrix if len([x for x in moves if x == who_begin[1]]) > len(
-            [x for x in moves if x != who_begin[1] and x != -1])]
+        return [move for move in matrix if len([x for x in move if x == who_begin[1]]) == 5 and
+                len([o for o in move if o != who_begin[1] and o != -1]) == 4]
 
     def count_victories(self, matrix):
         """
