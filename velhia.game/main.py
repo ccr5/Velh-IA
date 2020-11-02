@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv, find_dotenv
 from requests import request
-from sa import StatisticalAlgorithm
 
 
 def main():

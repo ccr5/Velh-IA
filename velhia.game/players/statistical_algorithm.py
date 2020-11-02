@@ -3,10 +3,10 @@ import random as r
 
 class StatisticalAlgorithm:
     """
-    Statistical Algorithm class
+    Statistical Algorithm Class
     :param obj: `IAlgorithm` Algorithm object saved in MongoDB
-    :param my_char: `list` List with its number and symbol [1, 'X']
-    :param my_enemy: `list` List with its number and symbol [0, 'O']
+    :param my_char: `list` List with its number and symbol ['X', 1]
+    :param my_enemy: `list` List with its number and symbol ['O', 0]
     """
 
     def __init__(self, obj, my_char, my_enemy):
@@ -18,12 +18,12 @@ class StatisticalAlgorithm:
     def play(self, moves):
         """
         Choose a position to play 
-        :param moves: List of the game status
+        :param moves: game status
         :return: `int` int
 
         Usage
         >>> from sa import StatisticalAlgorithm
-        >>> sa = StatisticalAlgorithm()
+        >>> sa = StatisticalAlgorithm(obj, ['X', 1], ['O', 0])
         >>> position = sa.play([-1,0,1,0,-1,-1,-1,-1,-1])
         >>> position
         4
@@ -48,14 +48,14 @@ class StatisticalAlgorithm:
 
     def strategy_plan(self, moves):
         """
-        Choose the best position to play using its own moves
+        Find the best position to play using game status
+        :param moves: game status
         :return: `int` int
 
         Usage
         >>> from sa import StatisticalAlgorithm
-        >>> sa = StatisticalAlgorithm(['X', 1], ['O', 0])
-        >>> sa.moves = [-1,1,1,0,0,0,-1,-1,-1]
-        >>> position = sa.strategy_plan()
+        >>> sa = StatisticalAlgorithm(obj, ['X', 1], ['O', 0])
+        >>> position = sa.strategy_plan([-1,1,1,0,0,0,-1,-1,-1])
         >>> position
         0
         """
@@ -64,48 +64,44 @@ class StatisticalAlgorithm:
         victory = 0
         defeats = 0
 
-        for x in range(0, len(self.moves)):
-            if self.moves[x] == -1:
-                self.moves[x] = self.char
-                matrix = self.create_matrix()
-                new_wins = self.count_wins(matrix)
-                new_defeats = self.count_defeats(matrix)
+        for x in range(0, len(moves)):
 
-                if new_defeats == 0:
-                    new_defeats = 1
+            if moves[x] == -1:
+                moves[x] = self.char[1]
+                matrix = self.create_matrix(moves)
+                number_victories = self.count_victories(matrix)
+                number_defeats = self.count_defeats(matrix)
+
+                if number_defeats == 0:
+                    number_defeats = 1
                 else:
                     pass
 
-                ratio = (new_wins / new_defeats)
+                ratio = (number_victories / number_defeats)
 
                 if best_position[1] > ratio:
                     pass
 
                 elif best_position[1] == ratio:
 
-                    if new_wins > wins and new_defeats == defeats:
+                    if number_victories > victory:
                         best_position[0] = x
                         best_position[1] = ratio
-                        wins = new_wins
-                        defeats = new_defeats
-                    elif new_wins == wins and new_defeats < defeats:
-                        best_position[0] = x
-                        best_position[1] = ratio
-                        wins = new_wins
-                        defeats = new_defeats
+                        victory = number_victories
+                        defeats = number_defeats
                     else:
                         pass
 
                 elif best_position[1] < ratio:
                     best_position[0] = x
                     best_position[1] = ratio
-                    wins = new_wins
-                    defeats = new_defeats
+                    victory = number_victories
+                    defeats = number_defeats
 
                 else:
                     pass
 
-                self.moves[x] = -1
+                moves[x] = -1
 
             else:
                 pass
@@ -114,13 +110,13 @@ class StatisticalAlgorithm:
 
     def create_matrix(self, moves):
         """
-        all move list variations
-        :param moves: List of the game status
+        all possible game variations
+        :param moves: game status
         :return: `list` matrix
 
         Usage
         >>> from sa import StatisticalAlgorithm
-        >>> sa = StatisticalAlgorithm()
+        >>> sa = StatisticalAlgorithm(obj, ['X', 1], ['O', 0])
         >>> matrix = sa.create_matrix([0,1,1,1,0,0,-1,-1,-1])
         >>> matrix
         [
@@ -130,14 +126,18 @@ class StatisticalAlgorithm:
         ]
         """
         matrix = []
+        empty_position = len([x for x in moves if x == -1])
+        who_begin = self.enemy if len([x for x in moves if x == self.enemy[1]]) > len(
+            [x for x in moves if x == self.char[1]]) else self.char
+        number_variations = 2 ^ (empty_position)
 
-        for i in range(0, 100000):
+        while len(matrix) != number_variations:
             new_moves = []
 
             for x in range(0, len(moves)):
 
                 if moves[x] == -1:
-                    new_moves.append(r.choice([0, 1]))
+                    new_moves.append(r.choice([self.char[1], self.enemy[1]]))
                 else:
                     new_moves.append(moves[x])
 
@@ -147,17 +147,18 @@ class StatisticalAlgorithm:
                 matrix.append(new_moves)
                 del new_moves
 
-        return matrix
+        return [x for x in matrix if len([x for x in moves if x == who_begin[1]]) > len(
+            [x for x in moves if x != who_begin[1] and x != -1])]
 
     def count_victories(self, matrix):
         """
-        Count how many victories he will have in a matrix
-        :param matrix: matrix of all moves variations
+        Count how many victories has in a matrix of game variation
+        :param matrix: matrix of all possible game variations
         :return: `int` int
 
         Usage
         >>> from sa import StatisticalAlgorithm
-        >>> sa = StatisticalAlgorithm()
+        >>> sa = StatisticalAlgorithm(obj, ['X', 1], ['O', 0])
         >>> matrix = sa.create_matrix([0,1,1,1,0,0,-1,-1,-1])
         >>> victories = sa.count_victories(matrix)
         >>> victories
@@ -179,13 +180,13 @@ class StatisticalAlgorithm:
 
     def count_defeats(self, matrix):
         """
-        Count how many defeats he will have in a matrix
-        :param matrix: matrix of all moves variations
+        Count how many defeats has in a matrix of game variation
+        :param matrix: matrix of all possible game variations
         :return: `int` int
 
         Usage
         >>> from sa import StatisticalAlgorithm
-        >>> sa = StatisticalAlgorithm()
+        >>> sa = StatisticalAlgorithm(obj, ['X', 1], ['O', 0])
         >>> matrix = sa.create_matrix([0,1,1,1,0,0,-1,-1,-1])
         >>> defeats = sa.count_defeats(matrix)
         >>> defeats
@@ -208,12 +209,12 @@ class StatisticalAlgorithm:
     def check_win(self, moves):
         """
         Check and return a position to win
-        :param moves: List of the game status
+        :param moves: game status
         :return: `int` int
 
         Usage
         >>> from sa import StatisticalAlgorithm
-        >>> sa = StatisticalAlgorithm()
+        >>> sa = StatisticalAlgorithm(obj, ['X', 1], ['O', 0])
         >>> position = sa.check_win([-1,0,1,0,0,1,0,-1,-1])
         >>> position
         8
@@ -236,12 +237,12 @@ class StatisticalAlgorithm:
     def check_lose(self, moves):
         """
         Check and return a position to protect itself
-        :param moves: List of the game status
+        :param moves: game status
         :return: `int` int
 
         Usage
         >>> from sa import StatisticalAlgorithm
-        >>> sa = StatisticalAlgorithm()
+        >>> sa = StatisticalAlgorithm(obj, ['X', 1], ['O', 0])
         >>> position = sa.check_lose([-1,0,1,0,-1,1,0,-1,-1])
         >>> position
         0
@@ -264,12 +265,12 @@ class StatisticalAlgorithm:
     def sequence_list(self, game_status):
         """
         All sequence to win 
-        :param game_status: List of the game status
+        :param game_status: game status
         :return: `list` matrix
 
         Usage
         >>> from sa import StatisticalAlgorithm
-        >>> sa = StatisticalAlgorithm()
+        >>> sa = StatisticalAlgorithm(obj, ['X', 1], ['O', 0])
         >>> ret = sa.sequence_list([-1,0,1,0,-1,1,0,-1,-1])
         >>> ret
         [
