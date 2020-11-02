@@ -4,8 +4,8 @@ import { IMemory } from '@interfaces/iMemory'
 interface IAgent extends Document {
   progenitor: string,
   birth: Date,
-  becomeLeader: Date,
-  death: Date,
+  becomeLeader?: Date,
+  death?: Date,
   life: number,
   memory: IMemory[],
   matchsAsLearner: number,

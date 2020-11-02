@@ -1,4 +1,4 @@
-from players.statistical_algorithm import StatisticalAlgorithm
+from classes.statistical_algorithm import StatisticalAlgorithm
 
 
 class TestSA:

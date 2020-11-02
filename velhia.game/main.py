@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv, find_dotenv
 from requests import request
-from players.statistical_algorithm import StatisticalAlgorithm
 from velhia import Velhia
 
 
@@ -18,7 +17,9 @@ def main():
         else:
             print("Can't connect with Velh-IA API")
 
-        Velhia.play()
+        print('Starting Velh-IA Game')
+        vlh = Velhia()
+        vlh.play()
     except:
         print('erro')
 
