@@ -1,5 +1,4 @@
 from players.statistical_algorithm import StatisticalAlgorithm
-import unittest
 
 
 class TestSA:
