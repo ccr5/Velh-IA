@@ -1,5 +1,6 @@
 from config.database import Database
 from classes.statistical_algorithm import StatisticalAlgorithm
+from classes.match import Match
 from classes.agent import Agent
 from datetime import datetime
 import json
@@ -19,129 +20,21 @@ class Velhia:
             last_match = self.match_db.get_last(1).json()
 
             if len(last_match) == 0 or last_match[0]['status'] != 'PENDENT':
-
                 sa = self.get_lastest_sa()
-
-                if len(self.education_db.get_last(2).json()) < 2:
-                    education_leader = Agent(self.education_db.create(json.dumps({
-                        "birth": datetime.now().ctime(),
-                        "progenitor": "I'm the first one, bitch ;)",
-                        "becomeLeader": datetime.now().ctime(),
-                        "life": 100,
-                        "memory": [],
-                        "matchsAsLearner": 0,
-                        "matchsAsLeader": 0,
-                        "victories": 0,
-                        "defeats": 0,
-                        "draw": 0
-                    })).json(), ('O', 0))
-
-                    education_learner = Agent(self.education_db.create(json.dumps({
-                        "birth": datetime.now().ctime(),
-                        "progenitor": education_leader.info['_id'],
-                        "life": 100,
-                        "memory": [],
-                        "matchsAsLearner": 0,
-                        "matchsAsLeader": 0,
-                        "victories": 0,
-                        "defeats": 0,
-                        "draw": 0
-                    })).json(), ('O', 0))
-                else:
-                    res = self.education_db.get_last(2).json()
-
-                    if res[1]['life'] > 0:
-                        education_leader = Agent(res[1], ('O', 0))
-                        education_learner = Agent(res[0], ('O', 0))
-                    else:
-                        res[1]['death'] = datetime.now().ctime()
-                        self.education_db.update(res[1]['_id'], res[1])
-                        res[0]['becomeLeader'] = datetime.now().ctime()
-                        self.education_db.update(res[0]['_id'], res[0])
-                        education_leader = Agent(res[0], ('O', 0))
-                        education_learner = Agent(self.education_db.create(json.dumps({
-                            "birth": datetime.now().ctime(),
-                            "progenitor": education_leader.info['_id'],
-                            "life": 100,
-                            "memory": [],
-                            "matchsAsLearner": 0,
-                            "matchsAsLeader": 0,
-                            "victories": 0,
-                            "defeats": 0,
-                            "draw": 0
-                        })).json(), ('O', 0))
-
-                if len(self.religion_db.get_last(2).json()) < 2:
-                    religion_leader = Agent(self.religion_db.create(json.dumps({
-                        "birth": datetime.now().ctime(),
-                        "progenitor": "I'm the first one, bitch ;)",
-                        "becomeLeader": datetime.now().ctime(),
-                        "life": 100,
-                        "memory": [],
-                        "matchsAsLearner": 0,
-                        "matchsAsLeader": 0,
-                        "victories": 0,
-                        "defeats": 0,
-                        "draw": 0
-                    })).json(), ('O', 0))
-
-                    religion_learner = Agent(self.religion_db.create(json.dumps({
-                        "birth": datetime.now().ctime(),
-                        "progenitor": religion_leader.info['_id'],
-                        "life": 100,
-                        "memory": [],
-                        "matchsAsLearner": 0,
-                        "matchsAsLeader": 0,
-                        "victories": 0,
-                        "defeats": 0,
-                        "draw": 0
-                    })).json(), ('O', 0))
-                else:
-                    res = self.religion_db.get_last(2).json()
-                    religion_leader = Agent(res[1], ('O', 0))
-                    religion_learner = Agent(res[0], ('O', 0))
-
-                if len(self.family_db.get_last(2).json()) < 2:
-                    family_leader = Agent(self.family_db.create(json.dumps({
-                        "birth": datetime.now().ctime(),
-                        "progenitor": "I'm the first one, bitch ;)",
-                        "becomeLeader": datetime.now().ctime(),
-                        "life": 100,
-                        "memory": [],
-                        "matchsAsLearner": 0,
-                        "matchsAsLeader": 0,
-                        "victories": 0,
-                        "defeats": 0,
-                        "draw": 0
-                    })).json(), ('O', 0))
-
-                    family_learner = Agent(self.family_db.create(json.dumps({
-                        "birth": datetime.now().ctime(),
-                        "progenitor": family_leader.info['_id'],
-                        "life": 100,
-                        "memory": [],
-                        "matchsAsLearner": 0,
-                        "matchsAsLeader": 0,
-                        "victories": 0,
-                        "defeats": 0,
-                        "draw": 0
-                    })).json(), ('O', 0))
-                else:
-                    res = self.family_db.get_last(2).json()
-                    family_leader = Agent(res[1], ('O', 0))
-                    family_learner = Agent(res[0], ('O', 0))
-
-                new_match = self.match_db.create(json.dumps({
-                    "begin": datetime.now().ctime(),
-                    "time": 0,
-                    "sa": {"playerId": sa.info['_id'], "symbol": sa.char[0]},
-                    "mas": {"family": {"playerId": family_leader.info['_id'], "symbol": family_leader.char[0]},
-                            "religion": {"playerId": religion_leader.info['_id'], "symbol": religion_leader.char[0]},
-                            "education": {"playerId": education_leader.info['_id'], "symbol": education_leader.char[0]}},
-                    "plays": [],
-                    "status": "PENDENT"}))
+                (education_leader, education_learner) = self.get_latest_agent(
+                    self.education_db
+                )
+                (religion_leader, religion_learner) = self.get_latest_agent(
+                    self.religion_db
+                )
+                (family_leader, family_learner) = self.get_latest_agent(
+                    self.family_db
+                )
+                match = self.create_new_match(
+                    sa, family_leader, religion_leader, education_leader
+                )
             else:
-                print('Não precisa criar uma nova partida')
+                pass
 
         except:
             print('play() error')
@@ -164,10 +57,10 @@ class Velhia:
 
         return sa
 
-    def get_latest_agent(self, db)
+    def get_latest_agent(self, db):
 
-       if len(db.get_last(2).json()) < 2:
-            education_leader = Agent(db.create(json.dumps({
+        if len(db.get_last(2).json()) < 2:
+            leader = Agent(db.create(json.dumps({
                 "birth": datetime.now().ctime(),
                 "progenitor": "I'm the first one, bitch ;)",
                 "becomeLeader": datetime.now().ctime(),
@@ -180,9 +73,9 @@ class Velhia:
                 "draw": 0
             })).json(), ('O', 0))
 
-            education_learner = Agent(db.create(json.dumps({
+            learner = Agent(db.create(json.dumps({
                 "birth": datetime.now().ctime(),
-                "progenitor": education_leader.info['_id'],
+                "progenitor": leader.info['_id'],
                 "life": 100,
                 "memory": [],
                 "matchsAsLearner": 0,
@@ -193,27 +86,47 @@ class Velhia:
             })).json(), ('O', 0))
         else:
             res = db.get_last(2).json()
+            return self.check_life(db, res)
 
-            if res[1]['life'] > 0:
-                education_leader = Agent(res[1], ('O', 0))
-                education_learner = Agent(res[0], ('O', 0))
-            else:
-                res[1]['death'] = datetime.now().ctime()
-                db.update(res[1]['_id'], res[1])
-                res[0]['becomeLeader'] = datetime.now().ctime()
-                db.update(res[0]['_id'], res[0])
-                education_leader = Agent(res[0], ('O', 0))
-                education_learner = Agent(db.create(json.dumps({
-                    "birth": datetime.now().ctime(),
-                    "progenitor": education_leader.info['_id'],
-                    "life": 100,
-                    "memory": [],
-                    "matchsAsLearner": 0,
-                    "matchsAsLeader": 0,
-                    "victories": 0,
-                    "defeats": 0,
-                    "draw": 0
-                })).json(), ('O', 0))
+    def create_new_match(self, sa, family, religion, education):
+
+        match = Match(self.match_db.create(json.dumps({
+            "begin": datetime.now().ctime(),
+            "time": 0,
+            "sa": {"playerId": sa.info['_id'], "symbol": sa.char[0]},
+            "mas": {"family": {"playerId": family.info['_id'], "symbol": family.char[0]},
+                    "religion": {"playerId": religion.info['_id'], "symbol": religion.char[0]},
+                    "education": {"playerId": education.info['_id'], "symbol": education.char[0]}},
+            "plays": [],
+            "status": "PENDENT"})))
+
+        return match
+
+    def check_life(self, db, agents):
+
+        if agents[1]['life'] > 0:
+            leader = Agent(agents[1], ('O', 0))
+            learner = Agent(agents[0], ('O', 0))
+        else:
+            agents[1]['death'] = datetime.now().ctime()
+            db.update(agents[1]['_id'], agents[1])
+            agents[0]['becomeLeader'] = datetime.now().ctime()
+            db.update(agents[0]['_id'], agents[0])
+            leader = Agent(agents[0], ('O', 0))
+            learner = Agent(db.create(json.dumps({
+                "birth": datetime.now().ctime(),
+                "progenitor": leader.info['_id'],
+                "life": 100,
+                "memory": [],
+                "matchsAsLearner": 0,
+                "matchsAsLeader": 0,
+                "victories": 0,
+                "defeats": 0,
+                "draw": 0
+            })).json(), ('O', 0))
+
+        return (leader, learner)
+
 
 #         ENDGAME = False
 #         NEW_GAME = False
