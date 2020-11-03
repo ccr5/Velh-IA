@@ -1,4 +1,3 @@
-from config.database import Database
 from classes.statistical_algorithm import StatisticalAlgorithm
 from classes.match import Match
 from classes.agent import Agent
@@ -7,15 +6,37 @@ import json
 
 
 class Velhia:
-    """ All functions and methods to the game works """
+    """ 
+    All functions and methods to the game works
+    :param match_db: `Database` Match object
+    :param family_db: `Database` Family object
+    :param education_db: `Database` Education object
+    :param religion_db: `Database` Religion object
+    :param algorithm_db: `Database` Statistical Algorithm object
+    """
 
-    match_db = Database('v1', 'matchs')
-    family_db = Database('v1', 'families')
-    education_db = Database('v1', 'educations')
-    religion_db = Database('v1', 'religions')
-    algorithm_db = Database('v1', 'algorithms')
+    def __init__(self, match_db, family_db, education_db, religion_db, algorithm_db):
+        self.match_db = match_db
+        self.family_db = family_db
+        self.education_db = education_db
+        self.religion_db = religion_db
+        self.algorithm_db = algorithm_db
 
-    def play(self):
+    def get_data(self):
+        """
+        Prepare all objects to start the game
+
+        Usage
+        >>> from velhia import Velhia
+        >>> vlh = Velhia(match_db, family_db, education_db, religion_db, algorithm_db)
+        >>> (match, sa, education_leader, education_learner, religion_leader,
+        >>>  religion_learner, family_leader, family_learner) = vlh.get_data()
+
+        <classes.match.Match object at 0x7fe6de3287d0> <classes.statistical_algorithm.StatisticalAlgorithm object at 0x7fe6de328150> 
+        <classes.agent.Agent object at 0x7fe6de34dd10> <classes.agent.Agent object at 0x7fe6de34d150> 
+        <classes.agent.Agent object at 0x7fe6de34d410> <classes.agent.Agent object at 0x7fe6de34d090> 
+        <classes.agent.Agent object at 0x7fe6de34df90> <classes.agent.Agent object at 0x7fe6de34de90>
+        """
         try:
             last_match = self.match_db.get_last(1).json()
 
@@ -34,8 +55,28 @@ class Velhia:
                     sa, family_leader, religion_leader, education_leader
                 )
             else:
-                pass
+                match = Match(last_match[0])
 
+                sa = StatisticalAlgorithm(
+                    self.algorithm_db.get_one(
+                        match.info['sa']['playerId']).json(),
+
+                    (match.info['sa']['symbol'],
+                     1 if match.info['sa']['symbol'] == 'X' else 0),
+
+                    ('O', 0) if match.info['sa']['symbol'] == 'X' else ('X', 1))
+
+                (education_leader, education_learner) = self.get_latest_players(
+                    match.info['mas']['education'][-1], self.education_db)
+
+                (religion_leader, religion_learner) = self.get_latest_players(
+                    match.info['mas']['religion'][-1], self.religion_db)
+
+                (family_leader, family_learner) = self.get_latest_players(
+                    match.info['mas']['family'][-1], self.family_db)
+
+            return (match, sa, education_leader, education_learner, religion_leader,
+                    religion_learner, family_leader, family_learner)
         except:
             print('play() error')
 
@@ -87,6 +128,14 @@ class Velhia:
         else:
             res = db.get_last(2).json()
             return self.check_life(db, res)
+
+    def get_latest_players(self, player, db):
+
+        res = db.get_last(2).json()
+        if res[1]['_id'] == player['playerId']:
+            return self.check_life(db, res)
+        else:
+            raise SystemError()
 
     def create_new_match(self, sa, family, religion, education):
 
