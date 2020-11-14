@@ -2,25 +2,39 @@ import React, { Component } from 'react'
 import Axios from 'axios'
 import './Camp.css'
 
-function checkCamp(value, height) {
-  if (value === 1) {
-    return (
-      <center>
-        <img src={process.env.PUBLIC_URL + "X.jpg"} height={height} alt=""></img>
-      </center>
-    )
-  } else if (value === 0) {
-    return (
-      <center>
-        <img src={process.env.PUBLIC_URL + "O.png"} height={height} alt=""></img>
-      </center>
-    )
+interface myProps {
+  height: number
+}
+
+interface myState {
+  C1: {
+    L1: number,
+    L2: number,
+    L3: number
+  },
+  C2: {
+    L1: number,
+    L2: number,
+    L3: number
+  },
+  C3: {
+    L1: number,
+    L2: number,
+    L3: number
   }
 }
 
-class Camp extends Component {
+function checkCamp(value: number, height: number) {
+  if (value === 1) {
+    return ( <img src={process.env.PUBLIC_URL + "X.jpg"} height={height} alt=""></img> )
+  } else if (value === 0) {
+    return ( <img src={process.env.PUBLIC_URL + "O.png"} height={height} alt=""></img> )
+  }
+}
 
-  constructor(props) {
+class Camp extends Component<myProps, myState> {
+
+  constructor(props: myProps) {
     super(props)
     this.state = {
       C1: {
@@ -42,7 +56,7 @@ class Camp extends Component {
   }
 
   componentDidMount() {
-    this.SA = setInterval(
+    setInterval(
       () => this.updateSAValues(),
       30000
     )

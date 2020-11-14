@@ -17,11 +17,9 @@ function Highlights() {
             <Menu />
           </div>
           <div id="iframe" className="col-10">
-            <center>
-              <iframe title="Pitch" width="100%" height={window.innerHeight - 110}
-                src="https://app.powerbi.com/view?r=eyJrIjoiMjIyODgxMGUtYTIwYi00YjkzLWIyNjMtN2EwZTBlNWJkZjk4IiwidCI6IjE4ZGZmZDg0LTg0Y2QtNDA3OC05YzJhLWI4NmQ2OGNhOThjYyJ9">
-              </iframe>
-            </center>
+            <iframe title="Pitch" width="100%" height={window.innerHeight - 110}
+              src="https://app.powerbi.com/view?r=eyJrIjoiMjIyODgxMGUtYTIwYi00YjkzLWIyNjMtN2EwZTBlNWJkZjk4IiwidCI6IjE4ZGZmZDg0LTg0Y2QtNDA3OC05YzJhLWI4NmQ2OGNhOThjYyJ9">
+            </iframe>
           </div>
         </div>
       </div>

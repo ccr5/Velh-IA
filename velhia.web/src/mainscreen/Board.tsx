@@ -2,9 +2,29 @@ import React, { Component } from 'react'
 import Axios from 'axios'
 import './Board.css'
 
-class Board extends Component {
+interface myProps {}
+interface myState {
+  SA: {
+    name: string,
+    wins: number,
+    last: string,
+    percent: string
+  },
+  MAS: {
+    name: string,
+    wins: number,
+    last: string,
+    percent: string
+  },
+  General: {
+    begin: string,
+    matchs: number
+  }
+}
 
-  constructor(props) {
+class Board extends Component<myProps, myState> {
+
+  constructor(props: myProps) {
     super(props)
     this.state = {
       SA: {
@@ -27,7 +47,7 @@ class Board extends Component {
   }
 
   componentDidMount() {
-    this.SA = setInterval(
+    setInterval(
       () => this.updateSAValues(),
       30000
     )
