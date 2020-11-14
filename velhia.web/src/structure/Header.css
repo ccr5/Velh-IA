@@ -1,7 +1,4 @@
 .velhia-header {
     height: 50px;
-}
-
-.blue {
-    background-color: #0E79B2 !important;
+    opacity: 0.8;
 }

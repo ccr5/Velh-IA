@@ -4,7 +4,7 @@
 
 .square {
     border-style: solid;
-    border-color: white;
+    border-color: black;
 }
 
 .col-4 {
@@ -26,4 +26,10 @@
 
 .left {
     border-left: none !important;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }

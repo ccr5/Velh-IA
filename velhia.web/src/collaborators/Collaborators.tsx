@@ -1,11 +1,10 @@
 import React from 'react'
-import '../App.css';
+import '../App.css'
 import './Collaborators.css'
 import Header from '../structure/Header'
 import Footer from '../structure/Footer'
 
-
-function Collaborators() {
+function Collaborators (): JSX.Element {
   return (
     <div className="App">
       <Header />

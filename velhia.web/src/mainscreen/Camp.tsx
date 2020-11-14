@@ -24,27 +24,18 @@ interface myState {
   }
 }
 
-function checkCamp(value: number, height: number) {
-  if (value === 1) {
-    return ( <img src={process.env.PUBLIC_URL + "X.jpg"} height={height} alt=""></img> )
-  } else if (value === 0) {
-    return ( <img src={process.env.PUBLIC_URL + "O.png"} height={height} alt=""></img> )
-  }
-}
-
 class Camp extends Component<myProps, myState> {
-
-  constructor(props: myProps) {
+  constructor (props: myProps) {
     super(props)
     this.state = {
       C1: {
-        L1: 1,
+        L1: -1,
         L2: -1,
         L3: -1
       },
       C2: {
         L1: -1,
-        L2: 0,
+        L2: -1,
         L3: -1
       },
       C3: {
@@ -55,26 +46,36 @@ class Camp extends Component<myProps, myState> {
     }
   }
 
-  componentDidMount() {
+  componentDidMount (): void {
     setInterval(
       () => this.updateSAValues(),
       30000
     )
   }
 
-  updateSAValues() {
+  checkCamp (value: number): JSX.Element {
+    if (value === 1) {
+      return (<img src={process.env.PUBLIC_URL + 'X.png'} className="center" height={this.props.height / 4} alt=""></img>)
+    } else if (value === 0) {
+      return (<img src={process.env.PUBLIC_URL + 'O.png'} className="center" height={this.props.height / 4} alt=""></img>)
+    } else {
+      return (<img src='' height={this.props.height} alt=''></img>)
+    }
+  }
+
+  updateSAValues (): void {
     Axios.get('https://api.bitpreco.com/btc-brl/ticker')
       .then((response) => {
         console.log(response.data.avg)
         this.setState({
           C1: {
-            L1: 1,
+            L1: -1,
             L2: -1,
             L3: -1
           },
           C2: {
             L1: -1,
-            L2: 0,
+            L2: -1,
             L3: -1
           },
           C3: {
@@ -86,45 +87,45 @@ class Camp extends Component<myProps, myState> {
       })
   }
 
-  // componentWillUnmount() {
+  // componentWillUnmount(): void {
   //   clearInterval(this.boardAdd)
   // }
 
-  render() {
+  render (): JSX.Element {
     return (
       <div className="container camp">
         <div className="row">
           <div className="col-4">
             <div className="square sup left" style={{ height: this.props.height / 4 }} id="C1L1">
-              {checkCamp(this.state.C1.L1, this.props.height / 4)}
+              {this.checkCamp(this.state.C1.L1)}
             </div>
             <div className="square left" style={{ height: this.props.height / 4 }} id="C1L2">
-              {checkCamp(this.state.C1.L2, this.props.height / 4)}
+              {this.checkCamp(this.state.C1.L2)}
             </div>
             <div className="square inf left" style={{ height: this.props.height / 4 }} id="C1L3">
-              {checkCamp(this.state.C1.L3, this.props.height / 4)}
+              {this.checkCamp(this.state.C1.L3)}
             </div>
           </div>
           <div className="col-4">
             <div className="square sup" style={{ height: this.props.height / 4 }} id="C2L1">
-              {checkCamp(this.state.C2.L1, this.props.height / 4)}
+              {this.checkCamp(this.state.C2.L1)}
             </div>
             <div className="square square" style={{ height: this.props.height / 4 }} id="C2L2">
-              {checkCamp(this.state.C2.L2, this.props.height / 4)}
+              {this.checkCamp(this.state.C2.L2)}
             </div>
             <div className="square inf" style={{ height: this.props.height / 4 }} id="C2L3">
-              {checkCamp(this.state.C2.L3, this.props.height / 4)}
+              {this.checkCamp(this.state.C2.L3)}
             </div>
           </div>
           <div className="col-4">
             <div className="square sup right" style={{ height: this.props.height / 4 }} id="C3L1">
-              {checkCamp(this.state.C3.L1, this.props.height / 4)}
+              {this.checkCamp(this.state.C3.L1)}
             </div>
             <div className="square right" style={{ height: this.props.height / 4 }} id="C3L2">
-              {checkCamp(this.state.C3.L2, this.props.height / 4)}
+              {this.checkCamp(this.state.C3.L2)}
             </div>
             <div className="square inf right" style={{ height: this.props.height / 4 }} id="C3L3">
-              {checkCamp(this.state.C3.L3, this.props.height / 4)}
+              {this.checkCamp(this.state.C3.L3)}
             </div>
           </div>
         </div>
