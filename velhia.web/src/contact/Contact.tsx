@@ -11,7 +11,7 @@ function Contact() {
       <Header />
       <div className="container-fluid" style={{ minHeight: window.innerHeight - 80 }}>
         <div className="jumbotron transp">
-          <center><h1 className="display-4">Contact</h1></center>
+          <h1 className="display-4">Contact</h1>
           <div className="row">
             <div className="jumbotron field col-6">
               <div className="row">
@@ -21,13 +21,13 @@ function Contact() {
                       <div className="col-md-6">
                         <div className="md-form mb-0">
                           <input type="text" id="name" name="name" className="form-control"></input>
-                          <label for="name" className="">Your name</label>
+                          <label htmlFor ="name" className="">Your name</label>
                         </div>
                       </div>
                       <div className="col-md-6">
                         <div className="md-form mb-0">
                           <input type="text" id="email" name="email" className="form-control"></input>
-                          <label for="email" className="">Your email</label>
+                          <label htmlFor="email" className="">Your email</label>
                         </div>
                       </div>
                     </div>
@@ -35,21 +35,21 @@ function Contact() {
                       <div className="col-md-12">
                         <div className="md-form mb-0">
                           <input type="text" id="subject" name="subject" className="form-control"></input>
-                          <label for="subject" className="">Subject</label>
+                          <label htmlFor="subject" className="">Subject</label>
                         </div>
                       </div>
                     </div>
                     <div className="row">
                       <div className="col-md-12">
                         <div className="md-form">
-                          <textarea type="text" id="message" name="message" rows="2" className="form-control md-textarea"></textarea>
-                          <label for="message">Your message</label>
+                          <textarea id="message" name="message" rows={2} className="form-control md-textarea"></textarea>
+                          <label htmlFor="message">Your message</label>
                         </div>
                       </div>
                     </div>
                   </form>
                   <div className="text-center text-md-left">
-                    <a className="btn btn-primary" href="/#" onclick="document.getElementById('contact-form').submit();">Send</a>
+                    <a className="btn btn-primary" href="/#">Send</a>
                   </div>
                   <div className="status"></div>
                 </div>
@@ -59,7 +59,7 @@ function Contact() {
               <p className="lead">
                 Fell free to call me. I'm waiting you
               </p>
-              <center><h5>Matheus Nobre Gomes</h5></center>
+              <h5>Matheus Nobre Gomes</h5>
               <br />
               <div className="row">
                 <div className="col-6">
@@ -88,7 +88,6 @@ function Contact() {
               <br />
               <hr />
               <br /><br />
-              <center>
                 <a href="https://www.facebook.com/Pynatic">
                   <img src={process.env.PUBLIC_URL + "facebook-logo.png"} height="30px" width="30px" alt=""></img>
                 </a>
@@ -101,7 +100,6 @@ function Contact() {
                 <a href="https://www.linkedin.com/in/mattnobre/">
                   <img src={process.env.PUBLIC_URL + "linkedin-logo.png"} height="30px" width="30px" alt=""></img>
                 </a>
-              </center>
             </div>
           </div>
         </div>

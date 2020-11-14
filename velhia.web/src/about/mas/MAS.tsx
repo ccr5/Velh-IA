@@ -60,13 +60,11 @@ function MAS() {
                 The video below presents whole
                 concept in a simple and objective way.
               </p>
-              <center>
                 <iframe title="Pitch" width={window.innerWidth * 0.8} height={window.innerHeight * 0.8}
-                  src="https://www.youtube.com/embed/twTLAVTcxgs" frameborder="0"
+                  src="https://www.youtube.com/embed/twTLAVTcxgs" frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen>
+                  allowFullScreen>
                 </iframe>
-              </center>
             </div>
           </div>
         </div>

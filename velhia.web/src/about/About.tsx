@@ -30,7 +30,7 @@ function About() {
                 environment (tic-tac-toe) and plays using probability and statistics.
               </p>
               <p className="lead">
-                <center><Link to="/SA">Click here</Link> to see more</center>
+                <Link to="/SA">Click here</Link> to see more
               </p>
             </div>
             <div className="col-6">
@@ -40,7 +40,7 @@ function About() {
                 representative agent plays based on previous experiences of the agents in the network (stored memory)
               </p>
               <p className="lead">
-                <center><Link to="/MAS">Click here</Link> to see more</center>
+                <Link to="/MAS">Click here</Link> to see more
               </p>
             </div>
           </div>
@@ -50,13 +50,11 @@ function About() {
             concept in a simple and objective way. We suggest that you watch
             before you move on to more specific approaches.
           </p>
-          <center>
             <iframe title="Pitch" width={window.innerWidth * 0.8} height={window.innerHeight * 0.8}
-              src="https://www.youtube.com/embed/twTLAVTcxgs" frameborder="0"
+              src="https://www.youtube.com/embed/twTLAVTcxgs" frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen>
+              allowFullScreen>
             </iframe>
-          </center>
         </div>
       </div>
       <Footer />

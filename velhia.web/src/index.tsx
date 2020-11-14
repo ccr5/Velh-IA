@@ -1,0 +1,41 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import * as dotenv from 'dotenv'
+
+import About from './about/About';
+import Highlights from './highlights/Highlights';
+import Contact from './contact/Contact';
+import Collaborators from './collaborators/Collaborators';
+import SA from './about/sa/SA';
+import MAS from './about/mas/MAS';
+
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+dotenv.config({path: '.env'})
+
+ReactDOM.render(
+  <BrowserRouter>
+    <Switch>
+      <Route path="/" exact={true} component={App} />
+      <Route path="/about" component={About} />
+      <Route path="/SA" component={SA} />
+      <Route path="/MAS" component={MAS} />
+      <Route path="/highlights" component={Highlights} />
+      <Route path='/pitch' render={() => (window.location.href = process.env.PITCH || '')} />
+      <Route path='/article' render={() => (window.location.href = process.env.ARTICLE || '')} />
+      <Route path='/code' render={() => (window.location.href = process.env.GITHUB || '')} />
+      <Route path="/collaborators" component={Collaborators} />
+      <Route path="/contact" component={Contact} />
+      {/* <Route path="*">Erro</Route> */}
+    </Switch>
+  </BrowserRouter>,
+  document.getElementById('root')
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
