@@ -18,15 +18,8 @@ class Header extends Component {
             <li className="nav-item">
               <Link className="nav-link" to="/highlights">Analysis</Link>
             </li>
-            <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Documentation
-              </a>
-              <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <Link className="dropdown-item" to="/pitch">Pitch</Link>
-                <Link className="dropdown-item" to="/article">Scientific Article</Link>
-                <Link className="dropdown-item" to="/code">Source Code</Link>
-              </div>
+            <li className="nav-item">
+              <Link className="nav-link" to="/documentation">Documentation</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/collaborators">Community</Link>
