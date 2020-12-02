@@ -1,11 +1,10 @@
 import React from 'react'
-import '../App.css';
+import '../App.css'
 import './Contact.css'
 import Header from '../structure/Header'
 import Footer from '../structure/Footer'
 
-
-function Contact() {
+function Contact (): JSX.Element {
   return (
     <div className="App">
       <Header />
@@ -88,18 +87,18 @@ function Contact() {
               <br />
               <hr />
               <br /><br />
-                <a href="https://www.facebook.com/Pynatic">
-                  <img src={process.env.PUBLIC_URL + "facebook-logo.png"} height="30px" width="30px" alt=""></img>
-                </a>
-                <a href="https://www.youtube.com/channel/UCNBSO8r0BwMNQUaNy2UQN1g">
-                  <img src={process.env.PUBLIC_URL + "youtube-logo.png"} height="30px" width="30px" alt=""></img>
-                </a>
-                <a href="https://github.com/ccr5">
-                  <img src={process.env.PUBLIC_URL + "github-logo.png"} height="30px" width="30px" alt=""></img>
-                </a>
-                <a href="https://www.linkedin.com/in/mattnobre/">
-                  <img src={process.env.PUBLIC_URL + "linkedin-logo.png"} height="30px" width="30px" alt=""></img>
-                </a>
+              <a href="https://www.facebook.com/Pynatic">
+                <img src={process.env.PUBLIC_URL + 'facebook-logo.png'} height="30px" width="30px" alt=""></img>
+              </a>
+              <a href="https://www.youtube.com/channel/UCNBSO8r0BwMNQUaNy2UQN1g">
+                <img src={process.env.PUBLIC_URL + 'youtube-logo.png'} height="30px" width="30px" alt=""></img>
+              </a>
+              <a href="https://github.com/ccr5">
+                <img src={process.env.PUBLIC_URL + 'github-logo.png'} height="30px" width="30px" alt=""></img>
+              </a>
+              <a href="https://www.linkedin.com/in/mattnobre/">
+                <img src={process.env.PUBLIC_URL + 'linkedin-logo.png'} height="30px" width="30px" alt=""></img>
+              </a>
             </div>
           </div>
         </div>

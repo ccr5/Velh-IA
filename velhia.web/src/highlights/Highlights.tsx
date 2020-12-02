@@ -1,13 +1,11 @@
 import React from 'react'
-import '../App.css';
+import '../App.css'
 import './Highlights.css'
 import Header from '../structure/Header'
 import Footer from '../structure/Footer'
-import Menu from './menu/Menu';
+import Menu from './menu/Menu'
 
-
-
-function Highlights() {
+function Highlights (): JSX.Element {
   return (
     <div className="App">
       <Header />
