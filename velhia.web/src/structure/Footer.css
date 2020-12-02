@@ -1,5 +1,7 @@
-.velhia-footer {
-    background-color: lightsteelblue;
+.footer {
+    color:white;
     height: 30px;
+    opacity: 0.4;
     text-align: center;
+    background-color: #433A3F;
 }

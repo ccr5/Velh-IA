@@ -2,9 +2,27 @@ import React, { Component } from 'react'
 import Axios from 'axios'
 import './Board.css'
 
-class Board extends Component {
+interface myState {
+  SA: {
+    name: string,
+    wins: number,
+    last: string,
+    percent: string
+  },
+  MAS: {
+    name: string,
+    wins: number,
+    last: string,
+    percent: string
+  },
+  General: {
+    begin: string,
+    matchs: number
+  }
+}
 
-  constructor(props) {
+class Board extends Component<Record<string, unknown>, myState> {
+  constructor (props: Record<string, unknown>) {
     super(props)
     this.state = {
       SA: {
@@ -26,17 +44,16 @@ class Board extends Component {
     }
   }
 
-  componentDidMount() {
-    this.SA = setInterval(
+  componentDidMount ():void {
+    setInterval(
       () => this.updateSAValues(),
       30000
     )
   }
 
-  updateSAValues() {
+  updateSAValues (): void {
     Axios.get('https://api.bitpreco.com/btc-brl/ticker')
       .then((response) => {
-        console.log(response.data.avg)
         this.setState({
           SA: {
             name: 'Statistical Algorithm',
@@ -48,11 +65,11 @@ class Board extends Component {
       })
   }
 
-  // componentWillUnmount() {
+  // componentWillUnmount(): void {
   //   clearInterval(this.boardAdd)
   // }
 
-  render() {
+  render (): JSX.Element {
     return (
       <div className="container board">
         <div className="jumbotron infos">
