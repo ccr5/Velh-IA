@@ -32,7 +32,8 @@ class Velhia:
         >>> (match, sa, education_leader, education_learner, religion_leader,
         >>>  religion_learner, family_leader, family_learner) = vlh.get_data()
 
-        <classes.match.Match object at 0x7fe6de3287d0> <classes.statistical_algorithm.StatisticalAlgorithm object at 0x7fe6de328150> 
+        <classes.match.Match object at 0x7fe6de3287d0> 
+        <classes.statistical_algorithm.StatisticalAlgorithm object at 0x7fe6de328150> 
         <classes.agent.Agent object at 0x7fe6de34dd10> <classes.agent.Agent object at 0x7fe6de34d150> 
         <classes.agent.Agent object at 0x7fe6de34d410> <classes.agent.Agent object at 0x7fe6de34d090> 
         <classes.agent.Agent object at 0x7fe6de34df90> <classes.agent.Agent object at 0x7fe6de34de90>
@@ -81,6 +82,17 @@ class Velhia:
             print('play() error')
 
     def get_lastest_sa(self):
+        """
+        Get the lastest statistical algorithm obj in the database 
+        or create if it not exists
+
+        Usage
+        >>> from velhia import Velhia
+        >>> sa = velhia.get_lastest_sa()
+        >>> print(sa)
+
+        <classes.statistical_algorithm.StatisticalAlgorithm object at 0x7fe6de3287d0> 
+        """
 
         if len(self.algorithm_db.get_last(1).json()) == 0:
             sa = StatisticalAlgorithm(self.algorithm_db.create(json.dumps({
@@ -99,6 +111,19 @@ class Velhia:
         return sa
 
     def get_latest_agent(self, db):
+        """
+        Get the lastest agent obj in the database 
+        or create if it not exists
+        :param db: `Database` a Database object
+
+        Usage
+        >>> from velhia import Velhia
+        >>> (leader, learner) = velhia.get_lastest_agent(education_db)
+        >>> print(leader, learner)
+
+        <classes.agent.Agent object at 0x7fe6de3287d0> 
+        <classes.agent.Agent object at 0x7fe6de3289a2> 
+        """
 
         if len(db.get_last(2).json()) < 2:
             leader = Agent(db.create(json.dumps({
@@ -130,6 +155,22 @@ class Velhia:
             return self.check_life(db, res)
 
     def get_latest_players(self, player, db):
+        """
+        Get the lastest agents as of a match obj in the database
+        :param player: `string` a player ID
+        :param db: `Database` a Database object
+
+        Usage
+        >>> from velhia import Velhia
+        >>> (education_leader, education_learner) = velhia.get_latest_players(
+                                                        match.info['mas']['education'][-1], 
+                                                        self.education_db
+                                                    )
+        >>> print(education_leader, education_learner)
+
+        <classes.agent.Agent object at 0x7fe6de3287d0> 
+        <classes.agent.Agent object at 0x7fe6de3289a2> 
+        """
 
         res = db.get_last(2).json()
         if res[1]['_id'] == player['playerId']:
@@ -138,6 +179,20 @@ class Velhia:
             raise SystemError()
 
     def create_new_match(self, sa, family, religion, education):
+        """
+        Create a new match in the database
+        :param sa: `StatisticalAlgorithm` a SA obj
+        :param family: `Agent` a Family object
+        :param religion: `Agent` a Religion object
+        :param education: `Agent` a Education object
+
+        Usage
+        >>> from velhia import Velhia
+        >>> match = velhia.create_new_match(sa, family, religion, education)
+        >>> print(match)
+
+        <classes.match.Match object at 0x7fe6de3287d0>
+        """
 
         match = Match(self.match_db.create(json.dumps({
             "begin": datetime.now().ctime(),
@@ -152,6 +207,19 @@ class Velhia:
         return match
 
     def check_life(self, db, agents):
+        """
+        Check if the lastest lider agent has life and create if hasn't
+        :param db: `Database` a Database object
+        :param agents: `List` a Agent object list
+
+        Usage
+        >>> from velhia import Velhia
+        >>> (leader, learner) = velhia.check_life(db, [agent1, agent2])
+        >>> print(leader, learner)
+
+        <classes.match.Match object at 0x7fe6de3287d0>
+        <classes.match.Match object at 0x7fe6de3215a3>
+        """
 
         if agents[1]['life'] > 0:
             leader = Agent(agents[1], ('O', 0))
@@ -176,6 +244,17 @@ class Velhia:
 
         return (leader, learner)
 
+    def get_sequence(self, match):
+
+        last_match = self.match_db.get_last(2).json()
+
+        if len(last_match) == 1:
+            return ['SA']
+
+        if len(match.info['plays']) == 0:
+            return ['MAS' if last_match[0]['sa']['playerId'] == last_match[0]['plays'][0]['player'] else 'SA']
+        else:
+            return ['MAS' if match.info['sa']['playerId'] == match.info['plays'][-1]['player'] else 'SA']
 
 #         ENDGAME = False
 #         NEW_GAME = False

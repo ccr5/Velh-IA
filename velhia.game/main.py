@@ -20,8 +20,8 @@ def play():
     (match, sa, education_leader, education_learner, religion_leader,
      religion_learner, family_leader, family_learner) = vlh.get_data()
 
-    print(match, sa, education_leader, education_learner, religion_leader,
-          religion_learner, family_leader, family_learner)
+    sequence = vlh.get_sequence(match)
+    if
 
 
 def main():
