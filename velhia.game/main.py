@@ -5,23 +5,32 @@ from requests import request
 from velhia import Velhia
 
 
-def play():
+def play(vlh):
     """ 
     Velh-IA Flow Control.
     Execute each step of Velh-IA workflow and keep Velh-IA works good.
     """
-    match_db = Database('v1', 'matchs')
-    family_db = Database('v1', 'families')
-    education_db = Database('v1', 'educations')
-    religion_db = Database('v1', 'religions')
-    algorithm_db = Database('v1', 'algorithms')
-    vlh = Velhia(match_db, family_db, education_db, religion_db, algorithm_db)
 
+    print('Getting data...')
     (match, sa, education_leader, education_learner, religion_leader,
      religion_learner, family_leader, family_learner) = vlh.get_data()
+    print('All datas was taked!')
 
+    print('Get who has to play now')
     sequence = vlh.get_sequence(match)
-    if
+    print("It's time to " + sequence[-1] + ' plays')
+
+    print('Getting game status...')
+    game_status = vlh.game_status(match, sa.info['_id'])
+    print(game_status)
+
+    if sequence[-1] == 'SA':
+        position = sa.play(game_status)
+        print(f'choose to play in the position { str(position + 1) }')
+        test = vlh.update_sa_match(match, sa, position)
+        print(test)
+    else:
+        print('Vez do SMA jogar')
 
 
 def main():
@@ -34,6 +43,7 @@ def main():
         load_dotenv(find_dotenv())
         print('Welcome to Velh-IA Game\nWhere everything happens')
         print('Check all requirements to starting Velh-IA Game')
+
         response = request('GET', os.getenv('API_ADDRESS'))
 
         if response.json() == {'message': 'Welcome Velh-IA API'}:
@@ -41,10 +51,19 @@ def main():
         else:
             print("Can't connect with Velh-IA API")
 
+        match_db = Database('v1', 'matchs')
+        family_db = Database('v1', 'families')
+        education_db = Database('v1', 'educations')
+        religion_db = Database('v1', 'religions')
+        algorithm_db = Database('v1', 'algorithms')
+        vlh = Velhia(match_db, family_db, education_db,
+                     religion_db, algorithm_db)
+
+        print('Database Objects Ok')
         print('Starting Velh-IA Game')
 
         while True:
-            play()
+            play(vlh)
     except:
         print('Error to starting Velh-IA Game (main.py)')
 

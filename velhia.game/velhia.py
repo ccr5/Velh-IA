@@ -6,7 +6,7 @@ import json
 
 
 class Velhia:
-    """ 
+    """
     All functions and methods to the game works
     :param match_db: `Database` Match object
     :param family_db: `Database` Family object
@@ -32,10 +32,10 @@ class Velhia:
         >>> (match, sa, education_leader, education_learner, religion_leader,
         >>>  religion_learner, family_leader, family_learner) = vlh.get_data()
 
-        <classes.match.Match object at 0x7fe6de3287d0> 
-        <classes.statistical_algorithm.StatisticalAlgorithm object at 0x7fe6de328150> 
-        <classes.agent.Agent object at 0x7fe6de34dd10> <classes.agent.Agent object at 0x7fe6de34d150> 
-        <classes.agent.Agent object at 0x7fe6de34d410> <classes.agent.Agent object at 0x7fe6de34d090> 
+        <classes.match.Match object at 0x7fe6de3287d0>
+        <classes.statistical_algorithm.StatisticalAlgorithm object at 0x7fe6de328150>
+        <classes.agent.Agent object at 0x7fe6de34dd10> <classes.agent.Agent object at 0x7fe6de34d150>
+        <classes.agent.Agent object at 0x7fe6de34d410> <classes.agent.Agent object at 0x7fe6de34d090>
         <classes.agent.Agent object at 0x7fe6de34df90> <classes.agent.Agent object at 0x7fe6de34de90>
         """
         try:
@@ -83,7 +83,7 @@ class Velhia:
 
     def get_lastest_sa(self):
         """
-        Get the lastest statistical algorithm obj in the database 
+        Get the lastest statistical algorithm obj in the database
         or create if it not exists
 
         Usage
@@ -91,7 +91,7 @@ class Velhia:
         >>> sa = velhia.get_lastest_sa()
         >>> print(sa)
 
-        <classes.statistical_algorithm.StatisticalAlgorithm object at 0x7fe6de3287d0> 
+        <classes.statistical_algorithm.StatisticalAlgorithm object at 0x7fe6de3287d0>
         """
 
         if len(self.algorithm_db.get_last(1).json()) == 0:
@@ -112,7 +112,7 @@ class Velhia:
 
     def get_latest_agent(self, db):
         """
-        Get the lastest agent obj in the database 
+        Get the lastest agent obj in the database
         or create if it not exists
         :param db: `Database` a Database object
 
@@ -121,8 +121,8 @@ class Velhia:
         >>> (leader, learner) = velhia.get_lastest_agent(education_db)
         >>> print(leader, learner)
 
-        <classes.agent.Agent object at 0x7fe6de3287d0> 
-        <classes.agent.Agent object at 0x7fe6de3289a2> 
+        <classes.agent.Agent object at 0x7fe6de3287d0>
+        <classes.agent.Agent object at 0x7fe6de3289a2>
         """
 
         if len(db.get_last(2).json()) < 2:
@@ -163,13 +163,13 @@ class Velhia:
         Usage
         >>> from velhia import Velhia
         >>> (education_leader, education_learner) = velhia.get_latest_players(
-                                                        match.info['mas']['education'][-1], 
+                                                        match.info['mas']['education'][-1],
                                                         self.education_db
                                                     )
         >>> print(education_leader, education_learner)
 
-        <classes.agent.Agent object at 0x7fe6de3287d0> 
-        <classes.agent.Agent object at 0x7fe6de3289a2> 
+        <classes.agent.Agent object at 0x7fe6de3287d0>
+        <classes.agent.Agent object at 0x7fe6de3289a2>
         """
 
         res = db.get_last(2).json()
@@ -245,6 +245,17 @@ class Velhia:
         return (leader, learner)
 
     def get_sequence(self, match):
+        """
+        Return who plays first
+        :param match: `Match` a Match object
+
+        Usage
+        >>> from velhia import Velhia
+        >>> sequence = velhia.get_sequence(match)
+        >>> print(sequence)
+
+        ['SA']
+        """
 
         last_match = self.match_db.get_last(2).json()
 
@@ -255,6 +266,21 @@ class Velhia:
             return ['MAS' if last_match[0]['sa']['playerId'] == last_match[0]['plays'][0]['player'] else 'SA']
         else:
             return ['MAS' if match.info['sa']['playerId'] == match.info['plays'][-1]['player'] else 'SA']
+
+    def game_status(self, match, saId):
+
+        game_status = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
+
+        for p in match.info['plays']:
+            if p['player'] == saId:
+                game_status[p['position']] = 1
+            else:
+                game_status[p['position']] = 0
+
+        return game_status
+
+    def update_sa_match(self, match, sa):
+        return 'Ok'
 
 #         ENDGAME = False
 #         NEW_GAME = False
