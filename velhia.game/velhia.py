@@ -259,9 +259,6 @@ class Velhia:
 
         last_match = self.match_db.get_last(2).json()
 
-        if len(last_match) == 1:
-            return ['SA']
-
         if len(match.info['plays']) == 0:
             return ['MAS' if last_match[0]['sa']['playerId'] == last_match[0]['plays'][0]['player'] else 'SA']
         else:
@@ -279,212 +276,315 @@ class Velhia:
 
         return game_status
 
-    def update_sa_match(self, match, sa):
-        return 'Ok'
+    def sequence_list(self, game_status):
+        """
+        All sequence to win 
+        :param game_status: game status
+        :return: `list` matrix
 
-#         ENDGAME = False
-#         NEW_GAME = False
-#         try:
-#             while not ENDGAME:
+        Usage
+        >>> from sa import StatisticalAlgorithm
+        >>> sa = StatisticalAlgorithm(obj, ['X', 1], ['O', 0])
+        >>> ret = sa.sequence_list([-1,0,1,0,-1,1,0,-1,-1])
+        >>> ret
+        [
+            [-1, 0, 1],     [0, -1, 1], 
+            [0, -1, -1],    [-1, 0, 0], 
+            [0, -1, -1],    [1, 1, -1],
+            [-1, -1, -1],   [1, -1, 0]
+        ]
+        """
+        return [[game_status[0], game_status[1], game_status[2]],
+                [game_status[3], game_status[4], game_status[5]],
+                [game_status[6], game_status[7], game_status[8]],
+                [game_status[0], game_status[3], game_status[6]],
+                [game_status[1], game_status[4], game_status[7]],
+                [game_status[2], game_status[5], game_status[8]],
+                [game_status[0], game_status[4], game_status[8]],
+                [game_status[2], game_status[4], game_status[6]]]
 
-#                 while not NEW_GAME:
-#                     NEW_GAME = Velhia.play_sa(
-#                         MOVES, EMPTY, PLAYER1, STATISTICAL)
+    def check_win(self, player, moves):
+        """
+        Check and return a position to win
+        :param moves: game status
+        :return: `int` int
 
-#                 if NEW_GAME[1] == PLAYER1:
-#                     count_player1 += 1
-#                 else:
-#                     count_player2 += 1
+        Usage
+        >>> from sa import StatisticalAlgorithm
+        >>> sa = StatisticalAlgorithm(obj, ['X', 1], ['O', 0])
+        >>> position = sa.check_win([-1,0,1,0,0,1,0,-1,-1])
+        >>> position
+        8
+        """
 
-#                 print("\n Player 1: {} \t Player 2: {}".format(
-#                     count_player1, count_player2))
-#                 NEW_GAME = NEW_GAME[0]
+        for y in moves:
 
-#                 RESULT = input("Do you wanna play again Y/N? ")
-#                 RESULT = RESULT.upper()
+            if y == [player.char[-1], player.char[-1], player.char[-1]]:
+                return True
+            else:
+                pass
 
-#                 if RESULT == 'Y':
+    def update_sa_match(self, match, sa, game_status, position, start, time):
 
-#                     ENDGAME = False
-#                     NEW_GAME = False
-#                     Velhia.clean_game(MOVES)
+        results = self.sequence_list(game_status)
 
-#                 elif RESULT == "N":
+        if self.check_win(sa, results):
+            match.info['plays'].append({
+                'seq': len(match.info['plays']) + 1,
+                'player': sa.info['_id'],
+                'time': time,
+                'position': position
+            })
+            match.info['status'] = 'WINNER'
+            match.info['winner'] = 'SA'
 
-#                     ENDGAME = True
+            sa.info['memory'].append({
+                'isLearner': False,
+                'choices': sa.info['choices'].append({
+                    'dateRequest': start,
+                    'gameStatus': game_status,
+                    'timeToAct': time,
+                    'action': position
+                }),
+                'environmentReaction': 'WINNER'
+            })
 
-#                 else:
-#                     pass
+            sa.info['memory'].append({
+                'isLearner': False,
+                'choices': []
+            })
 
-#                 print("Thank you for play!")
+            sa.info['matchs']: sa.info['matchs'] + 1
+            sa.info['victories']: sa.info['victories'] + 1
 
-#         except Exception as e:
-#             raise e
+            self.algorithm_db.update(sa.info['_id'], sa.info)
+            self.match_db.update(match.info['_id'], match.info)
+        else:
+            match.info['plays'].append({
+                'seq': len(match.info['plays']) + 1,
+                'player': sa.info['_id'],
+                'time': time,
+                'position': position
+            })
 
-#    def play_sa(self, m, e, p, s):
-#         """
-#         This method will call when the player wanna play with s.a (statistical algorithm)
-#         :param m: moves until now
-#         :param e: value of empty places
-#         :param p: value and character's player1
-#         :param s: value and character's player2
-#         :return: True when player or s.a win a game
-#         """
-#         game = False
-#         doppler_sa = Doppler10(s, p)
+            choices = sa.info['memory']['choices'] if len(
+                sa.info['memory']) > 0 else []
 
-#         try:
+            choices.append({
+                'dateRequest': start,
+                'gameStatus': game_status,
+                'timeToAct': time,
+                'action': position
+            })
 
-#             while not game:
+            sa.info['memory'].append({
+                'isLearner': False,
+                'choices': choices
+            })
 
-#                 Velhia.camp(m, e, p, s)
+            self.algorithm_db.update(sa.info['_id'], json.dumps(sa.info))
+            self.match_db.update(match.info['_id'], json.dumps(match.info))
 
-#                 if not game:
-#                     i = Velhia.check_input(m)
-#                     m[i] = p[1]
-#                 else:
-#                     pass
+            #         ENDGAME = False
+            #         NEW_GAME = False
+            #         try:
+            #             while not ENDGAME:
 
-#                 game = Velhia.check_game(m, p, s)
-#                 Velhia.camp(m, e, p, s)
+            #                 while not NEW_GAME:
+            #                     NEW_GAME = Velhia.play_sa(
+            #                         MOVES, EMPTY, PLAYER1, STATISTICAL)
 
-#                 if not game:
-#                     i = doppler_sa.doppler_sa(m)
-#                     m[i] = s[1]
+            #                 if NEW_GAME[1] == PLAYER1:
+            #                     count_player1 += 1
+            #                 else:
+            #                     count_player2 += 1
 
-#                 game = Velhia.check_game(m, p, s)
+            #                 print("\n Player 1: {} \t Player 2: {}".format(
+            #                     count_player1, count_player2))
+            #                 NEW_GAME = NEW_GAME[0]
 
-#             return game
+            #                 RESULT = input("Do you wanna play again Y/N? ")
+            #                 RESULT = RESULT.upper()
 
-#         except Exception as e:
-#             raise e
+            #                 if RESULT == 'Y':
 
-#     def play_play(self, m, e, p, s):
-#         """
-#         This method will call when the player wanna play with s.a (statistical algorithm)
-#         :param m: moves until now
-#         :param e: value of empty places
-#         :param p: value and character's player1
-#         :param s: value and character's player2
-#         :return: True when player or s.a win a game
-#         """
-#         game = False
+            #                     ENDGAME = False
+            #                     NEW_GAME = False
+            #                     Velhia.clean_game(MOVES)
 
-#         try:
+            #                 elif RESULT == "N":
 
-#             while not game:
+            #                     ENDGAME = True
 
-#                 Velhia.camp(m, e, p, s)
+            #                 else:
+            #                     pass
 
-#                 if not game:
-#                     i = Velhia.check_input(m)
-#                     m[i] = p[1]
-#                 else:
-#                     pass
+            #                 print("Thank you for play!")
 
-#                 game = Velhia.check_game(m, p, s)
-#                 Velhia.camp(m, e, p, s)
+            #         except Exception as e:
+            #             raise e
 
-#                 if not game:
-#                     i = Velhia.check_input(m)
-#                     m[i] = s[1]
+            #    def play_sa(self, m, e, p, s):
+            #         """
+            #         This method will call when the player wanna play with s.a (statistical algorithm)
+            #         :param m: moves until now
+            #         :param e: value of empty places
+            #         :param p: value and character's player1
+            #         :param s: value and character's player2
+            #         :return: True when player or s.a win a game
+            #         """
+            #         game = False
+            #         doppler_sa = Doppler10(s, p)
 
-#                 game = Velhia.check_game(m, p, s)
+            #         try:
 
-#             return game
+            #             while not game:
 
-#         except Exception as e:
-#             raise e
+            #                 Velhia.camp(m, e, p, s)
 
+            #                 if not game:
+            #                     i = Velhia.check_input(m)
+            #                     m[i] = p[1]
+            #                 else:
+            #                     pass
 
-#     def check_input(self, m):
-#         """
-#         check if the player or s.a choose a correct input
-#         :param m: moves until now
-#         :return: the position to add in moves
-#         """
+            #                 game = Velhia.check_game(m, p, s)
+            #                 Velhia.camp(m, e, p, s)
 
-#         try:
-#             i = -2
+            #                 if not game:
+            #                     i = doppler_sa.doppler_sa(m)
+            #                     m[i] = s[1]
 
-#             if -1 not in m:
-#                 print('the game is draw!')
-#                 print('Restarting...')
-#                 print('change who will begin the game...')
-#                 Velhia.clean_game(m)
-#             else:
-#                 pass
+            #                 game = Velhia.check_game(m, p, s)
 
-#             while i not in m:
+            #             return game
 
-#                 i = int(input('Witch position do you wanna play? '))
+            #         except Exception as e:
+            #             raise e
 
-#                 if i < 1 or i > 9:
-#                     print("\n There isn't this position!!!")
-#                     i = -2
-#                     continue
-#                 else:
-#                     if m[i-1] != -1:
-#                         print('\n this position was chosen!!!')
-#                         i = -2
-#                     else:
-#                         return i - 1
+            #     def play_play(self, m, e, p, s):
+            #         """
+            #         This method will call when the player wanna play with s.a (statistical algorithm)
+            #         :param m: moves until now
+            #         :param e: value of empty places
+            #         :param p: value and character's player1
+            #         :param s: value and character's player2
+            #         :return: True when player or s.a win a game
+            #         """
+            #         game = False
 
-#         except Exception as e:
-#             raise e
+            #         try:
 
+            #             while not game:
 
-#     def check_game(self, m, p, s):
-#         """
-#         :param m: moves until now
-#         :param p: value and character's player1
-#         :param s: value and character's player2
-#         :return: True and print who won the game
-#         """
-#         try:
-#             checklist = [[m[0], m[1], m[2]],
-#                          [m[3], m[4], m[5]],
-#                          [m[6], m[7], m[8]],
-#                          [m[0], m[3], m[6]],
-#                          [m[1], m[4], m[7]],
-#                          [m[2], m[5], m[8]],
-#                          [m[0], m[4], m[8]],
-#                          [m[2], m[4], m[6]]]
+            #                 Velhia.camp(m, e, p, s)
 
-#             for x in checklist:
+            #                 if not game:
+            #                     i = Velhia.check_input(m)
+            #                     m[i] = p[1]
+            #                 else:
+            #                     pass
 
-#                 if x == [1, 1, 1]:
+            #                 game = Velhia.check_game(m, p, s)
+            #                 Velhia.camp(m, e, p, s)
 
-#                     if p[1] == x[0]:
-#                         print("Player 1 win!")
-#                         return True, p
-#                     else:
-#                         print("Player 2 win!")
-#                         return True, s
+            #                 if not game:
+            #                     i = Velhia.check_input(m)
+            #                     m[i] = s[1]
 
-#                 elif x == [0, 0, 0]:
+            #                 game = Velhia.check_game(m, p, s)
 
-#                     if p[1] == x[0]:
-#                         print("Player 1 win!")
-#                         return True, p
-#                     else:
-#                         print("Player 2 win!")
-#                         return True, s
+            #             return game
 
-#                 else:
-#                     pass
+            #         except Exception as e:
+            #             raise e
 
-#             return False
+            #     def check_input(self, m):
+            #         """
+            #         check if the player or s.a choose a correct input
+            #         :param m: moves until now
+            #         :return: the position to add in moves
+            #         """
 
-#         except Exception as e:
-#             raise e
+            #         try:
+            #             i = -2
 
+            #             if -1 not in m:
+            #                 print('the game is draw!')
+            #                 print('Restarting...')
+            #                 print('change who will begin the game...')
+            #                 Velhia.clean_game(m)
+            #             else:
+            #                 pass
 
-#     def clean_game(self, m):
-#         """
-#         :param m: moves until now
-#         :return: a new field to play (only -1 / '')
-#         """
+            #             while i not in m:
 
-#         for x in range(0, len(m)):
-#             m[x] = -1
+            #                 i = int(input('Witch position do you wanna play? '))
+
+            #                 if i < 1 or i > 9:
+            #                     print("\n There isn't this position!!!")
+            #                     i = -2
+            #                     continue
+            #                 else:
+            #                     if m[i-1] != -1:
+            #                         print('\n this position was chosen!!!')
+            #                         i = -2
+            #                     else:
+            #                         return i - 1
+
+            #         except Exception as e:
+            #             raise e
+
+            #     def check_game(self, m, p, s):
+            #         """
+            #         :param m: moves until now
+            #         :param p: value and character's player1
+            #         :param s: value and character's player2
+            #         :return: True and print who won the game
+            #         """
+            #         try:
+            #             checklist = [[m[0], m[1], m[2]],
+            #                          [m[3], m[4], m[5]],
+            #                          [m[6], m[7], m[8]],
+            #                          [m[0], m[3], m[6]],
+            #                          [m[1], m[4], m[7]],
+            #                          [m[2], m[5], m[8]],
+            #                          [m[0], m[4], m[8]],
+            #                          [m[2], m[4], m[6]]]
+
+            #             for x in checklist:
+
+            #                 if x == [1, 1, 1]:
+
+            #                     if p[1] == x[0]:
+            #                         print("Player 1 win!")
+            #                         return True, p
+            #                     else:
+            #                         print("Player 2 win!")
+            #                         return True, s
+
+            #                 elif x == [0, 0, 0]:
+
+            #                     if p[1] == x[0]:
+            #                         print("Player 1 win!")
+            #                         return True, p
+            #                     else:
+            #                         print("Player 2 win!")
+            #                         return True, s
+
+            #                 else:
+            #                     pass
+
+            #             return False
+
+            #         except Exception as e:
+            #             raise e
+
+            #     def clean_game(self, m):
+            #         """
+            #         :param m: moves until now
+            #         :return: a new field to play (only -1 / '')
+            #         """
+
+            #         for x in range(0, len(m)):
+            #             m[x] = -1

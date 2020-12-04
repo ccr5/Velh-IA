@@ -15,7 +15,6 @@ const AlgorithmSchema: Schema = new Schema<IAlgorithm>(
       }],
       environmentReaction: {
         type: String,
-        required: true,
         enum: Object.values(environmentReaction)
       }
     }],

@@ -1,12 +1,13 @@
 import os
 from config.database import Database
 from dotenv import load_dotenv, find_dotenv
+from datetime import datetime
 from requests import request
 from velhia import Velhia
 
 
 def play(vlh):
-    """ 
+    """
     Velh-IA Flow Control.
     Execute each step of Velh-IA workflow and keep Velh-IA works good.
     """
@@ -25,16 +26,21 @@ def play(vlh):
     print(game_status)
 
     if sequence[-1] == 'SA':
+        start = datetime.now()
         position = sa.play(game_status)
+        end = datetime.now()
+        time = end - start
         print(f'choose to play in the position { str(position + 1) }')
-        test = vlh.update_sa_match(match, sa, position)
-        print(test)
+        game_status[position] = 1
+        print(f'new game status: {game_status}')
+        vlh.update_sa_match(match, sa, game_status,
+                            position, start.ctime(), time.microseconds)
     else:
         print('Vez do SMA jogar')
 
 
 def main():
-    """ 
+    """
     Velh-IA's Main function.
     Load environment variables, check requirements and connections
     before to start the game

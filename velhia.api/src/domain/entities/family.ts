@@ -19,7 +19,6 @@ const FamilySchema: Schema = new Schema<IAgent>(
       }],
       environmentReaction: {
         type: String,
-        required: true,
         enum: Object.values(environmentReaction)
       }
     }],
