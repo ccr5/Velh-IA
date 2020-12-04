@@ -55,4 +55,4 @@ LinkedIn: https://www.linkedin.com/in/mattnobre/
 ------------
 ### Project Status
 
-**Statistical Algorithm:** Develop a statistical algorithm able to anticipate any move and even if they don't win, not losing
+**Multi Agent System:** Develop an MAS simulating according to the project proposal and storing all the data necessary for its operation and future insights
