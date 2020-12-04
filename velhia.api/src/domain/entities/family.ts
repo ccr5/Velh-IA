@@ -6,8 +6,8 @@ const FamilySchema: Schema = new Schema<IAgent>(
   {
     progenitor: { type: String, required: true },
     birth: { type: Date, required: true },
-    becomeLeader: { type: Date, required: true },
-    death: { type: Date, required: true },
+    becomeLeader: { type: Date },
+    death: { type: Date },
     life: { type: Number, required: true },
     memory: [{
       isLearner: { type: Boolean, required: true },
@@ -19,7 +19,6 @@ const FamilySchema: Schema = new Schema<IAgent>(
       }],
       environmentReaction: {
         type: String,
-        required: true,
         enum: Object.values(environmentReaction)
       }
     }],

@@ -7,7 +7,7 @@ import { winner } from '@enums/winners'
 const matchSchema: Schema = new Schema<IMatch>(
   {
     begin: { type: Date, required: true },
-    end: { type: Date, required: true },
+    end: { type: Date },
     time: { type: Number, required: true },
     sa: {
       playerId: { type: String, required: true },
