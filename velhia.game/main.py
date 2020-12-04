@@ -13,8 +13,8 @@ def play(vlh):
     """
 
     print('Getting data...')
-    (match, sa, education_leader, education_learner, religion_leader,
-     religion_learner, family_leader, family_learner) = vlh.get_data()
+    [match, sa, education_leader, education_learner, religion_leader,
+     religion_learner, family_leader, family_learner] = vlh.get_data()
     print('All datas was taked!')
 
     print('Get who has to play now')
@@ -30,12 +30,14 @@ def play(vlh):
         position = sa.play(game_status)
         end = datetime.now()
         time = end - start
+        time = time.microseconds / 1000000
         print(f'choose to play in the position { str(position + 1) }')
         game_status[position] = 1
         print(f'new game status: {game_status}')
-        vlh.update_sa_match(match, sa, game_status,
-                            position, start.ctime(), time.microseconds)
+        vlh.update_sa_match(match, sa, game_status, position,
+                            start.ctime(), time)
     else:
+        start = datetime.now()
         print('Vez do SMA jogar')
 
 
