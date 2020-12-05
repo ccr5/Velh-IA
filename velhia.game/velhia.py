@@ -55,9 +55,10 @@ class Velhia:
                 [family_leader, family_learner] = self.get_latest_agent(
                     self.family_db)
 
-                match = self.create_new_match(
+                match = self.add_new_match(
                     sa, family_leader, religion_leader, education_leader
                 )
+
                 mas = MultiAgentSystem(family_leader, family_learner, education_leader,
                                        education_learner, religion_leader, religion_learner)
             else:
@@ -73,19 +74,18 @@ class Velhia:
                     ('O', 0) if match.info['sa']['symbol'] == 'X' else ('X', 1))
 
                 [education_leader, education_learner] = self.get_latest_players(
-                    match.info['mas']['education'][-1], self.education_db)
+                    match, match.info['mas']['education'][-1], self.education_db)
 
                 [religion_leader, religion_learner] = self.get_latest_players(
-                    match.info['mas']['religion'][-1], self.religion_db)
+                    match, match.info['mas']['religion'][-1], self.religion_db)
 
                 [family_leader, family_learner] = self.get_latest_players(
-                    match.info['mas']['family'][-1], self.family_db)
+                    match, match.info['mas']['family'][-1], self.family_db)
 
                 mas = MultiAgentSystem(family_leader, family_learner, education_leader,
                                        education_learner, religion_leader, religion_learner)
 
-            return [match, sa, education_leader, education_learner, religion_leader,
-                    religion_learner, family_leader, family_learner, mas]
+            return [match, sa, mas]
         except:
             print('get_data() error', sys.exc_info())
 
@@ -137,7 +137,8 @@ class Velhia:
         """
 
         try:
-            if len(db.get_last(2).json()) < 2:
+            res = len(db.get_last(2).json())
+            if res < 2:
                 leader = Agent(db.create(json.dumps({
                     "birth": datetime.now().ctime(),
                     "progenitor": "I'm the first one, bitch ;)",
@@ -165,12 +166,11 @@ class Velhia:
 
                 return [leader, learner]
             else:
-                res = db.get_last(2).json()
                 return self.check_life(db, res)
         except:
             print('get_lastest_agent() error', sys.exc_info())
 
-    def get_latest_players(self, player, db):
+    def get_latest_players(self, match, player, db):
         """
         Get the lastest agents as of a match obj in the database
         :param player: `string` a player ID
@@ -190,14 +190,54 @@ class Velhia:
 
         try:
             res = db.get_last(2).json()
+
             if res[1]['_id'] == player['playerId']:
-                return self.check_life(db, res)
+                [leader, learner] = self.check_life(db, res)
+
+                if leader.info['_id'] == player['playerId']:
+                    return [leader, learner]
+                else:
+                    self.add_new_mas_player(match, player, leader)
+                    return [leader, learner]
+
             else:
                 raise SystemError()
         except:
             print('get_lastest_players() error', sys.exc_info())
 
-    def create_new_match(self, sa, family, religion, education):
+    def get_sequence(self, match):
+        """
+        Return who plays first
+        :param match: `Match` a Match object
+
+        Usage
+        >>> from velhia import Velhia
+        >>> sequence = velhia.get_sequence(match)
+        >>> print(sequence)
+
+        ['SA']
+        """
+
+        try:
+            last_match = self.match_db.get_last(2).json()
+
+            if match.info['_id'] == last_match[0]['_id']:
+
+                if len(match.info['plays']) == 0:
+                    return ['SA']
+                else:
+                    return ['MAS' if match.info['sa']['playerId'] == match.info['plays'][-1]['player'] else 'SA']
+
+            else:
+
+                if len(match.info['plays']) == 0:
+                    return ['SA']
+                else:
+                    return ['MAS' if last_match[0]['sa']['playerId'] == last_match[0]['plays'][0]['player'] else 'SA']
+        except:
+            print('get_sequence() error', sys.exc_info())
+
+    def add_new_match(self, sa, family, religion, education):
         """
         Create a new match in the database
         :param sa: `StatisticalAlgorithm` a SA obj
@@ -207,7 +247,7 @@ class Velhia:
 
         Usage
         >>> from velhia import Velhia
-        >>> match = velhia.create_new_match(sa, family, religion, education)
+        >>> match = velhia.add_new_match(sa, family, religion, education)
         >>> print(match)
 
         <classes.match.Match object at 0x7fe6de3287d0>
@@ -226,7 +266,21 @@ class Velhia:
 
             return match
         except:
-            print('create_new_match() error', sys.exc_info())
+            print('add_new_match() error', sys.exc_info())
+
+    def add_new_mas_player(self, match, old_leader, new_leader):
+
+        for institution in match.info['mas']:
+
+            if institution[-1] == old_leader:
+
+                obj = {
+                    'playerId': new_leader.info['_id'],
+                    'symbol': 'O'
+                }
+
+                match.info['mas']['family'].append(obj)
+                self.match_db.update(match.info['_id'], json.dumps(match.info))
 
     def check_life(self, db, agents):
         """
@@ -268,96 +322,6 @@ class Velhia:
             return [leader, learner]
         except:
             print('check_life() error', sys.exc_info())
-
-    def get_sequence(self, match):
-        """
-        Return who plays first
-        :param match: `Match` a Match object
-
-        Usage
-        >>> from velhia import Velhia
-        >>> sequence = velhia.get_sequence(match)
-        >>> print(sequence)
-
-        ['SA']
-        """
-
-        try:
-            last_match = self.match_db.get_last(2).json()
-
-            if match.info['_id'] == last_match[0]['_id']:
-
-                if len(match.info['plays']) == 0:
-                    return ['SA']
-                else:
-                    return ['MAS' if match.info['sa']['playerId'] == match.info['plays'][-1]['player'] else 'SA']
-
-            else:
-
-                if len(match.info['plays']) == 0:
-                    return ['SA']
-                else:
-                    return ['MAS' if last_match[0]['sa']['playerId'] == last_match[0]['plays'][0]['player'] else 'SA']
-        except:
-            print('get_sequence() error', sys.exc_info())
-
-    def game_status(self, match, saId):
-        """
-        Return a list with all plays of the match
-        :param match: `Match` a Match object
-        :param saId: `String` a ID of Statistical Algorithm Obj
-
-        Usage
-        >>> from velhia import Velhia
-        >>> game_status = velhia.game_status(match, '5fcaa7adb2cd0517560bdb5e')
-        >>> print(game_status)
-
-        [-1, 0, -1, -1, 1, -1, 0, -1, 1]
-        """
-
-        try:
-            game_status = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
-
-            for p in match.info['plays']:
-                if p['player'] == saId:
-                    game_status[p['position']] = 1
-                else:
-                    game_status[p['position']] = 0
-
-            return game_status
-
-        except:
-            print('game_status() error', sys.exc_info())
-
-    def sequence_list(self, game_status):
-        """
-        All sequence to win 
-        :param game_status: game status
-        :return: `list` matrix
-
-        Usage
-        >>> from sa import StatisticalAlgorithm
-        >>> sa = StatisticalAlgorithm(obj, ['X', 1], ['O', 0])
-        >>> ret = sa.sequence_list([-1,0,1,0,-1,1,0,-1,-1])
-        >>> ret
-        [
-            [-1, 0, 1],     [0, -1, 1], 
-            [0, -1, -1],    [-1, 0, 0], 
-            [0, -1, -1],    [1, 1, -1],
-            [-1, -1, -1],   [1, -1, 0]
-        ]
-        """
-        try:
-            return [[game_status[0], game_status[1], game_status[2]],
-                    [game_status[3], game_status[4], game_status[5]],
-                    [game_status[6], game_status[7], game_status[8]],
-                    [game_status[0], game_status[3], game_status[6]],
-                    [game_status[1], game_status[4], game_status[7]],
-                    [game_status[2], game_status[5], game_status[8]],
-                    [game_status[0], game_status[4], game_status[8]],
-                    [game_status[2], game_status[4], game_status[6]]]
-        except:
-            print('sequence_list() error', sys.exc_info())
 
     def check_win(self, player, moves):
         """
@@ -460,5 +424,63 @@ class Velhia:
         except:
             print('update_sa_match() error', sys.exc_info())
 
-    def update_mas_match():
+    def update_mas_match(self, match, mas, game_status, position, start, time):
         pass
+
+    def game_status(self, match, saId):
+        """
+        Return a list with all plays of the match
+        :param match: `Match` a Match object
+        :param saId: `String` a ID of Statistical Algorithm Obj
+
+        Usage
+        >>> from velhia import Velhia
+        >>> game_status = velhia.game_status(match, '5fcaa7adb2cd0517560bdb5e')
+        >>> print(game_status)
+
+        [-1, 0, -1, -1, 1, -1, 0, -1, 1]
+        """
+
+        try:
+            game_status = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
+
+            for p in match.info['plays']:
+                if p['player'] == saId:
+                    game_status[p['position']] = 1
+                else:
+                    game_status[p['position']] = 0
+
+            return game_status
+
+        except:
+            print('game_status() error', sys.exc_info())
+
+    def sequence_list(self, game_status):
+        """
+        All sequence to win 
+        :param game_status: game status
+        :return: `list` matrix
+
+        Usage
+        >>> from sa import StatisticalAlgorithm
+        >>> sa = StatisticalAlgorithm(obj, ['X', 1], ['O', 0])
+        >>> ret = sa.sequence_list([-1,0,1,0,-1,1,0,-1,-1])
+        >>> ret
+        [
+            [-1, 0, 1],     [0, -1, 1], 
+            [0, -1, -1],    [-1, 0, 0], 
+            [0, -1, -1],    [1, 1, -1],
+            [-1, -1, -1],   [1, -1, 0]
+        ]
+        """
+        try:
+            return [[game_status[0], game_status[1], game_status[2]],
+                    [game_status[3], game_status[4], game_status[5]],
+                    [game_status[6], game_status[7], game_status[8]],
+                    [game_status[0], game_status[3], game_status[6]],
+                    [game_status[1], game_status[4], game_status[7]],
+                    [game_status[2], game_status[5], game_status[8]],
+                    [game_status[0], game_status[4], game_status[8]],
+                    [game_status[2], game_status[4], game_status[6]]]
+        except:
+            print('sequence_list() error', sys.exc_info())

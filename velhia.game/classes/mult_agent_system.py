@@ -18,8 +18,16 @@ class MultiAgentSystem:
     def play(self, game_status):
 
         family_position = self.family_leader.play(game_status)
+        self.family_leader.teach(
+            self.family_learner, game_status, family_position)
+
         education_position = self.education_leader.play(game_status)
+        self.education_leader.teach(
+            self.education_learner, game_status, education_position)
+
         religion_position = self.religion_leader.play(game_status)
+        self.education_leader.teach(
+            self.religion_learner, game_status, religion_position)
 
         if family_position in [education_position, religion_position]:
             return family_position
