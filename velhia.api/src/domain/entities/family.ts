@@ -10,6 +10,7 @@ const FamilySchema: Schema = new Schema<IAgent>(
     death: { type: Date },
     life: { type: Number, required: true },
     memory: [{
+      matchId: { type: String, required: true },
       isLearner: { type: Boolean, required: true },
       choices: [{
         dateRequest: { type: Date, required: true },

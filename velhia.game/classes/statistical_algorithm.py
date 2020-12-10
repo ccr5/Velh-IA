@@ -13,7 +13,7 @@ class StatisticalAlgorithm:
         self.info = obj
         self.char = my_char
         self.enemy = my_enemy
-        self.empty = ['', 0]
+        self.empty = ['', -1]
 
     def play(self, moves):
         """

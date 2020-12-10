@@ -404,10 +404,7 @@ class Velhia:
                     'position': position
                 })
 
-                choices = sa.info['memory']['choices'] if len(
-                    sa.info['memory']) > 0 else []
-
-                choices.append({
+                sa.info['memory']['choices'].append({
                     'dateRequest': start,
                     'gameStatus': game_status,
                     'timeToAct': time,
@@ -425,7 +422,84 @@ class Velhia:
             print('update_sa_match() error', sys.exc_info())
 
     def update_mas_match(self, match, mas, game_status, position, start, time):
-        pass
+
+        try:
+            results = self.sequence_list(game_status)
+
+            if self.check_win(mas, results):
+                match.info['plays'].append({
+                    'seq': len(match.info['plays']) + 1,
+                    'player': 'MAS',
+                    'time': time,
+                    'position': position
+                })
+                match.info['status'] = 'WINNER'
+                match.info['winner'] = 'MAS'
+
+                mas.family_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
+                mas.family_leader.info['matchsAsLeader']: mas.family_leader.info['matchsAsLeader'] + 1
+                mas.family_leader.info['victories']: mas.family_leader.info['victories'] + 1
+
+                mas.education_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
+                mas.education_leader.info['matchsAsLeader']: mas.education_leader.info['matchsAsLeader'] + 1
+                mas.education_leader.info['victories']: mas.education_leader.info['victories'] + 1
+
+                mas.religion_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
+                mas.religion_leader.info['matchsAsLeader']: mas.religion_leader.info['matchsAsLeader'] + 1
+                mas.religion_leader.info['victories']: mas.religion_leader.info['victories'] + 1
+
+                mas.family_learner.info['matchsAsLearner']: mas.family_learner.info['matchsAsLearner'] + 1
+                mas.education_learner.info['matchsAsLearner']: mas.education_learner.info['matchsAsLearner'] + 1
+                mas.religion_learner.info['matchsAsLearner']: mas.religion_learner.info['matchsAsLearner'] + 1
+
+                self.family_db.update(
+                    mas.family_leader.info['_id'], json.dumps(mas.family_leader.info))
+
+                self.family_db.update(
+                    mas.family_learner.info['_id'], json.dumps(mas.family_learner.info))
+
+                self.education_db.update(
+                    mas.education_leader.info['_id'], json.dumps(mas.education_leader.info))
+
+                self.education_db.update(
+                    mas.education_learner.info['_id'], json.dumps(mas.education_learner.info))
+
+                self.religion_db.update(
+                    mas.religion_leader.info['_id'], json.dumps(mas.religion_leader.info))
+
+                self.religion_db.update(
+                    mas.religion_learner.info['_id'], json.dumps(mas.religion_learner.info))
+
+                self.match_db.update(match.info['_id'], json.dumps(match.info))
+            else:
+                match.info['plays'].append({
+                    'seq': len(match.info['plays']) + 1,
+                    'player': 'MAS',
+                    'time': time,
+                    'position': position
+                })
+
+                self.family_db.update(
+                    mas.family_leader.info['_id'], json.dumps(mas.family_leader.info))
+
+                self.family_db.update(
+                    mas.family_learner.info['_id'], json.dumps(mas.family_learner.info))
+
+                self.education_db.update(
+                    mas.education_leader.info['_id'], json.dumps(mas.education_leader.info))
+
+                self.education_db.update(
+                    mas.education_learner.info['_id'], json.dumps(mas.education_learner.info))
+
+                self.religion_db.update(
+                    mas.religion_leader.info['_id'], json.dumps(mas.religion_leader.info))
+
+                self.religion_db.update(
+                    mas.religion_learner.info['_id'], json.dumps(mas.religion_learner.info))
+
+                self.match_db.update(match.info['_id'], json.dumps(match.info))
+        except:
+            print('update_mas_match() error', sys.exc_info())
 
     def game_status(self, match, saId):
         """

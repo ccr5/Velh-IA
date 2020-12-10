@@ -7,7 +7,7 @@ from requests import request
 from velhia import Velhia
 
 
-def play(file):
+def play():
     """
     Velh-IA Flow Control.
     Execute each step of Velh-IA workflow and keeps Velh-IA working good.
@@ -25,68 +25,47 @@ def play(file):
         while True:
 
             print('Taking the necessary data to start another play')
-            file.write('Taking the necessary data to start another play')
-
             [match, sa, mas] = vlh.get_data()
             print('All data was taken', match.info)
-            file.write('All data was taken: ' + str(match.info))
 
             print('Get the next player')
-            file.write('Get the next player')
-
             sequence = vlh.get_sequence(match)
             print("Next player: " + sequence[-1])
-            file.write("Next player: " + sequence[-1])
 
             print('Getting game status')
-            file.write('Getting game status')
             game_status = vlh.game_status(match, sa.info['_id'])
             print('the game status was taken', game_status)
-            file.write('the game status was taken: ' + str(game_status))
 
             if sequence[-1] == 'SA':
                 start = datetime.now()
                 print('Started to play at ' + str(start.date()))
-                file.write('Started to play at ' + str(start.ctime()))
                 position = sa.play(game_status)
                 end = datetime.now()
                 print('Ended at ' + str(end.date()))
-                file.write('Ended at ' + str(end.ctime()))
                 time = end - start
                 time = time.microseconds / 1000000
                 print('time to play: ' + str(time))
-                file.write('time to play: ' + str(time))
                 print(f'choose to play in the position { str(position + 1) }')
-                file.write(
-                    f'choose to play in the position { str(position + 1) }')
                 game_status[position] = 1
                 print(f'new game status: {game_status}')
-                file.write(f'new game status: {str(game_status)}')
                 vlh.update_sa_match(match, sa, game_status, position,
                                     start.ctime(), time)
                 print('next move')
-                file.write('next move')
             else:
                 start = datetime.now()
                 print('Started to play at ' + str(start.date()))
-                file.write('Started to play at ' + str(start.ctime()))
-                position = mas.play(game_status)
+                position = mas.play(match, game_status)
                 end = datetime.now()
                 print('Ended at ' + str(end.date()))
-                file.write('Ended at ' + str(end.ctime()))
                 time = end - start
                 time = time.microseconds / 1000000
                 print('time to play: ' + str(time))
-                file.write('time to play: ' + str(time))
                 print(f'choose to play in the position { str(position + 1) }')
-                file.write(
-                    f'choose to play in the position { str(position + 1) }')
-                game_status[position] = 1
+                game_status[position] = 0
                 print(f'new game status: {str(game_status)}')
-                file.write(f'new game status: {str(game_status)}')
-                # vlh.update_mas_match()
+                vlh.update_mas_match(match, mas, game_status, position,
+                                     start.ctime(), time)
                 print('next move')
-                file.write('next move')
     except:
         print('Play() Error: ', sys.exc_info())
 
@@ -108,14 +87,11 @@ def main():
             'message': 'Welcome Velh-IA API'} else print("Can't connect with Velh-IA API")
 
         print('Creating log file')
-        f = open(f'{datetime.now()}.txt', 'w')
 
         print('Starting Velh-IA Game')
         print('Today is ' + str(datetime.now()))
 
-        f.write('Today is ' + str(datetime.now()) + '\n')
-
-        play(f)
+        play()
     except:
         print('Error to starting Velh-IA Game (main.py)', sys.exc_info())
 

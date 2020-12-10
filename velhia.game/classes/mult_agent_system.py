@@ -8,6 +8,7 @@ class MultiAgentSystem:
                  education_leader, education_learner,
                  religion_leader, religion_learner
                  ):
+        self.char = [['O', 0]]
         self.family_leader = family_leader
         self.family_learner = family_learner
         self.education_leader = education_leader
@@ -15,27 +16,22 @@ class MultiAgentSystem:
         self.religion_leader = religion_leader
         self.religion_learner = religion_learner
 
-    def play(self, game_status):
+    def play(self, match, game_status):
 
-        family_position = self.family_leader.play(game_status)
-        self.family_leader.teach(
-            self.family_learner, game_status, family_position)
+        family_position = self.family_leader.play(match, game_status)
+        self.family_learner.learn(match, game_status, family_position)
 
-        education_position = self.education_leader.play(game_status)
-        self.education_leader.teach(
-            self.education_learner, game_status, education_position)
+        education_position = self.education_leader.play(match, game_status)
+        self.education_learner.learn(match, game_status, education_position)
 
-        religion_position = self.religion_leader.play(game_status)
-        self.education_leader.teach(
-            self.religion_learner, game_status, religion_position)
+        religion_position = self.religion_leader.play(match, game_status)
+        self.religion_learner.learn(match, game_status, religion_position)
 
         if family_position in [education_position, religion_position]:
             return family_position
-
-        if education_position in [family_position, religion_position]:
+        elif education_position in [family_position, religion_position]:
             return education_position
-
-        if religion_position in [family_position, education_position]:
+        elif religion_position in [family_position, education_position]:
             return religion_position
-
-        return r.choice([family_position, education_position, religion_position])
+        else:
+            return r.choice([family_position, education_position, religion_position])
