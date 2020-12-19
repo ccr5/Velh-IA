@@ -57,6 +57,8 @@ class MultiAgentSystem:
             self.religion_learner.learn(
                 match, game_status, religion_position)
 
+            return education_position
+
         elif family_position == education_position:
             self.family_leader.memorize(
                 match, game_status, family_start, family_end, family_position)

@@ -26,7 +26,7 @@ def play():
 
             print('Taking the necessary data to start another play')
             [match, sa, mas] = vlh.get_data()
-            print('All data was taken', match.info)
+            print('All data was taken')
 
             print('Get the next player')
             sequence = vlh.get_sequence(match)

@@ -381,13 +381,16 @@ class Velhia:
             sa.info['draw'] += 1
 
             mas.family_leader.info['memory'][-1]['environmentReaction'] = 'DRAW'
-            mas.family_learner.info['draw'] += 1
+            mas.family_learner.info['memory'][-1]['environmentReaction'] = 'DRAW'
+            mas.family_leader.info['draw'] += 1
 
             mas.education_leader.info['memory'][-1]['environmentReaction'] = 'DRAW'
-            mas.education_learner.info['draw'] += 1
+            mas.education_learner.info['memory'][-1]['environmentReaction'] = 'DRAW'
+            mas.education_leader.info['draw'] += 1
 
             mas.religion_leader.info['memory'][-1]['environmentReaction'] = 'DRAW'
-            mas.religion_learner.info['draw'] += 1
+            mas.religion_learner.info['memory'][-1]['environmentReaction'] = 'DRAW'
+            mas.religion_leader.info['draw'] += 1
 
             self.update_mas(mas)
             self.algorithm_db.update(sa.info['_id'], json.dumps(sa.info))
@@ -454,7 +457,7 @@ class Velhia:
                     match.info['winner'] = 'SA'
 
                     sa.info['memory'][-1]['environmentReaction'] = 'WINNER'
-                    sa.info['victories']: sa.info['victories'] + 1
+                    sa.info['victories'] += 1
 
                     mas.family_leader.info['memory'][-1]['environmentReaction'] = 'LOSER'
                     mas.education_leader.info['memory'][-1]['environmentReaction'] = 'LOSER'
@@ -464,9 +467,14 @@ class Velhia:
                     mas.education_leader.info['defeats'] += 1
                     mas.religion_leader.info['defeats'] += 1
 
-                    mas.family_leader.info['life'] -= 1
-                    mas.education_leader.info['life'] -= 1
-                    mas.religion_leader.info['life'] -= 1
+                    plays = 5 if match.info['plays'][0]['player'] == 'MAS' else 4
+
+                    mas.family_leader.info['life'] -= len(
+                        mas.family_leader.info['memory'][-1]['choices']) / plays
+                    mas.education_leader.info['life'] -= len(
+                        mas.education_leader.info['memory'][-1]['choices']) / plays
+                    mas.religion_leader.info['life'] -= len(
+                        mas.religion_leader.info['memory'][-1]['choices']) / plays
 
                     self.update_mas(mas)
 
@@ -496,13 +504,13 @@ class Velhia:
                     match.info['winner'] = 'MAS'
 
                     mas.family_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
-                    mas.family_leader.info['victories']: mas.family_leader.info['victories'] + 1
+                    mas.family_leader.info['victories'] += 1
 
                     mas.education_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
-                    mas.education_leader.info['victories']: mas.education_leader.info['victories'] + 1
+                    mas.education_leader.info['victories'] += 1
 
                     mas.religion_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
-                    mas.religion_leader.info['victories']: mas.religion_leader.info['victories'] + 1
+                    mas.religion_leader.info['victories'] += 1
 
                     sa.info['memory'][-1]['environmentReaction'] = 'LOSER'
                     sa.info['defeats'] += 1
