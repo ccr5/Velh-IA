@@ -43,7 +43,7 @@ class Velhia:
 
             if len(last_match) == 0 or last_match[0]['status'] != 'PENDENT':
                 sa = self.get_lastest_sa()
-                sa.info['matchs']: sa.info['matchs'] + 1
+                sa.info['matchs'] += 1
 
                 [education_leader, education_learner] = self.get_latest_agent(
                     self.education_db)
@@ -65,7 +65,7 @@ class Velhia:
 
                 match = self.add_new_match(sa, mas)
                 self.add_new_memory(match, sa, mas)
-                self.update_mas()
+                self.update_mas(mas)
                 self.algorithm_db.update(sa.info['_id'], json.dumps(sa.info))
 
             else:
@@ -389,7 +389,7 @@ class Velhia:
             mas.religion_leader.info['memory'][-1]['environmentReaction'] = 'DRAW'
             mas.religion_learner.info['draw'] += 1
 
-            self.update_mas()
+            self.update_mas(mas)
             self.algorithm_db.update(sa.info['_id'], json.dumps(sa.info))
             self.match_db.update(match.info['_id'], json.dumps(match.info))
 
@@ -468,7 +468,7 @@ class Velhia:
                     mas.education_leader.info['life'] -= 1
                     mas.religion_leader.info['life'] -= 1
 
-                    self.update_mas()
+                    self.update_mas(mas)
 
                 else:
                     match.info['plays'].append({

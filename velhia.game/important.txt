@@ -3,3 +3,6 @@
 * Se eu parto do principio que get_data é o ínicio do ciclo, tudo deve estar pronto para recomeçar, ou seja, 
 a partida anterior deve ter um resultado, os jogadores anteriores devem estar com a memória completa e os indicadores atualizados
 e é nesse método onde deve ser criado as memórias de uma nova partida, verificado se os agentes estão vivos e afins
+
+Verificar quando realmente um agente deve memorizar a jogada tendo em vista que não serão todas as jogadas e as 
+posições escolhidas que vão ser retornar para o ambiente. Sendo injusto reduzir a sua vida ou manter a memória

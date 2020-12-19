@@ -13,31 +13,13 @@ class Agent:
         self.info = obj
         self.char = my_char
 
-    def play(self, match, game_status):
+    def remember(self, match, game_status):
 
-        if len(self.info['memory']) == 0:
-            start = datetime.now()
+        if len(self.info['memory'][-1]['choices']) == 0:
             position = r.choice([0, 1, 2, 3, 4, 5, 6, 7, 8])
-            end = datetime.now()
-            time = end - start
-            time = time.microseconds / 1000000
-
-            new_memory = {
-                'matchId': match.info['_id'],
-                'isLearner': False,
-                'choices': [{
-                    'dateRequest': start.ctime(),
-                    'gameStatus': game_status,
-                    'timeToAct': time,
-                    'action': position
-                }]
-            }
-
-            self.info['memory'].append(new_memory)
             return position
 
         elif self.info['memory'][-1]['matchId'] == match.info['_id']:
-            start = datetime.now()
             searching = True
             position = -1
             memory_lenght = len(self.info['memory'])
@@ -46,7 +28,7 @@ class Agent:
 
                 for memory in reversed(self.info['memory']):
 
-                    for choices in self.info['choices']:
+                    for choices in memory['choices']:
 
                         if choices['gameStatus'] == game_status:
                             position = choices['position']
@@ -56,72 +38,39 @@ class Agent:
 
             if position == -1:
                 position = r.choice([0, 1, 2, 3, 4, 5, 6, 7, 8])
-                end = datetime.now()
-                time = end - start
-                time = time.microseconds / 1000000
-
-                new_choices = {
-                    'dateRequest': start.ctime(),
-                    'gameStatus': game_status,
-                    'timeToAct': time,
-                    'action': position
-                }
-
-                self.info['memory']['choices'].append(new_choices)
                 return position
 
             else:
-                end = datetime.now()
-                time = end - start
-                time = time.microseconds / 1000000
-
-                new_choices = {
-                    'dateRequest': start.ctime(),
-                    'gameStatus': game_status,
-                    'timeToAct': time,
-                    'action': position
-                }
-
-                self.info['memory']['choices'].append(new_choices)
                 return position
         else:
             raise SystemError
 
+    def memorize(self, match, game_status, start, end, position):
+
+        time = end - start
+        time = time.microseconds / 1000000
+
+        self.info['memory'][-1]['choices'].append({
+            'dateRequest': start.ctime(),
+            'gameStatus': game_status,
+            'timeToAct': time,
+            'action': position
+        })
+
     def learn(self, match, game_status, position):
 
-        if len(self.info['memory']) == 0:
+        if self.info['memory'][-1]['matchId'] == match.info['_id']:
             start = datetime.now()
             end = datetime.now()
             time = end - start
             time = time.microseconds / 1000000
 
-            new_memory = {
-                'matchId': match.info['_id'],
-                'isLearner': True,
-                'choices': [{
-                    'dateRequest': start.ctime(),
-                    'gameStatus': game_status,
-                    'timeToAct': time,
-                    'action': position
-                }]
-            }
-
-            self.info['memory'].append(new_memory)
-
-        elif self.info['memory'][-1]['matchId'] == match.info['_id']:
-            start = datetime.now()
-            end = datetime.now()
-            time = end - start
-            time = time.microseconds / 1000000
-
-            new_choices = {
+            self.info['memory'][-1]['choices'].append({
                 'dateRequest': start.ctime(),
                 'gameStatus': game_status,
                 'timeToAct': time,
                 'action': position
-            }
-
-            self.info['memory']['choices'].append(new_choices)
+            })
 
         else:
             raise SystemError

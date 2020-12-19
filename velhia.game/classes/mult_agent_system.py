@@ -1,4 +1,5 @@
 import random as r
+from datetime import datetime
 
 
 class MultiAgentSystem:
@@ -18,29 +19,101 @@ class MultiAgentSystem:
 
     def play(self, match, game_status):
 
-        family_position = self.family_leader.play(match, game_status)
-        self.family_learner.learn(match, game_status, family_position)
+        family_start = datetime.now()
+        validation = False
+        while not validation:
+            family_position = self.family_leader.remember(match, game_status)
+            validation = True if game_status[family_position] == -1 else False
+        family_end = datetime.now()
 
-        education_position = self.education_leader.play(match, game_status)
-        self.education_learner.learn(match, game_status, education_position)
+        education_start = datetime.now()
+        validation = False
+        while not validation:
+            education_position = self.education_leader.remember(
+                match, game_status)
+            validation = True if game_status[education_position] == -1 else False
+        education_end = datetime.now()
 
-        religion_position = self.religion_leader.play(match, game_status)
-        self.religion_learner.learn(match, game_status, religion_position)
+        religion_start = datetime.now()
+        validation = False
+        while not validation:
+            religion_position = self.religion_leader.remember(
+                match, game_status)
+            validation = True if game_status[religion_position] == -1 else False
+        religion_end = datetime.now()
 
-        if family_position in [education_position, religion_position]:
+        if family_position == education_position == religion_position:
+            self.family_leader.memorize(
+                match, game_status, family_start, family_end, family_position)
+            self.family_learner.learn(match, game_status, family_position)
+
+            self.education_leader.memorize(
+                match, game_status, education_start, education_end, education_position)
+            self.education_learner.learn(
+                match, game_status, education_position)
+
+            self.religion_leader.memorize(
+                match, game_status, religion_start, religion_end, religion_position)
+            self.religion_learner.learn(
+                match, game_status, religion_position)
+
+        elif family_position == education_position:
+            self.family_leader.memorize(
+                match, game_status, family_start, family_end, family_position)
+            self.family_learner.learn(match, game_status, family_position)
+
+            self.education_leader.memorize(
+                match, game_status, education_start, education_end, education_position)
+            self.education_learner.learn(
+                match, game_status, education_position)
+
             return family_position
-        elif education_position in [family_position, religion_position]:
-            return education_position
-        elif religion_position in [family_position, education_position]:
+
+        elif family_position == religion_position:
+            self.family_leader.memorize(
+                match, game_status, family_start, family_end, family_position)
+            self.family_learner.learn(match, game_status, family_position)
+
+            self.religion_leader.memorize(
+                match, game_status, religion_start, religion_end, religion_position)
+            self.religion_learner.learn(
+                match, game_status, religion_position)
+
             return religion_position
+
+        elif education_position == religion_position:
+            self.religion_leader.memorize(
+                match, game_status, religion_start, religion_end, religion_position)
+            self.religion_learner.learn(match, game_status, religion_position)
+
+            self.education_leader.memorize(
+                match, game_status, education_start, education_end, education_position)
+            self.education_learner.learn(
+                match, game_status, education_position)
+
+            return education_position
+
         else:
-            return r.choice([family_position, education_position, religion_position])
+            position = r.choice(
+                [family_position, education_position, religion_position])
 
-    def clear_latest_play(self):
+            if position == family_position:
+                self.family_leader.memorize(
+                    match, game_status, family_start, family_end, family_position)
+                self.family_learner.learn(match, game_status, family_position)
 
-        del(self.family_leader['memory'][-1]['choices'][-1])
-        del(self.family_learner['memory'][-1]['choices'][-1])
-        del(self.education_leader['memory'][-1]['choices'][-1])
-        del(self.education_learner['memory'][-1]['choices'][-1])
-        del(self.religion_leader['memory'][-1]['choices'][-1])
-        del(self.religion_learner['memory'][-1]['choices'][-1])
+            elif position == education_position:
+                self.education_leader.memorize(
+                    match, game_status, education_start, education_end, education_position)
+                self.education_learner.learn(
+                    match, game_status, education_position)
+
+            elif position == religion_position:
+                self.religion_leader.memorize(
+                    match, game_status, religion_start, religion_end, religion_position)
+                self.religion_learner.learn(
+                    match, game_status, religion_position)
+            else:
+                raise SystemError
+
+            return position
