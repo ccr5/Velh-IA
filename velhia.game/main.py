@@ -46,33 +46,23 @@ def play():
                 time = time.microseconds / 1000000
                 print('time to play: ' + str(time))
                 print(f'choose to play in the position { str(position + 1) }')
-                vlh.update_sa_match(match, sa, game_status, position,
-                                    start.ctime(), time)
-                print('next move')
             else:
                 start = datetime.now()
                 print('Started to play at ' + str(start.date()))
-                valid_position = False
-
-                while not valid_position:
-                    position = mas.play(match, game_status)
-                    valid_position = vlh.check_position(
-                        position, game_status)
-
-                    if valid_position:
-                        pass
-                    else:
-                        mas.clear_lastest_play()
-
+                position = mas.play(match, game_status)
                 end = datetime.now()
                 print('Ended at ' + str(end.date()))
                 time = end - start
                 time = time.microseconds / 1000000
                 print('time to play: ' + str(time))
                 print(f'choose to play in the position { str(position + 1) }')
-                vlh.update_mas_match(match, mas, game_status, position,
-                                     start.ctime(), time)
-                print('next move')
+
+            vlh.update_match(match, sa, mas,
+                             sequence[-1], game_status, position,
+                             start.ctime(), time)
+
+            vlh.check_draw(match, sa, mas)
+            print('next move')
     except:
         print('Play() Error: ', sys.exc_info())
 
