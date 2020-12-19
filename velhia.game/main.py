@@ -58,8 +58,7 @@ def play():
                 print(f'choose to play in the position { str(position + 1) }')
 
             vlh.update_match(match, sa, mas,
-                             sequence[-1], game_status, position,
-                             start.ctime(), time)
+                             sequence[-1], game_status, position, time)
 
             vlh.check_draw(match, sa, mas)
             print('next move')

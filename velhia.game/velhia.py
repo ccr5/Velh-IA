@@ -389,6 +389,10 @@ class Velhia:
             mas.religion_leader.info['memory'][-1]['environmentReaction'] = 'DRAW'
             mas.religion_learner.info['draw'] += 1
 
+            self.update_mas()
+            self.algorithm_db.update(sa.info['_id'], json.dumps(sa.info))
+            self.match_db.update(match.info['_id'], json.dumps(match.info))
+
         else:
             pass
 
@@ -414,7 +418,7 @@ class Velhia:
         except:
             print('update_mas() error', sys.exc_info())
 
-    def update_match(self, match, sa, mas, sequence, game_status, position, start, time):
+    def update_match(self, match, sa, mas, sequence, game_status, position, time):
         """
         Update a Match object after a play
         :param match: `Match` a Match object
@@ -445,15 +449,9 @@ class Velhia:
                         'position': position
                     })
 
+                    match.info['end'] = datetime.now().ctime()
                     match.info['status'] = 'WINNER'
                     match.info['winner'] = 'SA'
-
-                    sa.info['memory'][-1]['choices'].append({
-                        'dateRequest': start,
-                        'gameStatus': game_status,
-                        'timeToAct': time,
-                        'action': position
-                    })
 
                     sa.info['memory'][-1]['environmentReaction'] = 'WINNER'
                     sa.info['victories']: sa.info['victories'] + 1
@@ -478,13 +476,6 @@ class Velhia:
                         'player': sa.info['_id'],
                         'time': time,
                         'position': position
-                    })
-
-                    sa.info['memory'][-1]['choices'].append({
-                        'dateRequest': start,
-                        'gameStatus': game_status,
-                        'timeToAct': time,
-                        'action': position
                     })
 
                 self.algorithm_db.update(sa.info['_id'], json.dumps(sa.info))
