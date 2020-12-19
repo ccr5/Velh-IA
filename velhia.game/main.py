@@ -46,23 +46,30 @@ def play():
                 time = time.microseconds / 1000000
                 print('time to play: ' + str(time))
                 print(f'choose to play in the position { str(position + 1) }')
-                game_status[position] = 1
-                print(f'new game status: {game_status}')
                 vlh.update_sa_match(match, sa, game_status, position,
                                     start.ctime(), time)
                 print('next move')
             else:
                 start = datetime.now()
                 print('Started to play at ' + str(start.date()))
-                position = mas.play(match, game_status)
+                valid_position = False
+
+                while not valid_position:
+                    position = mas.play(match, game_status)
+                    valid_position = vlh.check_position(
+                        position, game_status)
+
+                    if valid_position:
+                        pass
+                    else:
+                        mas.clear_lastest_play()
+
                 end = datetime.now()
                 print('Ended at ' + str(end.date()))
                 time = end - start
                 time = time.microseconds / 1000000
                 print('time to play: ' + str(time))
                 print(f'choose to play in the position { str(position + 1) }')
-                game_status[position] = 0
-                print(f'new game status: {str(game_status)}')
                 vlh.update_mas_match(match, mas, game_status, position,
                                      start.ctime(), time)
                 print('next move')
@@ -76,6 +83,7 @@ def main():
     Load environment variables, check requirements and connections
     before to start the game
     """
+
     try:
         load_dotenv(find_dotenv())
         print('Welcome to Velh-IA Game\nWhere everything happens')

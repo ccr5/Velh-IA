@@ -1,0 +1,4 @@
+* get_data é o método principal que deve iniciar tudo enquanto update_xxx_match... encerra tudo
+
+* Se eu parto do principio que get_data é o ínicio do ciclo, tudo deve estar pronto para recomeçar, ou seja, 
+a partida anterior deve ter um resultado, os jogadores anteriores devem estar com a memória completa e os indicadores atualizados

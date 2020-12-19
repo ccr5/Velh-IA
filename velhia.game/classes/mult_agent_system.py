@@ -8,7 +8,7 @@ class MultiAgentSystem:
                  education_leader, education_learner,
                  religion_leader, religion_learner
                  ):
-        self.char = [['O', 0]]
+        self.char = ['O', 0]
         self.family_leader = family_leader
         self.family_learner = family_learner
         self.education_leader = education_leader
@@ -35,3 +35,12 @@ class MultiAgentSystem:
             return religion_position
         else:
             return r.choice([family_position, education_position, religion_position])
+
+    def clear_latest_play(self):
+
+        del(self.family_leader['memory'][-1]['choices'][-1])
+        del(self.family_learner['memory'][-1]['choices'][-1])
+        del(self.education_leader['memory'][-1]['choices'][-1])
+        del(self.education_learner['memory'][-1]['choices'][-1])
+        del(self.religion_leader['memory'][-1]['choices'][-1])
+        del(self.religion_learner['memory'][-1]['choices'][-1])
