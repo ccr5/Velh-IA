@@ -1,4 +1,5 @@
 import random as r
+from datetime import datetime
 
 
 class StatisticalAlgorithm:
@@ -13,7 +14,7 @@ class StatisticalAlgorithm:
         self.info = obj
         self.char = my_char
         self.enemy = my_enemy
-        self.empty = ['', 0]
+        self.empty = ['', -1]
 
     def play(self, moves):
         """
@@ -28,23 +29,69 @@ class StatisticalAlgorithm:
         >>> position
         4
         """
+        start = datetime.now()
         winner = self.check_win(moves)
         loser = self.check_lose(moves)
 
         if winner is not None and loser is not None:
+            end = datetime.now()
+            time = end - start
+            time = time.microseconds / 1000000
+
+            self.info['memory'][-1]['choices'].append({
+                'dateRequest': start.ctime(),
+                'gameStatus': moves,
+                'timeToAct': time,
+                'action': winner
+            })
+
             return winner
 
         elif winner is not None and loser is None:
+            end = datetime.now()
+            time = end - start
+            time = time.microseconds / 1000000
+
+            self.info['memory'][-1]['choices'].append({
+                'dateRequest': start.ctime(),
+                'gameStatus': moves,
+                'timeToAct': time,
+                'action': winner
+            })
+
             return winner
 
         elif winner is None and loser is not None:
+            end = datetime.now()
+            time = end - start
+            time = time.microseconds / 1000000
+
+            self.info['memory'][-1]['choices'].append({
+                'dateRequest': start.ctime(),
+                'gameStatus': moves,
+                'timeToAct': time,
+                'action': loser
+            })
+
             return loser
 
         elif winner is None and loser is None:
             position = self.strategy_plan(moves)
+            end = datetime.now()
+            time = end - start
+            time = time.microseconds / 1000000
+
+            self.info['memory'][-1]['choices'].append({
+                'dateRequest': start.ctime(),
+                'gameStatus': moves,
+                'timeToAct': time,
+                'action': position
+            })
+
             return position
+
         else:
-            return 55
+            raise SystemError
 
     def strategy_plan(self, moves):
         """
