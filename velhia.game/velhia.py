@@ -438,11 +438,11 @@ class Velhia:
         """
 
         try:
-            full_game_status = game_status
+            new_game_status = list(game_status)
 
             if sequence == 'SA':
-                full_game_status[position] = sa.char[1]
-                results = self.sequence_list(full_game_status)
+                new_game_status[position] = sa.char[1]
+                results = self.sequence_list(new_game_status)
 
                 if self.check_win(sa, results):
                     match.info['plays'].append({
@@ -490,8 +490,8 @@ class Velhia:
                 self.match_db.update(match.info['_id'], json.dumps(match.info))
 
             elif sequence == 'MAS':
-                full_game_status[position] = mas.char[1]
-                results = self.sequence_list(full_game_status)
+                new_game_status[position] = mas.char[1]
+                results = self.sequence_list(new_game_status)
 
                 if self.check_win(mas, results):
                     match.info['plays'].append({
