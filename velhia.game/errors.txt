@@ -1,0 +1,5 @@
+Não possue um arquivo de Log
+Não está validando se toda sociedade & ambiente estão batendo os dados
+Não sei se está aguardando o retorno da API
+Não está deletando tudo no final do Play()
+Não dando baixa na partida quando checa se o agente morreu
