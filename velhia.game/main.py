@@ -66,7 +66,7 @@ def main():
         root_dir = os.path.dirname(os.path.abspath(__file__))
         logging.basicConfig(filename=f'{root_dir}/logs/{datetime.now()}.log', filemode='w',
                             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                            level=logging.INFO)
+                            level=logging.DEBUG)
 
         logging.info('Check all requirements to starting Velh-IA Game')
         response = request('GET', os.getenv('API_ADDRESS'))

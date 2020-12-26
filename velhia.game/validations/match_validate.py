@@ -11,16 +11,21 @@ def check_match_pendent(match):
 
 def check_match_status(match, sa, family, religion, education):
 
-    if match.info['status'] != 'PENDENT' and match.info['winner'] in ['SA', 'MAS']:
+    if match.info['status'] == 'WINNER' and match.info['winner'] in ['SA', 'MAS']:
+        pass
+    elif match.info['status'] == 'DRAW' and len(match.info['plays']) == 9:
         pass
 
-    status = match.info['status']
     status_list = [sa.info['memory'][-2]['environmentReaction'],
                    family.info['memory'][-2]['environmentReaction'],
                    religion.info['memory'][-2]['environmentReaction'],
                    education.info['memory'][-2]['environmentReaction']]
 
-    if [status, status, status, status] == status_list:
+    if ['WINNER', 'LOSER', 'LOSER', 'LOSER'] == status_list:
+        pass
+    elif ['LOSER', 'WINNER', 'WINNER', 'WINNER'] == status_list:
+        pass
+    elif ['DRAW', 'DRAW', 'DRAW', 'DRAW'] == status_list:
         pass
     else:
         raise InvalidMatch
@@ -61,21 +66,21 @@ def check_previous_match_game(game_status, sa, family, religion, education):
 
     for p in family.info['memory'][-2]['choices']:
 
-        if game[p['action']] != -1:
+        if game[p['action']] == -1:
             game[p['action']] = family.char[1]
         else:
             pass
 
     for p in religion.info['memory'][-2]['choices']:
 
-        if game[p['action']] != -1:
+        if game[p['action']] == -1:
             game[p['action']] = religion.char[1]
         else:
             pass
 
     for p in education.info['memory'][-2]['choices']:
 
-        if game[p['action']] != -1:
+        if game[p['action']] == -1:
             game[p['action']] = education.char[1]
         else:
             pass
@@ -95,21 +100,21 @@ def check_currenty_match_game(game_status, sa, family, religion, education):
 
     for p in family.info['memory'][-1]['choices']:
 
-        if game[p['action']] != -1:
+        if game[p['action']] == -1:
             game[p['action']] = family.char[1]
         else:
             pass
 
     for p in religion.info['memory'][-1]['choices']:
 
-        if game[p['action']] != -1:
+        if game[p['action']] == -1:
             game[p['action']] = religion.char[1]
         else:
             pass
 
     for p in education.info['memory'][-1]['choices']:
 
-        if game[p['action']] != -1:
+        if game[p['action']] == -1:
             game[p['action']] = education.char[1]
         else:
             pass

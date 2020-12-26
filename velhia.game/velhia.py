@@ -126,15 +126,15 @@ class Velhia:
         if len(self.match_db.get_last(2).json()) > 1:
 
             # Previous
-            previous_match = Match(self.match_db.get_last(2)[1].json())
+            previous_match = Match(self.match_db.get_last(2).json()[1])
             previous_sa = StatisticalAlgorithm(self.algorithm_db.get_one(
-                previous_match['sa']['playerId']).json(), ['X', 1], ['O', 0])
+                previous_match.info['sa']['playerId']).json(), ['X', 1], ['O', 0])
             previous_family = Agent(self.family_db.get_one(
-                previous_match['mas']['family']['playerId']).json(), ['O', 0])
+                previous_match.info['mas']['family'][-1]['playerId']).json(), ['O', 0])
             previous_religion = Agent(self.religion_db.get_one(
-                previous_match['mas']['religion']['playerId']).json(), ['O', 0])
+                previous_match.info['mas']['religion'][-1]['playerId']).json(), ['O', 0])
             previous_education = Agent(self.education_db.get_one(
-                previous_match['mas']['education']['playerId']).json(), ['O', 0])
+                previous_match.info['mas']['education'][-1]['playerId']).json(), ['O', 0])
 
             check_match_status(previous_match, previous_sa, previous_family,
                                previous_religion, previous_education)
@@ -145,20 +145,21 @@ class Velhia:
             check_previous_match_game(game_status, previous_sa, previous_family,
                                       previous_religion, previous_education)
             check_sa_matchs(previous_sa)
-            [check_agent_matchs(x) for x in [
-                previous_sa, previous_family, previous_religion, previous_education]]
+            [check_agent_matchs(x) for x in [previous_family,
+                                             previous_religion,
+                                             previous_education]]
 
             # Currenty
             check_match_pendent(match)
-            check_match_id(match, sa, mas.family_leader,
-                           mas.religion_leader, mas.education_leader)
+            check_currenty_match_id(match, sa, mas.family_leader,
+                                    mas.religion_leader, mas.education_leader)
             game_status = self.game_status(match, sa.info['_id'])
             check_currenty_match_game(game_status, sa, mas.family_leader,
                                       mas.religion_leader, mas.education_leader)
             check_sa_matchs(sa)
-            [check_agent_matchs(x) for x in [sa, mas.family_leader,
-                                             mas.religion_leader, mas.education_leader]]
-
+            [check_agent_matchs(x) for x in [mas.family_leader,
+                                             mas.religion_leader,
+                                             mas.education_leader]]
         else:
 
             # Currenty
