@@ -1,6 +1,10 @@
 import json
 from datetime import datetime
 from classes.match import Match
+from errors.handler.match.new_match_error import NewMatchError
+from errors.handler.match.new_memory_error import NewMemoryError
+from errors.handler.match.new_player_mas_error import NewPlayerInMASError
+from errors.handler.match.sequence_list_error import SequenceListError
 
 
 def add_new_match(db, sa, mas):
@@ -33,7 +37,7 @@ def add_new_match(db, sa, mas):
         match = Match(json.loads(ret.text))
         return match
     except:
-        raise SystemError
+        raise NewMatchError
 
 
 def add_new_memory(match, sa, mas):
@@ -80,22 +84,27 @@ def add_new_memory(match, sa, mas):
             'choices': []
         })
     except:
-        raise SystemError
+        raise NewMemoryError
 
 
 def add_new_mas_player(db, match, old_leader, new_leader):
 
-    for institution, players in match.info['mas']:
+    try:
 
-        if players[-1]['playerId'] == old_leader:
+        for institution, players in match.info['mas']:
 
-            obj = {
-                'playerId': new_leader.info['_id'],
-                'symbol': 'O'
-            }
+            if players[-1]['playerId'] == old_leader:
 
-            match.info['mas'][institution].append(obj)
-            db.update(match.info['_id'], json.dumps(match.info))
+                obj = {
+                    'playerId': new_leader.info['_id'],
+                    'symbol': 'O'
+                }
+
+                match.info['mas'][institution].append(obj)
+                db.update(match.info['_id'], json.dumps(match.info))
+
+    except:
+        raise NewPlayerInMASError
 
 
 def sequence_list(game_status):
@@ -117,6 +126,7 @@ def sequence_list(game_status):
     ]
     """
     try:
+
         return [[game_status[0], game_status[1], game_status[2]],
                 [game_status[3], game_status[4], game_status[5]],
                 [game_status[6], game_status[7], game_status[8]],
@@ -125,5 +135,6 @@ def sequence_list(game_status):
                 [game_status[2], game_status[5], game_status[8]],
                 [game_status[0], game_status[4], game_status[8]],
                 [game_status[2], game_status[4], game_status[6]]]
+
     except:
-        raise SystemError
+        raise SequenceListError

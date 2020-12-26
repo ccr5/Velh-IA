@@ -1,5 +1,8 @@
 import random as r
 from datetime import datetime
+from errors.agent.remember_error import RememberError
+from errors.agent.memorize_error import MemorizeError
+from errors.agent.learn_error import LearnError
 
 
 class Agent:
@@ -14,6 +17,19 @@ class Agent:
         self.char = my_char
 
     def remember(self, match, game_status):
+        """
+        Remember a game when was received a game status like now
+        :param match: `Match` a Match obj
+        :param game_status: `List` a game status
+
+        usage
+        >>> from classes.agent import Agent
+        >>> agt = Agent(obj, ['O', 0])
+        >>> game_status = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
+        >>> position = agt.remember(match, game_status)
+        >>> position
+        5
+        """
 
         if len(self.info['memory']) > 0:
 
@@ -46,21 +62,55 @@ class Agent:
                     return position
 
         else:
-            raise SystemError
+            raise RememberError
 
     def memorize(self, match, game_status, start, end, position):
+        """
+        Add a new play in the memory
+        :param match: `Match` a Match obj
+        :param game_status: `List` a game status
+        :param start: `datetime` when this play started
+        :param end: `datetime` when this play ended
+        :param position: `int` the chosen position
 
-        time = end - start
-        time = time.microseconds / 1000000
+        usage
+        >>> from classes.agent import Agent
+        >>> agt = Agent(obj, ['O', 0])
+        >>> game_status = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
+        >>> start = datetime.now()
+        >>> end = datetime.now()
+        >>> position = 5
+        >>> agt.memorize(match, game_status, start, end, position)
+        """
 
-        self.info['memory'][-1]['choices'].append({
-            'dateRequest': start.ctime(),
-            'gameStatus': game_status,
-            'timeToAct': time,
-            'action': position
-        })
+        try:
+            time = end - start
+            time = time.microseconds / 1000000
+
+            self.info['memory'][-1]['choices'].append({
+                'dateRequest': start.ctime(),
+                'gameStatus': game_status,
+                'timeToAct': time,
+                'action': position
+            })
+
+        except:
+            raise MemorizeError
 
     def learn(self, match, game_status, position):
+        """
+        Learn a play from its progenitor
+        :param match: `Match` a Match obj
+        :param game_status: `List` a game status
+        :param position: `int` the chosen position
+
+        usage
+        >>> from classes.agent import Agent
+        >>> agt = Agent(obj, ['O', 0])
+        >>> game_status = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
+        >>> position = 5
+        >>> agt.learn(match, game_status, position)
+        """
 
         if self.info['memory'][-1]['matchId'] == match.info['_id']:
             start = datetime.now()
@@ -76,4 +126,4 @@ class Agent:
             })
 
         else:
-            raise SystemError
+            raise LearnError

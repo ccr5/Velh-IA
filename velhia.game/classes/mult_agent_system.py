@@ -1,5 +1,6 @@
 import random as r
 from datetime import datetime
+from errors.multi_agent_system.play_error import MASPlayError
 
 
 class MultiAgentSystem:
@@ -116,6 +117,6 @@ class MultiAgentSystem:
                 self.religion_learner.learn(
                     match, game_status, religion_position)
             else:
-                raise SystemError
+                raise MASPlayError
 
             return position

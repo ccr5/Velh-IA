@@ -1,7 +1,6 @@
 import os
 import sys
 import logging
-from errors.invalid_match import InvalidMatch
 from config.database import Database
 from dotenv import load_dotenv, find_dotenv
 from datetime import datetime
@@ -94,10 +93,6 @@ def main():
     except exceptions.ConnectionError:
         print("Can't connect with Velh-IA API")
         logging.exception("Can't connect with Velh-IA API")
-
-    except InvalidMatch:
-        print("There's something incongruity in the Velh-IA")
-        logging.exception("There's something incongruity in the Velh-IA")
 
     except:
         print('Error (main.py): ', sys.exc_info())

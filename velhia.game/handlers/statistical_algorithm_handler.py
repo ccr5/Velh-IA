@@ -2,6 +2,7 @@ import sys
 import json
 from datetime import datetime
 from classes.statistical_algorithm import StatisticalAlgorithm
+from errors.handler.sa.get_sa_error import GetStatisticalAlgorithmError
 
 
 def get_lastest_sa(db):
@@ -18,6 +19,7 @@ def get_lastest_sa(db):
     """
 
     try:
+
         if len(db.get_last(1).json()) == 0:
             sa = StatisticalAlgorithm(db.create(json.dumps({
                 "birth": datetime.now().ctime(),
@@ -33,5 +35,6 @@ def get_lastest_sa(db):
                 ('X', 1), ('O', 0))
 
         return sa
+
     except:
-        raise SystemError
+        raise GetStatisticalAlgorithmError

@@ -1,5 +1,6 @@
 import os
 from requests import request
+from errors.database.invalid_response import InvalidResponse
 
 
 class Database:
@@ -22,7 +23,13 @@ class Database:
         >>> res = db.get_one('5fa01ed2b24ffc2dfdc9f019')
         >>> res.json()
         """
-        return request('GET', self.url + object_id)
+
+        response = request('GET', self.url + object_id)
+
+        if response.status_code is 200:
+            return response
+        else:
+            raise InvalidResponse(response.status_code, 200)
 
     def get_last(self, limit):
         """
@@ -36,7 +43,13 @@ class Database:
         >>> res = db.get_last('5fa01ed2b24ffc2dfdc9f019')
         >>> res
         """
-        return request('GET', self.url + 'limit/' + str(limit))
+
+        response = request('GET', self.url + 'limit/' + str(limit))
+
+        if response.status_code is 200:
+            return response
+        else:
+            raise InvalidResponse(response.status_code, 200)
 
     def create(self, obj):
         """
@@ -50,9 +63,15 @@ class Database:
         >>> res = db.create(IAlgorithm)
         >>> res
         """
+
         head = {'Content-Type': 'application/json',
                 'cache-control': 'no-cache'}
-        return request('POST', self.url, data=obj, headers=head)
+        response = request('POST', self.url, data=obj, headers=head)
+
+        if response.status_code is 200:
+            return response
+        else:
+            raise InvalidResponse(response.status_code, 200)
 
     def update(self, object_id, obj):
         """
@@ -61,6 +80,13 @@ class Database:
         :param obj: `dict` Object
         :return: `dict` lastest object version
         """
+
         head = {'Content-Type': 'application/json',
                 'cache-control': 'no-cache'}
-        return request('PUT', self.url + str(object_id), data=obj, headers=head)
+        response = request('PUT', self.url + str(object_id),
+                           data=obj, headers=head)
+
+        if response.status_code is 200:
+            return response
+        else:
+            raise InvalidResponse(response.status_code, 200)

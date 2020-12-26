@@ -3,6 +3,9 @@ from datetime import datetime
 from classes.match import Match
 from classes.agent import Agent
 from handlers.match_handler import add_new_mas_player
+from errors.handler.agent.get_agent_error import GetAgentError
+from errors.handler.agent.check_win_error import CheckWinError
+from errors.handler.agent.check_life_error import CheckLifeError
 
 
 def get_latest_agent(db, match_db, match=Match({'_id': ''}), player=''):
@@ -66,7 +69,7 @@ def get_latest_agent(db, match_db, match=Match({'_id': ''}), player=''):
         else:
             return check_life(db, res)
     except:
-        raise SystemError
+        raise GetAgentError
 
 
 def check_life(db, agents):
@@ -110,7 +113,7 @@ def check_life(db, agents):
         return [leader, learner]
 
     except:
-        raise SystemError
+        raise CheckLifeError
 
 
 def check_win(player, moves):
@@ -132,4 +135,4 @@ def check_win(player, moves):
             else:
                 pass
     except:
-        raise SystemError
+        raise CheckWinError

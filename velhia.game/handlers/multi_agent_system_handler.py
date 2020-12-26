@@ -1,4 +1,5 @@
 import json
+from errors.handler.mas.update_mas_error import UpdateMASError
 
 
 def update_mas(vlh, mas):
@@ -21,4 +22,4 @@ def update_mas(vlh, mas):
         vlh.education_db.update(
             mas.education_learner.info['_id'], json.dumps(mas.education_learner.info))
     except:
-        raise SystemError
+        raise UpdateMASError

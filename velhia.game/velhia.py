@@ -46,58 +46,54 @@ class Velhia:
         <classes.multi_agent_system.MultiAgentSystem object at 0x7fe6de34dd10>
         """
 
-        try:
+        last_match = self.match_db.get_last(1).json()
 
-            last_match = self.match_db.get_last(1).json()
+        if len(last_match) == 0 or last_match[0]['status'] != 'PENDENT':
+            sa = get_lastest_sa(self.algorithm_db)
+            sa.info['matchs'] += 1
 
-            if len(last_match) == 0 or last_match[0]['status'] != 'PENDENT':
-                sa = get_lastest_sa(self.algorithm_db)
-                sa.info['matchs'] += 1
+            [education_leader, education_learner] = get_latest_agent(
+                self.education_db, self.match_db)
+            education_leader.info['matchsAsLeader'] += 1
+            education_learner.info['matchsAsLearner'] += 1
 
-                [education_leader, education_learner] = get_latest_agent(
-                    self.education_db, self.match_db)
-                education_leader.info['matchsAsLeader'] += 1
-                education_learner.info['matchsAsLearner'] += 1
+            [religion_leader, religion_learner] = get_latest_agent(
+                self.religion_db, self.match_db)
+            religion_leader.info['matchsAsLeader'] += 1
+            religion_learner.info['matchsAsLearner'] += 1
 
-                [religion_leader, religion_learner] = get_latest_agent(
-                    self.religion_db, self.match_db)
-                religion_leader.info['matchsAsLeader'] += 1
-                religion_learner.info['matchsAsLearner'] += 1
+            [family_leader, family_learner] = get_latest_agent(
+                self.family_db, self.match_db)
+            family_leader.info['matchsAsLeader'] += 1
+            family_learner.info['matchsAsLearner'] += 1
 
-                [family_leader, family_learner] = get_latest_agent(
-                    self.family_db, self.match_db)
-                family_leader.info['matchsAsLeader'] += 1
-                family_learner.info['matchsAsLearner'] += 1
+            mas = MultiAgentSystem(family_leader, family_learner, education_leader,
+                                   education_learner, religion_leader, religion_learner)
 
-                mas = MultiAgentSystem(family_leader, family_learner, education_leader,
-                                       education_learner, religion_leader, religion_learner)
+            match = add_new_match(self.match_db, sa, mas)
+            add_new_memory(match, sa, mas)
+            update_mas(self, mas)
+            self.algorithm_db.update(sa.info['_id'], json.dumps(sa.info))
 
-                match = add_new_match(self.match_db, sa, mas)
-                add_new_memory(match, sa, mas)
-                update_mas(self, mas)
-                self.algorithm_db.update(sa.info['_id'], json.dumps(sa.info))
+        else:
+            match = Match(last_match[0])
 
-            else:
-                match = Match(last_match[0])
+            sa = StatisticalAlgorithm(
+                self.algorithm_db.get_one(
+                    match.info['sa']['playerId']).json(),
+                ('X', 1), ('O', 0))
 
-                sa = StatisticalAlgorithm(
-                    self.algorithm_db.get_one(
-                        match.info['sa']['playerId']).json(),
-                    ('X', 1), ('O', 0))
+            [education_leader, education_learner] = get_latest_agent(
+                self.education_db, self.match_db, match, match.info['mas']['education'][-1])
+            [religion_leader, religion_learner] = get_latest_agent(
+                self.religion_db, self.match_db, match, match.info['mas']['religion'][-1])
+            [family_leader, family_learner] = get_latest_agent(
+                self.family_db, self.match_db, match, match.info['mas']['family'][-1])
 
-                [education_leader, education_learner] = get_latest_agent(
-                    self.education_db, self.match_db, match, match.info['mas']['education'][-1])
-                [religion_leader, religion_learner] = get_latest_agent(
-                    self.religion_db, self.match_db, match, match.info['mas']['religion'][-1])
-                [family_leader, family_learner] = get_latest_agent(
-                    self.family_db, self.match_db, match, match.info['mas']['family'][-1])
+            mas = MultiAgentSystem(family_leader, family_learner, education_leader,
+                                   education_learner, religion_leader, religion_learner)
 
-                mas = MultiAgentSystem(family_leader, family_learner, education_leader,
-                                       education_learner, religion_leader, religion_learner)
-
-            return [match, sa, mas]
-        except:
-            raise SystemError
+        return [match, sa, mas]
 
     def validate(self, match, sa, mas):
         """
@@ -187,20 +183,26 @@ class Velhia:
         ['SA']
         """
 
-        try:
-            last_match = self.match_db.get_last(2).json()
+        last_match = self.match_db.get_last(2).json()
 
-            if len(match.info['plays']) == 0 and len(last_match) == 1:
-                return ['SA']
-            elif len(match.info['plays']) == 0 and len(last_match) > 1:
-                return ['MAS' if last_match[1]['sa']['playerId'] == last_match[1]['plays'][0]['player'] else 'SA']
-            else:
-                return ['MAS' if match.info['sa']['playerId'] == match.info['plays'][-1]['player'] else 'SA']
-
-        except:
-            print('get_sequence() error', sys.exc_info())
+        if len(match.info['plays']) == 0 and len(last_match) == 1:
+            return ['SA']
+        elif len(match.info['plays']) == 0 and len(last_match) > 1:
+            return ['MAS' if last_match[1]['sa']['playerId'] == last_match[1]['plays'][0]['player'] else 'SA']
+        else:
+            return ['MAS' if match.info['sa']['playerId'] == match.info['plays'][-1]['player'] else 'SA']
 
     def check_draw(self, match, sa, mas):
+        """
+        Check if the match is draw and update all datas
+        :param match: `Match` a Match object
+        :param sa: `Statistical Algorithm` a Statistical Algorithm object
+        :param mas: `Multi Agent System` a Multi Agent System object
+
+        usage
+        >>> from velhia import Velhia
+        >>> velhia.check_draw(match, sa, mas) 
+        """
 
         if len(match.info['plays']) == 9 and match.info['status'] == 'PENDENT':
             match.info['status'] = 'DRAW'
@@ -244,101 +246,97 @@ class Velhia:
         >>> velhia.update_sa_match(self, match, sa, game_status, position, start, time)
         """
 
-        try:
-            new_game_status = list(game_status)
+        new_game_status = list(game_status)
 
-            if sequence == 'SA':
-                new_game_status[position] = sa.char[1]
-                results = sequence_list(new_game_status)
+        if sequence == 'SA':
+            new_game_status[position] = sa.char[1]
+            results = sequence_list(new_game_status)
 
-                if check_win(sa, results):
-                    match.info['plays'].append({
-                        'seq': len(match.info['plays']) + 1,
-                        'player': sa.info['_id'],
-                        'time': time,
-                        'position': position
-                    })
+            if check_win(sa, results):
+                match.info['plays'].append({
+                    'seq': len(match.info['plays']) + 1,
+                    'player': sa.info['_id'],
+                    'time': time,
+                    'position': position
+                })
 
-                    match.info['end'] = datetime.now().ctime()
-                    match.info['status'] = 'WINNER'
-                    match.info['winner'] = 'SA'
+                match.info['end'] = datetime.now().ctime()
+                match.info['status'] = 'WINNER'
+                match.info['winner'] = 'SA'
 
-                    sa.info['memory'][-1]['environmentReaction'] = 'WINNER'
-                    sa.info['victories'] += 1
+                sa.info['memory'][-1]['environmentReaction'] = 'WINNER'
+                sa.info['victories'] += 1
 
-                    mas.family_leader.info['memory'][-1]['environmentReaction'] = 'LOSER'
-                    mas.education_leader.info['memory'][-1]['environmentReaction'] = 'LOSER'
-                    mas.religion_leader.info['memory'][-1]['environmentReaction'] = 'LOSER'
+                mas.family_leader.info['memory'][-1]['environmentReaction'] = 'LOSER'
+                mas.education_leader.info['memory'][-1]['environmentReaction'] = 'LOSER'
+                mas.religion_leader.info['memory'][-1]['environmentReaction'] = 'LOSER'
 
-                    mas.family_leader.info['defeats'] += 1
-                    mas.education_leader.info['defeats'] += 1
-                    mas.religion_leader.info['defeats'] += 1
+                mas.family_leader.info['defeats'] += 1
+                mas.education_leader.info['defeats'] += 1
+                mas.religion_leader.info['defeats'] += 1
 
-                    plays = 5 if match.info['plays'][0]['player'] == 'MAS' else 4
+                plays = 5 if match.info['plays'][0]['player'] == 'MAS' else 4
 
-                    mas.family_leader.info['life'] -= len(
-                        mas.family_leader.info['memory'][-1]['choices']) / plays
-                    mas.education_leader.info['life'] -= len(
-                        mas.education_leader.info['memory'][-1]['choices']) / plays
-                    mas.religion_leader.info['life'] -= len(
-                        mas.religion_leader.info['memory'][-1]['choices']) / plays
-
-                    update_mas(self, mas)
-
-                else:
-                    match.info['plays'].append({
-                        'seq': len(match.info['plays']) + 1,
-                        'player': sa.info['_id'],
-                        'time': time,
-                        'position': position
-                    })
-
-                self.algorithm_db.update(sa.info['_id'], json.dumps(sa.info))
-                self.match_db.update(match.info['_id'], json.dumps(match.info))
-
-            elif sequence == 'MAS':
-                new_game_status[position] = mas.char[1]
-                results = sequence_list(new_game_status)
-
-                if check_win(mas, results):
-                    match.info['plays'].append({
-                        'seq': len(match.info['plays']) + 1,
-                        'player': 'MAS',
-                        'time': time,
-                        'position': position
-                    })
-                    match.info['status'] = 'WINNER'
-                    match.info['winner'] = 'MAS'
-
-                    mas.family_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
-                    mas.family_leader.info['victories'] += 1
-
-                    mas.education_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
-                    mas.education_leader.info['victories'] += 1
-
-                    mas.religion_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
-                    mas.religion_leader.info['victories'] += 1
-
-                    sa.info['memory'][-1]['environmentReaction'] = 'LOSER'
-                    sa.info['defeats'] += 1
-
-                    self.algorithm_db.update(
-                        sa.info['_id'], json.dumps(sa.info))
-                else:
-                    match.info['plays'].append({
-                        'seq': len(match.info['plays']) + 1,
-                        'player': 'MAS',
-                        'time': time,
-                        'position': position
-                    })
+                mas.family_leader.info['life'] -= len(
+                    mas.family_leader.info['memory'][-1]['choices']) / plays
+                mas.education_leader.info['life'] -= len(
+                    mas.education_leader.info['memory'][-1]['choices']) / plays
+                mas.religion_leader.info['life'] -= len(
+                    mas.religion_leader.info['memory'][-1]['choices']) / plays
 
                 update_mas(self, mas)
-                self.match_db.update(
-                    match.info['_id'], json.dumps(match.info))
+
             else:
-                raise SystemError
-        except:
-            print('update_match() error', sys.exc_info())
+                match.info['plays'].append({
+                    'seq': len(match.info['plays']) + 1,
+                    'player': sa.info['_id'],
+                    'time': time,
+                    'position': position
+                })
+
+            self.algorithm_db.update(sa.info['_id'], json.dumps(sa.info))
+            self.match_db.update(match.info['_id'], json.dumps(match.info))
+
+        elif sequence == 'MAS':
+            new_game_status[position] = mas.char[1]
+            results = sequence_list(new_game_status)
+
+            if check_win(mas, results):
+                match.info['plays'].append({
+                    'seq': len(match.info['plays']) + 1,
+                    'player': 'MAS',
+                    'time': time,
+                    'position': position
+                })
+                match.info['status'] = 'WINNER'
+                match.info['winner'] = 'MAS'
+
+                mas.family_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
+                mas.family_leader.info['victories'] += 1
+
+                mas.education_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
+                mas.education_leader.info['victories'] += 1
+
+                mas.religion_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
+                mas.religion_leader.info['victories'] += 1
+
+                sa.info['memory'][-1]['environmentReaction'] = 'LOSER'
+                sa.info['defeats'] += 1
+
+                self.algorithm_db.update(
+                    sa.info['_id'], json.dumps(sa.info))
+            else:
+                match.info['plays'].append({
+                    'seq': len(match.info['plays']) + 1,
+                    'player': 'MAS',
+                    'time': time,
+                    'position': position
+                })
+
+            update_mas(self, mas)
+            self.match_db.update(match.info['_id'], json.dumps(match.info))
+        else:
+            raise SystemError
 
     def game_status(self, match, saId):
         """
@@ -354,16 +352,12 @@ class Velhia:
         [-1, 0, -1, -1, 1, -1, 0, -1, 1]
         """
 
-        try:
-            game_status = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
+        game_status = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
 
-            for p in match.info['plays']:
-                if p['player'] == saId:
-                    game_status[p['position']] = 1
-                else:
-                    game_status[p['position']] = 0
+        for p in match.info['plays']:
+            if p['player'] == saId:
+                game_status[p['position']] = 1
+            else:
+                game_status[p['position']] = 0
 
-            return game_status
-
-        except:
-            raise SystemError
+        return game_status
