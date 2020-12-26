@@ -1,15 +1,20 @@
+import sys
+import json
+from datetime import datetime
+from errors.invalid_match import InvalidMatch
 from classes.statistical_algorithm import StatisticalAlgorithm
 from classes.mult_agent_system import MultiAgentSystem
 from classes.match import Match
 from classes.agent import Agent
-from datetime import datetime
-import json
-import sys
+from handlers.statistical_algorithm_handler import get_lastest_sa
+from handlers.multi_agent_system_handler import update_mas
+from handlers.match_handler import add_new_match, add_new_memory, sequence_list
+from handlers.agent_handler import check_win, get_latest_agent
 
 
 class Velhia:
     """
-    All functions and methods to the game works
+    All functions and methods to use in Velh-IA workflow
     :param match_db: `Database` Match object
     :param family_db: `Database` Family object
     :param education_db: `Database` Education object
@@ -39,33 +44,34 @@ class Velhia:
         """
 
         try:
+
             last_match = self.match_db.get_last(1).json()
 
             if len(last_match) == 0 or last_match[0]['status'] != 'PENDENT':
-                sa = self.get_lastest_sa()
+                sa = get_lastest_sa(self.algorithm_db)
                 sa.info['matchs'] += 1
 
-                [education_leader, education_learner] = self.get_latest_agent(
-                    self.education_db)
+                [education_leader, education_learner] = get_latest_agent(
+                    self.education_db, self.match_db)
                 education_leader.info['matchsAsLeader'] += 1
                 education_learner.info['matchsAsLearner'] += 1
 
-                [religion_leader, religion_learner] = self.get_latest_agent(
-                    self.religion_db)
+                [religion_leader, religion_learner] = get_latest_agent(
+                    self.religion_db, self.match_db)
                 religion_leader.info['matchsAsLeader'] += 1
                 religion_learner.info['matchsAsLearner'] += 1
 
-                [family_leader, family_learner] = self.get_latest_agent(
-                    self.family_db)
+                [family_leader, family_learner] = get_latest_agent(
+                    self.family_db, self.match_db)
                 family_leader.info['matchsAsLeader'] += 1
                 family_learner.info['matchsAsLearner'] += 1
 
                 mas = MultiAgentSystem(family_leader, family_learner, education_leader,
                                        education_learner, religion_leader, religion_learner)
 
-                match = self.add_new_match(sa, mas)
-                self.add_new_memory(match, sa, mas)
-                self.update_mas(mas)
+                match = add_new_match(self.match_db, sa, mas)
+                add_new_memory(match, sa, mas)
+                update_mas(self, mas)
                 self.algorithm_db.update(sa.info['_id'], json.dumps(sa.info))
 
             else:
@@ -76,115 +82,39 @@ class Velhia:
                         match.info['sa']['playerId']).json(),
                     ('X', 1), ('O', 0))
 
-                [education_leader, education_learner] = self.get_latest_agent(
-                    self.education_db, match, match.info['mas']['education'][-1])
-                [religion_leader, religion_learner] = self.get_latest_agent(
-                    self.religion_db, match, match.info['mas']['religion'][-1])
-                [family_leader, family_learner] = self.get_latest_agent(
-                    self.family_db, match, match.info['mas']['family'][-1])
+                [education_leader, education_learner] = get_latest_agent(
+                    self.education_db, self.match_db, match, match.info['mas']['education'][-1])
+                [religion_leader, religion_learner] = get_latest_agent(
+                    self.religion_db, self.match_db, match, match.info['mas']['religion'][-1])
+                [family_leader, family_learner] = get_latest_agent(
+                    self.family_db, self.match_db, match, match.info['mas']['family'][-1])
 
                 mas = MultiAgentSystem(family_leader, family_learner, education_leader,
                                        education_learner, religion_leader, religion_learner)
 
             return [match, sa, mas]
         except:
-            print('get_data() error', sys.exc_info())
+            raise SystemError
 
-    def get_lastest_sa(self):
+    def validate(self, match, sa, mas):
         """
-        Get the lastest statistical algorithm obj in the database
-        or create if it not exists
+        Check if everything is running correctly
 
-        Usage
+            1. Check if the latest match has a status
+            2. Check if the currenty match is pendent
+            3. Check if the lastest leaders match is equals the currenty match
+            4. Check if the plays in match obj is equals the in the leaders memories
+
+        usage
         >>> from velhia import Velhia
-        >>> sa = velhia.get_lastest_sa()
-        >>> print(sa)
-
-        <classes.statistical_algorithm.StatisticalAlgorithm object at 0x7fe6de3287d0>
+        >>> vlh = Velhia(match_db, family_db, education_db, religion_db, algorithm_db)
+        >>> vlh.validate(match, sa, mas)
+        True or False
         """
-
         try:
-            if len(self.algorithm_db.get_last(1).json()) == 0:
-                sa = StatisticalAlgorithm(self.algorithm_db.create(json.dumps({
-                    "birth": datetime.now().ctime(),
-                    "memory": [],
-                    "matchs": 0,
-                    "victories": 0,
-                    "defeats": 0,
-                    "draw": 0
-                })).json(), ('X', 1), ('O', 0))
-            else:
-                sa = StatisticalAlgorithm(
-                    self.algorithm_db.get_last(1).json()[0],
-                    ('X', 1), ('O', 0))
-
-            return sa
+            pass
         except:
-            print('get_lastest_sa() error', sys.exc_info())
-
-    def get_latest_agent(self, db, match=Match({'_id': ''}), player=''):
-        """
-        Get the lastest agent obj in the database or create if it not exists
-        If a match and player was passed, it will get the lastest agents as of a match obj in the database
-        :param db: `Database` a Database object
-        :param match: `Match`a Match object
-        :param player: `string` a player ID
-
-        Usage
-        >>> from velhia import Velhia
-        >>> (leader, learner) = velhia.get_lastest_agent(education_db)
-        >>> print(leader, learner)
-
-        <classes.agent.Agent object at 0x7fe6de3287d0>
-        <classes.agent.Agent object at 0x7fe6de3289a2>
-        """
-
-        try:
-            res = db.get_last(2).json()
-
-            if len(res) < 2:
-                leader = Agent(db.create(json.dumps({
-                    "birth": datetime.now().ctime(),
-                    "progenitor": "I'm the first one, bitch ;)",
-                    "becomeLeader": datetime.now().ctime(),
-                    "life": 100,
-                    "memory": [],
-                    "matchsAsLearner": 0,
-                    "matchsAsLeader": 0,
-                    "victories": 0,
-                    "defeats": 0,
-                    "draw": 0
-                })).json(), ('O', 0))
-
-                learner = Agent(db.create(json.dumps({
-                    "birth": datetime.now().ctime(),
-                    "progenitor": leader.info['_id'],
-                    "life": 100,
-                    "memory": [],
-                    "matchsAsLearner": 0,
-                    "matchsAsLeader": 0,
-                    "victories": 0,
-                    "defeats": 0,
-                    "draw": 0
-                })).json(), ('O', 0))
-
-                return [leader, learner]
-
-            elif match.info['_id'] != '' and player != '':
-
-                if res[1]['_id'] == player['playerId']:
-                    [leader, learner] = self.check_life(db, res)
-
-                    if leader.info['_id'] == player['playerId']:
-                        return [leader, learner]
-                    else:
-                        self.add_new_mas_player(match, player, leader)
-                        return [leader, learner]
-
-            else:
-                return self.check_life(db, res)
-        except:
-            print('get_lastest_agent() error', sys.exc_info())
+            raise InvalidMatch
 
     def get_sequence(self, match):
         """
@@ -212,165 +142,6 @@ class Velhia:
         except:
             print('get_sequence() error', sys.exc_info())
 
-    def add_new_match(self, sa, mas):
-        """
-        Create a new match in the database
-        :param sa: `StatisticalAlgorithm` a SA obj
-        :param family: `Agent` a Family object
-        :param religion: `Agent` a Religion object
-        :param education: `Agent` a Education object
-
-        Usage
-        >>> from velhia import Velhia
-        >>> match = velhia.add_new_match(sa, family, religion, education)
-        >>> print(match)
-
-        <classes.match.Match object at 0x7fe6de3287d0>
-        """
-
-        try:
-            ret = self.match_db.create(json.dumps({
-                "begin": datetime.now().ctime(),
-                "time": 0,
-                "sa": {"playerId": sa.info['_id'], "symbol": sa.char[0]},
-                "mas": {"family": {"playerId": mas.family_leader.info['_id'], "symbol": mas.char[0]},
-                        "religion": {"playerId": mas.religion_leader.info['_id'], "symbol": mas.char[0]},
-                        "education": {"playerId": mas.education_leader.info['_id'], "symbol": mas.char[0]}},
-                "plays": [],
-                "status": "PENDENT"}))
-
-            match = Match(json.loads(ret.text))
-            return match
-        except:
-            print('add_new_match() error', sys.exc_info())
-
-    def add_new_memory(self, match, sa, mas):
-        try:
-            sa.info['memory'].append({
-                'matchId': match.info['_id'],
-                'isLearner': False,
-                'choices': []
-            })
-
-            mas.religion_leader.info['memory'].append({
-                'matchId': match.info['_id'],
-                'isLearner': False,
-                'choices': []
-            })
-
-            mas.religion_learner.info['memory'].append({
-                'matchId': match.info['_id'],
-                'isLearner': True,
-                'choices': []
-            })
-
-            mas.education_leader.info['memory'].append({
-                'matchId': match.info['_id'],
-                'isLearner': False,
-                'choices': []
-            })
-
-            mas.education_learner.info['memory'].append({
-                'matchId': match.info['_id'],
-                'isLearner': True,
-                'choices': []
-            })
-
-            mas.family_leader.info['memory'].append({
-                'matchId': match.info['_id'],
-                'isLearner': False,
-                'choices': []
-            })
-
-            mas.family_learner.info['memory'].append({
-                'matchId': match.info['_id'],
-                'isLearner': True,
-                'choices': []
-            })
-        except:
-            print('add_new_memory() error', sys.exc_info())
-
-    def add_new_mas_player(self, match, old_leader, new_leader):
-
-        for institution, players in match.info['mas']:
-
-            if players[-1]['playerId'] == old_leader:
-
-                obj = {
-                    'playerId': new_leader.info['_id'],
-                    'symbol': 'O'
-                }
-
-                match.info['mas'][institution].append(obj)
-                self.match_db.update(match.info['_id'], json.dumps(match.info))
-
-    def check_life(self, db, agents):
-        """
-        Check if the lastest lider agent has life and create if hasn't
-        :param db: `Database` a Database object
-        :param agents: `List` a Agent object list
-
-        Usage
-        >>> from velhia import Velhia
-        >>> (leader, learner) = velhia.check_life(db, [agent1, agent2])
-        >>> print(leader, learner)
-
-        <classes.match.Match object at 0x7fe6de3287d0>
-        <classes.match.Match object at 0x7fe6de3215a3>
-        """
-
-        try:
-
-            if agents[1]['life'] > 0:
-                leader = Agent(agents[1], ('O', 0))
-                learner = Agent(agents[0], ('O', 0))
-
-            else:
-                agents[1]['death'] = datetime.now().ctime()
-                db.update(agents[1]['_id'], json.dumps(agents[1]))
-                agents[0]['becomeLeader'] = datetime.now().ctime()
-                db.update(agents[0]['_id'], json.dumps(agents[0]))
-                leader = Agent(agents[0], ('O', 0))
-                learner = Agent(db.create(json.dumps({
-                    "birth": datetime.now().ctime(),
-                    "progenitor": leader.info['_id'],
-                    "life": 100,
-                    "memory": [],
-                    "matchsAsLearner": 0,
-                    "matchsAsLeader": 0,
-                    "victories": 0,
-                    "defeats": 0,
-                    "draw": 0
-                })).json(), ('O', 0))
-
-            return [leader, learner]
-        except:
-            print('check_life() error', sys.exc_info())
-
-    def check_win(self, player, moves):
-        """
-        Check and return a position to win
-        :param moves: game status
-        :return: `int` int
-
-        Usage
-        >>> from sa import StatisticalAlgorithm
-        >>> sa = StatisticalAlgorithm(obj, ['X', 1], ['O', 0])
-        >>> position = sa.check_win([-1,0,1,0,0,1,0,-1,-1])
-        >>> position
-        8
-        """
-
-        try:
-            for y in moves:
-
-                if y == [player.char[-1], player.char[-1], player.char[-1]]:
-                    return True
-                else:
-                    pass
-        except:
-            print('update_sa_match() error', sys.exc_info())
-
     def check_draw(self, match, sa, mas):
 
         if len(match.info['plays']) == 9 and match.info['status'] == 'PENDENT':
@@ -392,34 +163,12 @@ class Velhia:
             mas.religion_learner.info['memory'][-1]['environmentReaction'] = 'DRAW'
             mas.religion_leader.info['draw'] += 1
 
-            self.update_mas(mas)
+            update_mas(self, mas)
             self.algorithm_db.update(sa.info['_id'], json.dumps(sa.info))
             self.match_db.update(match.info['_id'], json.dumps(match.info))
 
         else:
             pass
-
-    def update_mas(self, mas):
-        try:
-            self.family_db.update(
-                mas.family_leader.info['_id'], json.dumps(mas.family_leader.info))
-
-            self.family_db.update(
-                mas.family_learner.info['_id'], json.dumps(mas.family_learner.info))
-
-            self.religion_db.update(
-                mas.religion_leader.info['_id'], json.dumps(mas.religion_leader.info))
-
-            self.religion_db.update(
-                mas.religion_learner.info['_id'], json.dumps(mas.religion_learner.info))
-
-            self.education_db.update(
-                mas.education_leader.info['_id'], json.dumps(mas.education_leader.info))
-
-            self.education_db.update(
-                mas.education_learner.info['_id'], json.dumps(mas.education_learner.info))
-        except:
-            print('update_mas() error', sys.exc_info())
 
     def update_match(self, match, sa, mas, sequence, game_status, position, time):
         """
@@ -442,9 +191,9 @@ class Velhia:
 
             if sequence == 'SA':
                 new_game_status[position] = sa.char[1]
-                results = self.sequence_list(new_game_status)
+                results = sequence_list(new_game_status)
 
-                if self.check_win(sa, results):
+                if check_win(sa, results):
                     match.info['plays'].append({
                         'seq': len(match.info['plays']) + 1,
                         'player': sa.info['_id'],
@@ -476,7 +225,7 @@ class Velhia:
                     mas.religion_leader.info['life'] -= len(
                         mas.religion_leader.info['memory'][-1]['choices']) / plays
 
-                    self.update_mas(mas)
+                    update_mas(self, mas)
 
                 else:
                     match.info['plays'].append({
@@ -491,9 +240,9 @@ class Velhia:
 
             elif sequence == 'MAS':
                 new_game_status[position] = mas.char[1]
-                results = self.sequence_list(new_game_status)
+                results = sequence_list(new_game_status)
 
-                if self.check_win(mas, results):
+                if check_win(mas, results):
                     match.info['plays'].append({
                         'seq': len(match.info['plays']) + 1,
                         'player': 'MAS',
@@ -525,7 +274,7 @@ class Velhia:
                         'position': position
                     })
 
-                self.update_mas(mas)
+                update_mas(self, mas)
                 self.match_db.update(
                     match.info['_id'], json.dumps(match.info))
             else:
@@ -559,34 +308,4 @@ class Velhia:
             return game_status
 
         except:
-            print('game_status() error', sys.exc_info())
-
-    def sequence_list(self, game_status):
-        """
-        All sequence to win 
-        :param game_status: game status
-        :return: `list` matrix
-
-        Usage
-        >>> from sa import StatisticalAlgorithm
-        >>> sa = StatisticalAlgorithm(obj, ['X', 1], ['O', 0])
-        >>> ret = sa.sequence_list([-1,0,1,0,-1,1,0,-1,-1])
-        >>> ret
-        [
-            [-1, 0, 1],     [0, -1, 1], 
-            [0, -1, -1],    [-1, 0, 0], 
-            [0, -1, -1],    [1, 1, -1],
-            [-1, -1, -1],   [1, -1, 0]
-        ]
-        """
-        try:
-            return [[game_status[0], game_status[1], game_status[2]],
-                    [game_status[3], game_status[4], game_status[5]],
-                    [game_status[6], game_status[7], game_status[8]],
-                    [game_status[0], game_status[3], game_status[6]],
-                    [game_status[1], game_status[4], game_status[7]],
-                    [game_status[2], game_status[5], game_status[8]],
-                    [game_status[0], game_status[4], game_status[8]],
-                    [game_status[2], game_status[4], game_status[6]]]
-        except:
-            print('sequence_list() error', sys.exc_info())
+            raise SystemError
