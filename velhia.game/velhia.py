@@ -1,7 +1,6 @@
 import sys
 import json
 from datetime import datetime
-from errors.invalid_match import InvalidMatch
 from classes.statistical_algorithm import StatisticalAlgorithm
 from classes.mult_agent_system import MultiAgentSystem
 from classes.match import Match
@@ -10,6 +9,10 @@ from handlers.statistical_algorithm_handler import get_lastest_sa
 from handlers.multi_agent_system_handler import update_mas
 from handlers.match_handler import add_new_match, add_new_memory, sequence_list
 from handlers.agent_handler import check_win, get_latest_agent
+from validations.match_validate import check_match_status, check_match_pendent
+from validations.match_validate import check_previous_match_game, check_currenty_match_game
+from validations.match_validate import check_previous_match_id, check_currenty_match_id
+from validations.player_validate import check_sa_matchs, check_agent_matchs
 
 
 class Velhia:
@@ -98,23 +101,77 @@ class Velhia:
 
     def validate(self, match, sa, mas):
         """
-        Check if everything is running correctly
+        Check if everything ran correctly
 
-            1. Check if the latest match has a status
-            2. Check if the currenty match is pendent
-            3. Check if the lastest leaders match is equals the currenty match
-            4. Check if the plays in match obj is equals the in the leaders memories
+            Previous
+            1. Check if the previous match has a status in ['WINNER', 'DRAW']
+            2. Check if the previous players memory is the previous match
+            3. Check if the previous match status is the previous environment status in the previous players memory
+            4. Check if the plays in previous match obj is equals previous players memories
+            5. Check if the number of players matchs is correctly (victories, defeats, draws)
+
+            Currenty
+            1. Check if the currenty match status is pendent
+            2. Check if the last match of institutions leaders is equals the currenty match
+            3. Check if the plays in match obj is equals players memories
+            4. Check if the number of players matchs is correctly (victories, defeats, draws)
 
         usage
         >>> from velhia import Velhia
         >>> vlh = Velhia(match_db, family_db, education_db, religion_db, algorithm_db)
-        >>> vlh.validate(match, sa, mas)
+        >>> vlh.validate_previous_match()
         True or False
         """
-        try:
-            pass
-        except:
-            raise InvalidMatch
+
+        if len(self.match_db.get_last(2).json()) > 1:
+
+            # Previous
+            previous_match = Match(self.match_db.get_last(2)[1].json())
+            previous_sa = StatisticalAlgorithm(self.algorithm_db.get_one(
+                previous_match['sa']['playerId']).json(), ['X', 1], ['O', 0])
+            previous_family = Agent(self.family_db.get_one(
+                previous_match['mas']['family']['playerId']).json(), ['O', 0])
+            previous_religion = Agent(self.religion_db.get_one(
+                previous_match['mas']['religion']['playerId']).json(), ['O', 0])
+            previous_education = Agent(self.education_db.get_one(
+                previous_match['mas']['education']['playerId']).json(), ['O', 0])
+
+            check_match_status(previous_match, previous_sa, previous_family,
+                               previous_religion, previous_education)
+            check_previous_match_id(previous_match, previous_sa, previous_family,
+                                    previous_religion, previous_education)
+            game_status = self.game_status(
+                previous_match, previous_sa.info['_id'])
+            check_previous_match_game(game_status, previous_sa, previous_family,
+                                      previous_religion, previous_education)
+            check_sa_matchs(previous_sa)
+            [check_agent_matchs(x) for x in [
+                previous_sa, previous_family, previous_religion, previous_education]]
+
+            # Currenty
+            check_match_pendent(match)
+            check_match_id(match, sa, mas.family_leader,
+                           mas.religion_leader, mas.education_leader)
+            game_status = self.game_status(match, sa.info['_id'])
+            check_currenty_match_game(game_status, sa, mas.family_leader,
+                                      mas.religion_leader, mas.education_leader)
+            check_sa_matchs(sa)
+            [check_agent_matchs(x) for x in [sa, mas.family_leader,
+                                             mas.religion_leader, mas.education_leader]]
+
+        else:
+
+            # Currenty
+            check_match_pendent(match)
+            check_currenty_match_id(match, sa, mas.family_leader,
+                                    mas.religion_leader, mas.education_leader)
+            game_status = self.game_status(match, sa.info['_id'])
+            check_currenty_match_game(game_status, sa, mas.family_leader,
+                                      mas.religion_leader, mas.education_leader)
+            check_sa_matchs(sa)
+            [check_agent_matchs(x) for x in [mas.family_leader,
+                                             mas.religion_leader,
+                                             mas.education_leader]]
 
     def get_sequence(self, match):
         """

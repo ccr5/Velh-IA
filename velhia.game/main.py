@@ -17,6 +17,7 @@ def play(vlh):
 
     [match, sa, mas] = vlh.get_data()
     vlh.validate(match, sa, mas)
+    logging.info('All informations was validated')
     sequence = vlh.get_sequence(match)
     game_status = vlh.game_status(match, sa.info['_id'])
 
