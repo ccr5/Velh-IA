@@ -6,10 +6,11 @@ const ReligionSchema: Schema = new Schema<IAgent>(
   {
     progenitor: { type: String, required: true },
     birth: { type: Date, required: true },
-    becomeLeader: { type: Date, required: true },
-    death: { type: Date, required: true },
+    becomeLeader: { type: Date },
+    death: { type: Date },
     life: { type: Number, required: true },
     memory: [{
+      matchId: { type: String, required: true },
       isLearner: { type: Boolean, required: true },
       choices: [{
         dateRequest: { type: Date, required: true },
@@ -19,7 +20,6 @@ const ReligionSchema: Schema = new Schema<IAgent>(
       }],
       environmentReaction: {
         type: String,
-        required: true,
         enum: Object.values(environmentReaction)
       }
     }],

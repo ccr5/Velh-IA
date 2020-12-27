@@ -6,6 +6,7 @@ const AlgorithmSchema: Schema = new Schema<IAlgorithm>(
   {
     birth: { type: Date, required: true },
     memory: [{
+      matchId: { type: String, required: true },
       isLearner: { type: Boolean, required: true },
       choices: [{
         dateRequest: { type: Date, required: true },
@@ -15,7 +16,6 @@ const AlgorithmSchema: Schema = new Schema<IAlgorithm>(
       }],
       environmentReaction: {
         type: String,
-        required: true,
         enum: Object.values(environmentReaction)
       }
     }],

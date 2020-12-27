@@ -7,13 +7,13 @@ import { IPlayer } from '@interfaces/iPlayer'
 
 interface IMatch extends Document {
   begin: Date,
-  end: Date,
+  end?: Date,
   time: number,
   sa: IPlayer,
   mas: IMultiAgentSystem
   plays: IPlay[],
   status: status,
-  winner: winner
+  winner?: winner
 }
 
 interface IMatchRepository {
