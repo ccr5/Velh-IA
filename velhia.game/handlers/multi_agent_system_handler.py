@@ -3,7 +3,14 @@ from errors.handler.mas.update_mas_error import UpdateMASError
 
 
 def update_mas(vlh, mas):
+    """
+    Update all multi agent system
+    :param vlh: `Velhia` Velhia obj
+    :param mas: `Multi Agent System` Multi Agent System obj 
+    """
+
     try:
+
         vlh.family_db.update(
             mas.family_leader.info['_id'], json.dumps(mas.family_leader.info))
 
@@ -21,5 +28,6 @@ def update_mas(vlh, mas):
 
         vlh.education_db.update(
             mas.education_learner.info['_id'], json.dumps(mas.education_learner.info))
+
     except:
         raise UpdateMASError

@@ -98,6 +98,9 @@ class Velhia:
     def validate(self, match, sa, mas):
         """
         Check if everything ran correctly
+        :param match: `Match` Match obj
+        :param sa: `Statistical Algorithm` Statistical Algorithm obj
+        :param mas: `Multi Agent System` Multi Agent System obj 
 
             Previous
             1. Check if the previous match has a status in ['WINNER', 'DRAW']

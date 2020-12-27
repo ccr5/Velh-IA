@@ -8,6 +8,15 @@ from errors.validation.match.previous_match_game_error import PreviousMatchGameI
 
 
 def check_match_pendent(match):
+    """
+    Check if a status of currenty match is pendent
+    :param match: `Match` Match obj
+
+    usage
+    >>> from validations.match_validate import check_match_pendent
+    >>> match = Match()
+    >>> check_match_pendent(match)
+    """
 
     try:
 
@@ -24,6 +33,23 @@ def check_match_pendent(match):
 
 
 def check_match_status(match, sa, family, religion, education):
+    """
+    Check if a status of currenty match is pendent
+    :param match: `Match` Match obj
+    :param sa: `StatisticalAlgorithm` Statistical Algorithm obj
+    :param family: `Agent` Agent obj
+    :param religion: `Agent` Agent obj
+    :param education: `Agent` Agent obj
+
+    usage
+    >>> from validations.match_validate import check_match_status
+    >>> match = Match()
+    >>> sa = StatisticalAlgorithm()
+    >>> family = Agent()
+    >>> religion = Agent()
+    >>> education = Agent()
+    >>> check_match_status(match)
+    """
 
     try:
 
@@ -54,6 +80,23 @@ def check_match_status(match, sa, family, religion, education):
 
 
 def check_previous_match_id(match, sa, family, religion, education):
+    """
+    Check if all previous objects has the same match id
+    :param match: `Match` Match obj
+    :param sa: `StatisticalAlgorithm` Statistical Algorithm obj
+    :param family: `Agent` Agent obj
+    :param religion: `Agent` Agent obj
+    :param education: `Agent` Agent obj
+
+    usage
+    >>> from validations.match_validate import check_previous_match_id
+    >>> match = Match()
+    >>> sa = StatisticalAlgorithm()
+    >>> family = Agent()
+    >>> religion = Agent()
+    >>> education = Agent()
+    >>> check_previous_match_id(match)
+    """
 
     try:
 
@@ -75,6 +118,23 @@ def check_previous_match_id(match, sa, family, religion, education):
 
 
 def check_currenty_match_id(match, sa, family, religion, education):
+    """
+    Check if all currenty objects has the same match id
+    :param match: `Match` Match obj
+    :param sa: `StatisticalAlgorithm` Statistical Algorithm obj
+    :param family: `Agent` Agent obj
+    :param religion: `Agent` Agent obj
+    :param education: `Agent` Agent obj
+
+    usage
+    >>> from validations.match_validate import check_currenty_match_id
+    >>> match = Match()
+    >>> sa = StatisticalAlgorithm()
+    >>> family = Agent()
+    >>> religion = Agent()
+    >>> education = Agent()
+    >>> check_currenty_match_id(match)
+    """
 
     try:
 
@@ -96,6 +156,23 @@ def check_currenty_match_id(match, sa, family, religion, education):
 
 
 def check_previous_match_game(game_status, sa, family, religion, education):
+    """
+    Check if all previous objects has the same match game
+    :param match: `Match` Match obj
+    :param sa: `StatisticalAlgorithm` Statistical Algorithm obj
+    :param family: `Agent` Agent obj
+    :param religion: `Agent` Agent obj
+    :param education: `Agent` Agent obj
+
+    usage
+    >>> from validations.match_validate import check_previous_match_game
+    >>> match = Match()
+    >>> sa = StatisticalAlgorithm()
+    >>> family = Agent()
+    >>> religion = Agent()
+    >>> education = Agent()
+    >>> check_previous_match_game(match)
+    """
 
     try:
 
@@ -138,6 +215,23 @@ def check_previous_match_game(game_status, sa, family, religion, education):
 
 
 def check_currenty_match_game(game_status, sa, family, religion, education):
+    """
+    Check if all currenty objects has the same match game
+    :param match: `Match` Match obj
+    :param sa: `StatisticalAlgorithm` Statistical Algorithm obj
+    :param family: `Agent` Agent obj
+    :param religion: `Agent` Agent obj
+    :param education: `Agent` Agent obj
+
+    usage
+    >>> from validations.match_validate import check_currenty_match_game
+    >>> match = Match()
+    >>> sa = StatisticalAlgorithm()
+    >>> family = Agent()
+    >>> religion = Agent()
+    >>> education = Agent()
+    >>> check_currenty_match_game(match)
+    """
 
     try:
 

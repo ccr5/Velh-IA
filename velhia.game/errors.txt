@@ -3,7 +3,5 @@ Ok - Não está deletando tudo no final do Play()
 Ok - Não sei se está aguardando o retorno da API
 Ok - Completar o arquivo de log
 Ok - Não está validando se toda sociedade & ambiente estão batendo os dados
-
-Corrigir o construtor das classes .info
-Acrescentar a validação de http status no calsse database
+Ok - Acrescentar a validação de http status no calsse database
 Não dando baixa na partida quando checa se o agente morreu

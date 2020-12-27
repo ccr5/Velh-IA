@@ -4,6 +4,15 @@ from errors.validation.player.agent_match_error import AgentMatchError
 
 
 def check_sa_matchs(sa):
+    """
+    Check if the number of matchs, memories and (victories, defeats and draw) is correctly
+    :param sa: `Statistical Algorithm` Statistical Algorithm obj
+
+    usage
+    >>> from validations.player_validate import check_sa_matchs
+    >>> sa = StatisticalAlgorithm()
+    >>> check_sa_matchs(sa) 
+    """
 
     try:
 
@@ -22,6 +31,15 @@ def check_sa_matchs(sa):
 
 
 def check_agent_matchs(agent):
+    """
+    Check if the number of matchs, memories and (victories, defeats and draw) is correctly
+    :param sa: `Agent` Agent obj
+
+    usage
+    >>> from validations.player_validate import check_sa_matchs
+    >>> sa = Agent()
+    >>> check_agent_matchs(agent) 
+    """
 
     try:
 

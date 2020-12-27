@@ -41,7 +41,15 @@ def add_new_match(db, sa, mas):
 
 
 def add_new_memory(match, sa, mas):
+    """
+    Add a new empty memory in all players
+    :param match: `Match` Match obj
+    :param sa: `Statistical Algorithm` Statistical Algorithm obj
+    :param mas: `Multi Agent System` Multi Agent System obj
+    """
+
     try:
+
         sa.info['memory'].append({
             'matchId': match.info['_id'],
             'isLearner': False,
@@ -83,11 +91,19 @@ def add_new_memory(match, sa, mas):
             'isLearner': True,
             'choices': []
         })
+
     except:
         raise NewMemoryError
 
 
 def add_new_mas_player(db, match, old_leader, new_leader):
+    """
+    Add a new player in the match's mas obj
+    :param db: `Database` Database obj
+    :param match: `Match` Match obj
+    :param old_leader: `String` old leader id
+    :param new_leader: `Agent` new Agent leader obj
+    """
 
     try:
 
@@ -112,18 +128,6 @@ def sequence_list(game_status):
     All sequence to win 
     :param game_status: game status
     :return: `list` matrix
-
-    Usage
-    >>> from sa import StatisticalAlgorithm
-    >>> sa = StatisticalAlgorithm(obj, ['X', 1], ['O', 0])
-    >>> ret = sa.sequence_list([-1,0,1,0,-1,1,0,-1,-1])
-    >>> ret
-    [
-        [-1, 0, 1],     [0, -1, 1], 
-        [0, -1, -1],    [-1, 0, 0], 
-        [0, -1, -1],    [1, 1, -1],
-        [-1, -1, -1],   [1, -1, 0]
-    ]
     """
     try:
 
