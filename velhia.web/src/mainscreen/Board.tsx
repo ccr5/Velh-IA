@@ -6,18 +6,17 @@ interface myState {
   SA: {
     name: string,
     wins: number,
-    last: string,
     percent: string
   },
   MAS: {
     name: string,
     wins: number,
-    last: string,
     percent: string
   },
   General: {
     begin: string,
-    matchs: number
+    matchs: number,
+    draws: number
   }
 }
 
@@ -28,41 +27,77 @@ class Board extends Component<Record<string, unknown>, myState> {
       SA: {
         name: 'Statistical Algorithm',
         wins: 0,
-        last: '24/10/2020',
-        percent: '%'
+        percent: '-'
       },
       MAS: {
         name: 'Multi-Agent System',
         wins: 0,
-        last: '25/10/2020',
-        percent: '%'
+        percent: '-'
       },
       General: {
-        begin: '28/09/2020',
-        matchs: 0
+        begin: '',
+        matchs: 0,
+        draws: 0
       }
     }
   }
 
   componentDidMount ():void {
+    this.updateSAValues()
+    this.updateMASValues()
+    this.updateGeneralValues()
+
     setInterval(
-      () => this.updateSAValues(),
-      30000
+      () => {
+        this.updateSAValues()
+        this.updateMASValues()
+        this.updateGeneralValues()
+      },
+      1000
     )
   }
 
   updateSAValues (): void {
-    Axios.get('https://api.bitpreco.com/btc-brl/ticker')
+    Axios.get('http://localhost:3000/api/v1/web/sa')
       .then((response) => {
         this.setState({
           SA: {
             name: 'Statistical Algorithm',
-            wins: response.data.avg,
-            last: '24/10/2020',
-            percent: '%'
+            wins: response.data.wins,
+            percent: `${Math.round(response.data.percent * 100).toFixed(0)}%`
           }
         })
       })
+  }
+
+  updateMASValues (): void {
+    Axios.get('http://localhost:3000/api/v1/web/mas')
+      .then((response) => {
+        this.setState({
+          MAS: {
+            name: 'Multi-Agent System',
+            wins: response.data.wins,
+            percent: `${Math.round(response.data.percent * 100).toFixed(0)}%`
+          }
+        })
+      })
+  }
+
+  updateGeneralValues (): void {
+    Axios.get('http://localhost:3000/api/v1/web/general')
+      .then((response) => {
+        this.setState({
+          General: {
+            begin: this.formatDate(new Date(response.data.begin)),
+            matchs: response.data.nMatchs,
+            draws: response.data.nDraws
+          }
+        })
+      })
+  }
+
+  formatDate (date: Date): string {
+    return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
   }
 
   // componentWillUnmount(): void {
@@ -79,7 +114,6 @@ class Board extends Component<Record<string, unknown>, myState> {
               <tr>
                 <th scope="col">Player</th>
                 <th scope="col">Wins</th>
-                <th scope="col">Last</th>
                 <th scope="col">%</th>
               </tr>
             </thead>
@@ -87,13 +121,11 @@ class Board extends Component<Record<string, unknown>, myState> {
               <tr>
                 <td>{this.state.SA.name}</td>
                 <td>{this.state.SA.wins}</td>
-                <td>{this.state.SA.last}</td>
                 <td>{this.state.SA.percent}</td>
               </tr>
               <tr>
                 <td>{this.state.MAS.name}</td>
                 <td>{this.state.MAS.wins}</td>
-                <td>{this.state.MAS.last}</td>
                 <td>{this.state.MAS.percent}</td>
               </tr>
             </tbody>
@@ -109,6 +141,10 @@ class Board extends Component<Record<string, unknown>, myState> {
               <tr>
                 <td>Nº Matchs</td>
                 <td>{this.state.General.matchs}</td>
+              </tr>
+              <tr>
+                <td>Nº Draws</td>
+                <td>{this.state.General.draws}</td>
               </tr>
             </tbody>
           </table>
