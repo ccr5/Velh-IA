@@ -69,7 +69,7 @@ class Velhia:
             return [match_backup, sa_backup, mas_backup]
 
         else:
-            pass
+            return [None, None, None]
 
     def start(self):
         """
@@ -412,25 +412,30 @@ class Velhia:
         :param mas_backup: `MultiAgentSystem` Multi Agent System obj
         """
 
-        if sa.info['_id'] != sa_backup.info['_id']:
-            self.algorithm_db.delete(sa.info['_id'])
+        if [None, None, None] != [match_backup, sa_backup, mas_backup]:
 
-        if match.info['_id'] != match_backup.info['_id']:
-            self.match_db.delete(sa.info['_id'])
+            if sa.info['_id'] != sa_backup.info['_id']:
+                self.algorithm_db.delete(sa.info['_id'])
 
-        if mas.family_learner.info['_id'] != mas_backup.family_learner.info['_id']:
-            self.family_db.delete(mas.family_learner.info['_id'])
+            if match.info['_id'] != match_backup.info['_id']:
+                self.match_db.delete(sa.info['_id'])
 
-        if mas.religion_learner.info['_id'] != mas_backup.religion_learner.info['_id']:
-            self.religion_db.delete(mas.religion_learner.info['_id'])
+            if mas.family_learner.info['_id'] != mas_backup.family_learner.info['_id']:
+                self.family_db.delete(mas.family_learner.info['_id'])
 
-        if mas.education_learner.info['_id'] != mas_backup.education_learner.info['_id']:
-            self.education_db.delete(mas.education_learner.info['_id'])
+            if mas.religion_learner.info['_id'] != mas_backup.religion_learner.info['_id']:
+                self.religion_db.delete(mas.religion_learner.info['_id'])
 
-        self.match_db.update(
-            match_backup.info['_id'], json.dumps(match_backup.info))
+            if mas.education_learner.info['_id'] != mas_backup.education_learner.info['_id']:
+                self.education_db.delete(mas.education_learner.info['_id'])
 
-        self.algorithm_db.update(
-            sa_backup.info['_id'], json.dumps(sa_backup.info))
+            self.match_db.update(
+                match_backup.info['_id'], json.dumps(match_backup.info))
 
-        update_mas(self, mas_backup)
+            self.algorithm_db.update(
+                sa_backup.info['_id'], json.dumps(sa_backup.info))
+
+            update_mas(self, mas_backup)
+
+        else:
+            pass
