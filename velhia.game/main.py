@@ -14,42 +14,49 @@ def play(vlh):
     Execute and control each step of Velh-IA workflow.
     """
 
-    [match, sa, mas] = vlh.get_data()
-    vlh.validate(match, sa, mas)
-    logging.info('All informations was validated')
-    sequence = vlh.get_sequence(match)
-    game_status = vlh.game_status(match, sa.info['_id'])
+    try:
+        [match_backup, sa_backup, mas_backup] = vlh.backup()
+        [match, sa, mas] = vlh.start()
+        vlh.validate(match, sa, mas)
+        logging.info('All informations was validated')
+        sequence = vlh.get_sequence(match)
+        game_status = vlh.game_status(match, sa.info['_id'])
 
-    if sequence[-1] == 'SA':
-        start = datetime.now()
-        position = sa.play(game_status)
-        end = datetime.now()
-        time = end - start
-        time = time.microseconds / 1000000
-    else:
-        start = datetime.now()
-        position = mas.play(match, game_status)
-        end = datetime.now()
-        time = end - start
-        time = time.microseconds / 1000000
+        if sequence[-1] == 'SA':
+            start = datetime.now()
+            position = sa.play(game_status)
+            end = datetime.now()
+            time = end - start
+            time = time.microseconds / 1000000
+        else:
+            start = datetime.now()
+            position = mas.play(match, game_status)
+            end = datetime.now()
+            time = end - start
+            time = time.microseconds / 1000000
 
-    vlh.update_match(match, sa, mas,
-                     sequence[-1], game_status, position, time)
+        vlh.update_match(match, sa, mas,
+                         sequence[-1], game_status, position, time)
 
-    vlh.check_draw(match, sa, mas)
+        vlh.check_draw(match, sa, mas)
 
-    logging.info(f"match: {match.info['_id']}")
-    logging.info(f"sa: {match.info['sa']}")
-    logging.info(f"family: {match.info['mas']['family']}")
-    logging.info(f"education: {match.info['mas']['education']}")
-    logging.info(f"religion: {match.info['mas']['religion']}")
-    logging.info(f"seq: {len(match.info['plays'])}")
-    logging.info(f"game: {game_status}")
-    logging.info(f"status: {match.info['status']}")
-    logging.info(
-        f"winner: {match.info['winner']}") if match.info['status'] == "WINNER" else ""
+        logging.info(f"match: {match.info['_id']}")
+        logging.info(f"sa: {match.info['sa']}")
+        logging.info(f"family: {match.info['mas']['family']}")
+        logging.info(f"education: {match.info['mas']['education']}")
+        logging.info(f"religion: {match.info['mas']['religion']}")
+        logging.info(f"seq: {len(match.info['plays'])}")
+        logging.info(f"game: {game_status}")
+        logging.info(f"status: {match.info['status']}")
+        logging.info(
+            f"winner: {match.info['winner']}") if match.info['status'] == "WINNER" else ""
 
-    del match, sa, mas, sequence, game_status, start, position, end, time
+        del match, sa, mas, sequence, game_status, start, position, end, time
+
+    except Exception as e:
+        vlh.rollback(match, match_backup, sa, sa_backup, mas, mas_backup)
+        logging.info('Rollback function is successfully')
+        raise e
 
 
 def main():

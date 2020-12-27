@@ -90,3 +90,19 @@ class Database:
             return response
         else:
             raise InvalidResponse(response.status_code, 200)
+
+    def delete(self, object_id):
+        """
+        Delete a object in a collection
+        :param object_id: `str` ObjectId
+        :return: `dict` lastest object version
+        """
+
+        head = {'Content-Type': 'application/json',
+                'cache-control': 'no-cache'}
+        response = request('DELETE', self.url + str(object_id), headers=head)
+
+        if response.status_code is 200:
+            return response
+        else:
+            raise InvalidResponse(response.status_code, 200)
