@@ -1,5 +1,6 @@
 import random as r
 from datetime import datetime
+from errors.multi_agent_system.play_error import MASPlayError
 
 
 class MultiAgentSystem:
@@ -18,6 +19,11 @@ class MultiAgentSystem:
         self.religion_learner = religion_learner
 
     def play(self, match, game_status):
+        """
+        Choose a position to play
+        :param match: `Match` a Match obj
+        :param game_status: game status
+        """
 
         family_start = datetime.now()
         validation = False
@@ -116,6 +122,6 @@ class MultiAgentSystem:
                 self.religion_learner.learn(
                     match, game_status, religion_position)
             else:
-                raise SystemError
+                raise MASPlayError
 
             return position
