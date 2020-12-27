@@ -34,8 +34,7 @@ class Agent:
         if len(self.info['memory']) > 0:
 
             if len(self.info['memory'][0]['choices']) == 0:
-                position = r.choice([0, 1, 2, 3, 4, 5, 6, 7, 8])
-                return position
+                return r.choice([0, 1, 2, 3, 4, 5, 6, 7, 8])
 
             else:
                 searching = True
@@ -55,11 +54,10 @@ class Agent:
                         memory_lenght -= 1
 
                 if position == -1:
-                    position = r.choice([0, 1, 2, 3, 4, 5, 6, 7, 8])
-                    return position
+                    return r.choice([0, 1, 2, 3, 4, 5, 6, 7, 8])
 
                 else:
-                    return position
+                    return r.choice([position, r.choice([0, 1, 2, 3, 4, 5, 6, 7, 8])])
 
         else:
             raise RememberError
