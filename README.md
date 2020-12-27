@@ -6,7 +6,7 @@ A New Way To Study, Learn and Have A Fun!
 1. Description
 2. The Scientific Research
 3. Project Code
-4.Colaborations
+4. Colaborations
 5. Tools
 6. Usage
 7. Project Status
