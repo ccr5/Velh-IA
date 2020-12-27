@@ -32,7 +32,46 @@ class Velhia:
         self.religion_db = religion_db
         self.algorithm_db = algorithm_db
 
-    def get_data(self):
+    def backup(self):
+        """
+        Get the lastest datas to use in rollback function
+
+        usage
+        >>> from velhia import Velhia
+        >>> vlh = Velhia()
+        >>> [match_backup, sa_backup, mas_backup] = vlh.backup()
+
+        <classes.match.Match object at 0x7fe6de3287d0>
+        <classes.statistical_algorithm.StatisticalAlgorithm object at 0x7fe6de328150>
+        <classes.multi_agent_system.MultiAgentSystem object at 0x7fe6de34dd10>
+        """
+
+        ret = self.match_db.get_last(1).json()
+
+        if len(ret) != 0:
+
+            match_backup = Match(ret[0])
+
+            sa_backup = StatisticalAlgorithm(
+                self.algorithm_db.get_last(1).json()[0],
+                ['X', 1], ['O', 0]
+            )
+
+            mas_backup = MultiAgentSystem(
+                Agent(self.family_db.get_last(2).json()[1], ['O', 0]),
+                Agent(self.family_db.get_last(1).json()[0], ['O', 0]),
+                Agent(self.education_db.get_last(2).json()[1], ['O', 0]),
+                Agent(self.education_db.get_last(1).json()[0], ['O', 0]),
+                Agent(self.religion_db.get_last(2).json()[1], ['O', 0]),
+                Agent(self.religion_db.get_last(1).json()[0], ['O', 0]),
+            )
+
+            return [match_backup, sa_backup, mas_backup]
+
+        else:
+            pass
+
+    def start(self):
         """
         Prepare all objects to start the game
 
@@ -364,3 +403,34 @@ class Velhia:
                 game_status[p['position']] = 0
 
         return game_status
+
+    def rollback(self, match, match_backup, sa, sa_backup, mas, mas_backup):
+        """
+        Rollback function to restore database object if something is wrong
+        :param match_backup: `Match` Match obj
+        :param sa_backup: `StatisticalAlgorithm` Statistical Algorithm obj
+        :param mas_backup: `MultiAgentSystem` Multi Agent System obj
+        """
+
+        if sa.info['_id'] != sa_backup.info['_id']:
+            self.algorithm_db.delete(sa.info['_id'])
+
+        if match.info['_id'] != match_backup.info['_id']:
+            self.match_db.delete(sa.info['_id'])
+
+        if mas.family_learner.info['_id'] != mas_backup.family_learner.info['_id']:
+            self.family_db.delete(mas.family_learner.info['_id'])
+
+        if mas.religion_learner.info['_id'] != mas_backup.religion_learner.info['_id']:
+            self.religion_db.delete(mas.religion_learner.info['_id'])
+
+        if mas.education_learner.info['_id'] != mas_backup.education_learner.info['_id']:
+            self.education_db.delete(mas.education_learner.info['_id'])
+
+        self.match_db.update(
+            match_backup.info['_id'], json.dumps(match_backup.info))
+
+        self.algorithm_db.update(
+            sa_backup.info['_id'], json.dumps(sa_backup.info))
+
+        update_mas(self, mas_backup)
