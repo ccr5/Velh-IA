@@ -19,8 +19,8 @@ const options: cors.CorsOptions = {
   preflightContinue: true
 }
 
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }))
+app.use(bodyParser.json({ limit: '5mb' }))
 app.use(cors(options))
 app.use(routes)
 app.get('*', (req, res) => res.send({ message: 'Welcome Velh-IA API' }))
