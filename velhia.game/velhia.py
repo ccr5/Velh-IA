@@ -418,7 +418,7 @@ class Velhia:
                 self.algorithm_db.delete(sa.info['_id'])
 
             if match.info['_id'] != match_backup.info['_id']:
-                self.match_db.delete(sa.info['_id'])
+                self.match_db.delete(match.info['_id'])
 
             if mas.family_learner.info['_id'] != mas_backup.family_learner.info['_id']:
                 self.family_db.delete(mas.family_learner.info['_id'])
