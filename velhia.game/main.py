@@ -68,11 +68,23 @@ def main():
     try:
 
         load_dotenv(find_dotenv())
+        root_dir = os.path.dirname(
+            os.path.abspath(__file__)).replace('\\', '/')
 
-        root_dir = os.path.dirname(os.path.abspath(__file__))
-        logging.basicConfig(filename=f'{root_dir}/logs/{datetime.now()}.log', filemode='w',
-                            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                            level=logging.DEBUG)
+        try:
+            file_name = f'{datetime.now()}.log'
+            logging.basicConfig(filename=f'{root_dir}/logs/{file_name}', filemode='w',
+                                format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                                level=logging.DEBUG)
+            logging.info(f'log file {file_name} was created')
+        except:
+            if not os.path.exists(f'{root_dir}/logs/app.log'):
+                open(f'{root_dir}/logs/app.log', 'x')
+
+            logging.basicConfig(filename=f'{root_dir}/logs/app.log', filemode='w',
+                                format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                                level=logging.DEBUG)
+            logging.info(f'log file app.log was created')
 
         logging.info('Check all requirements to starting Velh-IA Game')
         response = request('GET', os.getenv('API_ADDRESS'))
