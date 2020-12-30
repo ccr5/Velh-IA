@@ -97,7 +97,7 @@ class Board extends Component<Record<string, unknown>, myState> {
   }
 
   formatDate (date: Date): string {
-    return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
   }
 
   // componentWillUnmount(): void {
