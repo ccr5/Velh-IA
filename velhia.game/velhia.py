@@ -311,6 +311,10 @@ class Velhia:
                 mas.education_leader.info['memory'][-1]['environmentReaction'] = 'LOSER'
                 mas.religion_leader.info['memory'][-1]['environmentReaction'] = 'LOSER'
 
+                mas.family_learner.info['memory'][-1]['environmentReaction'] = 'LOSER'
+                mas.education_learner.info['memory'][-1]['environmentReaction'] = 'LOSER'
+                mas.religion_learner.info['memory'][-1]['environmentReaction'] = 'LOSER'
+
                 mas.family_leader.info['defeats'] += 1
                 mas.education_leader.info['defeats'] += 1
                 mas.religion_leader.info['defeats'] += 1
@@ -352,12 +356,15 @@ class Velhia:
                 match.info['winner'] = 'MAS'
 
                 mas.family_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
+                mas.family_learner.info['memory'][-1]['environmentReaction'] = 'WINNER'
                 mas.family_leader.info['victories'] += 1
 
                 mas.education_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
+                mas.education_learner.info['memory'][-1]['environmentReaction'] = 'WINNER'
                 mas.education_leader.info['victories'] += 1
 
                 mas.religion_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
+                mas.religion_learner.info['memory'][-1]['environmentReaction'] = 'WINNER'
                 mas.religion_leader.info['victories'] += 1
 
                 sa.info['defeats'] += 1
