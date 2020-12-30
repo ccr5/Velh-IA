@@ -57,6 +57,8 @@ def check_match_status(match, family, religion, education):
             pass
         elif match.info['status'] == 'DRAW' and len(match.info['plays']) == 9:
             pass
+        else:
+            raise PreviousMatchHasInvalidStatus
 
         status_list = [family.info['memory'][-2]['environmentReaction'],
                        religion.info['memory'][-2]['environmentReaction'],
@@ -106,7 +108,28 @@ def check_previous_match_id(match, family, religion, education):
         if [match.info['_id'], match.info['_id'], match.info['_id']] == id_match_list:
             pass
         else:
-            raise PreviousMatchIdIsDifferent
+            check = []
+
+            if 'death' in family.info and family.info['life'] <= 0:
+                check.append(0)
+            elif 'death' in religion.info and religion.info['life'] <= 0:
+                check.append(1)
+            elif 'death' in education.info and education.info['life'] <= 0:
+                check.append(2)
+            else:
+                pass
+
+            new_id_list = [True, True, True]
+
+            for i in check:
+                new_id_list[i] = False
+
+            if [match.info['_id'] == family.info['memory'][-2]['matchId'],
+                    match.info['_id'] == religion.info['memory'][-2]['matchId'],
+                    match.info['_id'] == education.info['memory'][-2]['matchId']] == new_id_list:
+                pass
+            else:
+                raise PreviousMatchIdIsDifferent
 
     except PreviousMatchIdIsDifferent:
         raise PreviousMatchIdIsDifferent
@@ -152,7 +175,7 @@ def check_currenty_match_id(match, family, religion, education):
         raise ValidationError
 
 
-def check_previous_match_game(game_status, family, religion, education):
+def check_previous_match_game(game_status, match, family, religion, education):
     """
     Check if all previous objects has the same match game
     :param match: `Match` Match obj
@@ -204,7 +227,14 @@ def check_previous_match_game(game_status, family, religion, education):
         if game_status == game:
             pass
         else:
-            raise PreviousMatchGameIsDifferent
+            id_match_list = [family.info['memory'][-2]['matchId'],
+                             religion.info['memory'][-2]['matchId'],
+                             education.info['memory'][-2]['matchId']]
+
+            if [match.info['_id'], match.info['_id'], match.info['_id']] != id_match_list:
+                pass
+            else:
+                raise PreviousMatchGameIsDifferent
 
     except PreviousMatchGameIsDifferent:
         raise PreviousMatchGameIsDifferent

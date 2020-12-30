@@ -1,0 +1,13 @@
+.board {
+    margin-top: 30px;
+}
+
+.infosMAS {
+    border-radius: 50px;
+    background-color: lightblue;
+    color: white;
+}
+
+.title {
+    text-align: center;
+}

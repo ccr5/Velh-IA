@@ -52,6 +52,8 @@ def check_agent_matchs(agent):
 
             if matchs_info == total_memories == total_matchs + 1:
                 pass
+            elif matchs_info == total_memories and agent.info['matchsAsLeader'] == total_matchs + 1:
+                pass
             else:
                 raise AgentMatchError
 

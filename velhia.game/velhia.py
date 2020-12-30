@@ -180,7 +180,7 @@ class Velhia:
                                     previous_religion, previous_education)
             game_status = self.game_status(
                 previous_match, previous_sa.info['_id'])
-            check_previous_match_game(game_status, previous_family,
+            check_previous_match_game(game_status, previous_match, previous_family,
                                       previous_religion, previous_education)
             check_sa_matchs(previous_sa)
             [check_agent_matchs(x) for x in [previous_family,
