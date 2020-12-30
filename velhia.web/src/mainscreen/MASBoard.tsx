@@ -138,7 +138,7 @@ export default class MASBoard extends Component<Record<string, unknown>, myState
     return (
       <div className="container-fluid board">
         <div className="jumbotron infosMAS">
-          <h5 className="title">Multi Agent System - Details</h5>
+          <h5 className="title">Multi Agent System</h5>
           <table className="table">
             <thead>
               <tr>

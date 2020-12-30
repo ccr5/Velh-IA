@@ -21,12 +21,12 @@ export class WebController {
     @inject(TYPES.FamilyRepository) familyRepository: IAgentRepository,
     @inject(TYPES.EducationRepository) educationRepository: IAgentRepository,
     @inject(TYPES.ReligionRepository) religionRepository: IAgentRepository
-    ) {
-      this.matchRepository = matchRepository
-      this.algorithmRepository = algorithmRepository
-      this.familyRepository = familyRepository
-      this.educationRepository = educationRepository
-      this.religionRepository = religionRepository
+  ) {
+    this.matchRepository = matchRepository
+    this.algorithmRepository = algorithmRepository
+    this.familyRepository = familyRepository
+    this.educationRepository = educationRepository
+    this.religionRepository = religionRepository
   }
 
   /**
@@ -36,18 +36,18 @@ export class WebController {
    * @example getGeneralData()
    * @returns {Promise<Response | void>} IAgent[] | 404 
    */
-  async getGeneralData(req: Request, res: Response): Promise<Response | void> {
+  async getGeneralData (req: Request, res: Response): Promise<Response | void> {
     try {
       const mac: IMatch[] | null = await this.matchRepository.getAllMatch()
-      const religion: IAgent[] | null = await this.religionRepository.getLastAgent(2)
+      const sa: IAlgorithm[] | null = await this.algorithmRepository.getLastAlgorithm(1)
 
       if (mac == null) { return res.sendStatus(404) }
-      if (religion == null) { return res.sendStatus(404) }
+      if (sa == null) { return res.sendStatus(404) }
 
       const ret: IGeneralData = {
         begin: mac[0].begin,
         nMatchs: mac.length,
-        nDraws: religion[1].draw
+        nDraws: sa[0].draw
       }
 
       res.send(ret)
@@ -64,7 +64,7 @@ export class WebController {
    * @example getSAData()
    * @returns {Promise<Response | void>} IAgent[] | 404 
    */
-  async getSAData(req: Request, res: Response): Promise<Response | void> {
+  async getSAData (req: Request, res: Response): Promise<Response | void> {
     try {
       const sa: IAlgorithm[] | null = await this.algorithmRepository.getLastAlgorithm(1)
       if (sa == null) { return res.sendStatus(404) }
@@ -85,7 +85,7 @@ export class WebController {
    * @example getMASData()
    * @returns {Promise<Response | void>} IAgent[] | 404 
    */
-  async getMASData(req: Request, res: Response): Promise<Response | void> {
+  async getMASData (req: Request, res: Response): Promise<Response | void> {
     try {
       const family: IAgent[] | null = await this.familyRepository.getLastAgent(2)
 
@@ -107,13 +107,13 @@ export class WebController {
    * @example getCampData()
    * @returns {Promise<Response | void>} IAgent[] | 404 
    */
-  async getCampData(req: Request, res: Response): Promise<Response | void> {
+  async getCampData (req: Request, res: Response): Promise<Response | void> {
     try {
-      const match: IMatch[] | null = await this.matchRepository.getLastMatch(2)
+      const match: IMatch[] | null = await this.matchRepository.getLastMatch(1)
       if (match == null) { return res.sendStatus(404) }
       let game = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
 
-      match[1].plays.forEach(play => {
+      match[0].plays.forEach(play => {
         if (play.player == 'MAS') {
           game[play.position] = 0
         } else {
@@ -121,7 +121,7 @@ export class WebController {
         }
       })
 
-      const ret: ICamp ={
+      const ret: ICamp = {
         C1: { L1: game[6], L2: game[3], L3: game[0] },
         C2: { L1: game[7], L2: game[4], L3: game[1] },
         C3: { L1: game[8], L2: game[5], L3: game[2] }
@@ -141,14 +141,14 @@ export class WebController {
    * @example getMAS()
    * @returns {Promise<Response | void>} 
    */
-  async getMAS(req: Request, res: Response): Promise<Response | void> {
+  async getMAS (req: Request, res: Response): Promise<Response | void> {
     try {
       const family: IAgent[] | null = await this.familyRepository.getLastAgent(2)
       const familyMemories: IAgent[] | null = await this.familyRepository.getAllAgent()
       const education: IAgent[] | null = await this.educationRepository.getLastAgent(2)
       const educationMemories: IAgent[] | null = await this.educationRepository.getAllAgent()
       const religion: IAgent[] | null = await this.religionRepository.getLastAgent(2)
-      const religionMemories: IAgent[] | null = await this.familyRepository.getAllAgent()
+      const religionMemories: IAgent[] | null = await this.religionRepository.getAllAgent()
 
       if (family == null || education == null || religion == null) { return res.sendStatus(404) }
       if (familyMemories == null || educationMemories == null || religionMemories == null) { return res.sendStatus(404) }
