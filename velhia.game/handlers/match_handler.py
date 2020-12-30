@@ -50,12 +50,6 @@ def add_new_memory(match, sa, mas):
 
     try:
 
-        sa.info['memory'].append({
-            'matchId': match.info['_id'],
-            'isLearner': False,
-            'choices': []
-        })
-
         mas.religion_leader.info['memory'].append({
             'matchId': match.info['_id'],
             'isLearner': False,

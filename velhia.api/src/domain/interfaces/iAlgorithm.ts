@@ -3,7 +3,6 @@ import { IMemory } from '@interfaces/iMemory'
 
 interface IAlgorithm extends Document {
   birth: Date,
-  memory: IMemory[]
   matchs: number,
   victories: number,
   defeats: number,

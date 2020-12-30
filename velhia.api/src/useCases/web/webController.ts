@@ -68,7 +68,7 @@ export class WebController {
       const sa: IAlgorithm[] | null = await this.algorithmRepository.getLastAlgorithm(1)
       if (sa == null) { return res.sendStatus(404) }
       const wins: number = sa[0].victories
-      const percent: number = sa[0].victories / sa[0].memory.length
+      const percent: number = sa[0].victories / (sa[0].victories + sa[0].draw + sa[0].defeats)
       const ret: IPlayersData = { wins: wins, percent: percent }
       res.send(ret)
 

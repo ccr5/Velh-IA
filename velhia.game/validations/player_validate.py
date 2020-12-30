@@ -18,10 +18,9 @@ def check_sa_matchs(sa):
 
         total_matchs = sa.info['victories'] + \
             sa.info['defeats'] + sa.info['draw']
-        total_memories = len(sa.info['memory'])
         matchs_info = sa.info['matchs']
 
-        if matchs_info == total_memories == total_matchs + 1:
+        if matchs_info == total_matchs + 1:
             pass
         else:
             raise SAMatchError
