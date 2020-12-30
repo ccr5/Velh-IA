@@ -174,13 +174,13 @@ class Velhia:
             previous_education = Agent(self.education_db.get_one(
                 previous_match.info['mas']['education'][-1]['playerId']).json(), ['O', 0])
 
-            check_match_status(previous_match, previous_sa, previous_family,
+            check_match_status(previous_match, previous_family,
                                previous_religion, previous_education)
-            check_previous_match_id(previous_match, previous_sa, previous_family,
+            check_previous_match_id(previous_match, previous_family,
                                     previous_religion, previous_education)
             game_status = self.game_status(
                 previous_match, previous_sa.info['_id'])
-            check_previous_match_game(game_status, previous_sa, previous_family,
+            check_previous_match_game(game_status, previous_family,
                                       previous_religion, previous_education)
             check_sa_matchs(previous_sa)
             [check_agent_matchs(x) for x in [previous_family,
@@ -189,10 +189,10 @@ class Velhia:
 
             # Currenty
             check_match_pendent(match)
-            check_currenty_match_id(match, sa, mas.family_leader,
+            check_currenty_match_id(match, mas.family_leader,
                                     mas.religion_leader, mas.education_leader)
             game_status = self.game_status(match, sa.info['_id'])
-            check_currenty_match_game(game_status, sa, mas.family_leader,
+            check_currenty_match_game(game_status, mas.family_leader,
                                       mas.religion_leader, mas.education_leader)
             check_sa_matchs(sa)
             [check_agent_matchs(x) for x in [mas.family_leader,
@@ -202,10 +202,10 @@ class Velhia:
 
             # Currenty
             check_match_pendent(match)
-            check_currenty_match_id(match, sa, mas.family_leader,
+            check_currenty_match_id(match, mas.family_leader,
                                     mas.religion_leader, mas.education_leader)
             game_status = self.game_status(match, sa.info['_id'])
-            check_currenty_match_game(game_status, sa, mas.family_leader,
+            check_currenty_match_game(game_status, mas.family_leader,
                                       mas.religion_leader, mas.education_leader)
             check_sa_matchs(sa)
             [check_agent_matchs(x) for x in [mas.family_leader,
@@ -250,7 +250,6 @@ class Velhia:
             match.info['status'] = 'DRAW'
             match.info['end'] = datetime.now().ctime()
 
-            sa.info['memory'][-1]['environmentReaction'] = 'DRAW'
             sa.info['draw'] += 1
 
             mas.family_leader.info['memory'][-1]['environmentReaction'] = 'DRAW'
@@ -306,7 +305,6 @@ class Velhia:
                 match.info['status'] = 'WINNER'
                 match.info['winner'] = 'SA'
 
-                sa.info['memory'][-1]['environmentReaction'] = 'WINNER'
                 sa.info['victories'] += 1
 
                 mas.family_leader.info['memory'][-1]['environmentReaction'] = 'LOSER'
@@ -362,7 +360,6 @@ class Velhia:
                 mas.religion_leader.info['memory'][-1]['environmentReaction'] = 'WINNER'
                 mas.religion_leader.info['victories'] += 1
 
-                sa.info['memory'][-1]['environmentReaction'] = 'LOSER'
                 sa.info['defeats'] += 1
 
                 self.algorithm_db.update(

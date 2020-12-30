@@ -44,42 +44,18 @@ class StatisticalAlgorithm:
             end = datetime.now()
             time = end - start
             time = time.microseconds / 1000000
-
-            self.info['memory'][-1]['choices'].append({
-                'dateRequest': start.ctime(),
-                'gameStatus': moves,
-                'timeToAct': time,
-                'action': winner
-            })
-
             return winner
 
         elif winner is not None and loser is None:
             end = datetime.now()
             time = end - start
             time = time.microseconds / 1000000
-
-            self.info['memory'][-1]['choices'].append({
-                'dateRequest': start.ctime(),
-                'gameStatus': moves,
-                'timeToAct': time,
-                'action': winner
-            })
-
             return winner
 
         elif winner is None and loser is not None:
             end = datetime.now()
             time = end - start
             time = time.microseconds / 1000000
-
-            self.info['memory'][-1]['choices'].append({
-                'dateRequest': start.ctime(),
-                'gameStatus': moves,
-                'timeToAct': time,
-                'action': loser
-            })
-
             return loser
 
         elif winner is None and loser is None:
@@ -87,14 +63,6 @@ class StatisticalAlgorithm:
             end = datetime.now()
             time = end - start
             time = time.microseconds / 1000000
-
-            self.info['memory'][-1]['choices'].append({
-                'dateRequest': start.ctime(),
-                'gameStatus': moves,
-                'timeToAct': time,
-                'action': position
-            })
-
             return position
 
         else:

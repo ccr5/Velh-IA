@@ -32,7 +32,7 @@ def check_match_pendent(match):
         raise ValidationError
 
 
-def check_match_status(match, sa, family, religion, education):
+def check_match_status(match, family, religion, education):
     """
     Check if a status of currenty match is pendent
     :param match: `Match` Match obj
@@ -58,16 +58,15 @@ def check_match_status(match, sa, family, religion, education):
         elif match.info['status'] == 'DRAW' and len(match.info['plays']) == 9:
             pass
 
-        status_list = [sa.info['memory'][-2]['environmentReaction'],
-                       family.info['memory'][-2]['environmentReaction'],
+        status_list = [family.info['memory'][-2]['environmentReaction'],
                        religion.info['memory'][-2]['environmentReaction'],
                        education.info['memory'][-2]['environmentReaction']]
 
-        if ['WINNER', 'LOSER', 'LOSER', 'LOSER'] == status_list:
+        if ['LOSER', 'LOSER', 'LOSER'] == status_list:
             pass
-        elif ['LOSER', 'WINNER', 'WINNER', 'WINNER'] == status_list:
+        elif ['WINNER', 'WINNER', 'WINNER'] == status_list:
             pass
-        elif ['DRAW', 'DRAW', 'DRAW', 'DRAW'] == status_list:
+        elif ['DRAW', 'DRAW', 'DRAW'] == status_list:
             pass
         else:
             raise PreviousMatchHasInvalidStatus
@@ -79,7 +78,7 @@ def check_match_status(match, sa, family, religion, education):
         raise ValidationError
 
 
-def check_previous_match_id(match, sa, family, religion, education):
+def check_previous_match_id(match, family, religion, education):
     """
     Check if all previous objects has the same match id
     :param match: `Match` Match obj
@@ -100,12 +99,11 @@ def check_previous_match_id(match, sa, family, religion, education):
 
     try:
 
-        id_match_list = [sa.info['memory'][-2]['matchId'],
-                         family.info['memory'][-2]['matchId'],
+        id_match_list = [family.info['memory'][-2]['matchId'],
                          religion.info['memory'][-2]['matchId'],
                          education.info['memory'][-2]['matchId']]
 
-        if [match.info['_id'], match.info['_id'], match.info['_id'], match.info['_id']] == id_match_list:
+        if [match.info['_id'], match.info['_id'], match.info['_id']] == id_match_list:
             pass
         else:
             raise PreviousMatchIdIsDifferent
@@ -117,7 +115,7 @@ def check_previous_match_id(match, sa, family, religion, education):
         raise ValidationError
 
 
-def check_currenty_match_id(match, sa, family, religion, education):
+def check_currenty_match_id(match, family, religion, education):
     """
     Check if all currenty objects has the same match id
     :param match: `Match` Match obj
@@ -138,12 +136,11 @@ def check_currenty_match_id(match, sa, family, religion, education):
 
     try:
 
-        id_match_list = [sa.info['memory'][-1]['matchId'],
-                         family.info['memory'][-1]['matchId'],
+        id_match_list = [family.info['memory'][-1]['matchId'],
                          religion.info['memory'][-1]['matchId'],
                          education.info['memory'][-1]['matchId']]
 
-        if [match.info['_id'], match.info['_id'], match.info['_id'], match.info['_id']] == id_match_list:
+        if [match.info['_id'], match.info['_id'], match.info['_id']] == id_match_list:
             pass
         else:
             raise CurrentyMatchIdIsDifferent
@@ -155,7 +152,7 @@ def check_currenty_match_id(match, sa, family, religion, education):
         raise ValidationError
 
 
-def check_previous_match_game(game_status, sa, family, religion, education):
+def check_previous_match_game(game_status, family, religion, education):
     """
     Check if all previous objects has the same match game
     :param match: `Match` Match obj
@@ -178,9 +175,6 @@ def check_previous_match_game(game_status, sa, family, religion, education):
 
         game = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
 
-        for p in sa.info['memory'][-2]['choices']:
-            game[p['action']] = sa.char[1]
-
         for p in family.info['memory'][-2]['choices']:
 
             if game[p['action']] == -1:
@@ -202,6 +196,11 @@ def check_previous_match_game(game_status, sa, family, religion, education):
             else:
                 pass
 
+        for i in range(0, len(game_status)):
+
+            if game_status[i] == 1:
+                game_status[i] = -1
+
         if game_status == game:
             pass
         else:
@@ -214,7 +213,7 @@ def check_previous_match_game(game_status, sa, family, religion, education):
         raise ValidationError
 
 
-def check_currenty_match_game(game_status, sa, family, religion, education):
+def check_currenty_match_game(game_status, family, religion, education):
     """
     Check if all currenty objects has the same match game
     :param match: `Match` Match obj
@@ -236,9 +235,7 @@ def check_currenty_match_game(game_status, sa, family, religion, education):
     try:
 
         game = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
-
-        for p in sa.info['memory'][-1]['choices']:
-            game[p['action']] = sa.char[1]
+        new_game = []
 
         for p in family.info['memory'][-1]['choices']:
 
@@ -260,6 +257,11 @@ def check_currenty_match_game(game_status, sa, family, religion, education):
                 game[p['action']] = education.char[1]
             else:
                 pass
+
+        for i in range(0, len(game_status)):
+
+            if game_status[i] == 1:
+                game_status[i] = -1
 
         if game_status == game:
             pass
