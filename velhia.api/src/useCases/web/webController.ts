@@ -1,6 +1,7 @@
 import { TYPES } from '@config/container/types'
 import { IAgent, IAgentRepository } from '@interfaces/iAgent'
 import { IAlgorithm, IAlgorithmRepository } from '@interfaces/iAlgorithm'
+import IMAS from '@interfaces/iMAS'
 import { IMatch, IMatchRepository } from '@interfaces/iMatch'
 import { ICamp, IGeneralData, IPlayersData } from '@interfaces/iWeb'
 import { Request, Response } from 'express'
@@ -89,8 +90,8 @@ export class WebController {
       const family: IAgent[] | null = await this.familyRepository.getLastAgent(2)
 
       if (family == null) { return res.sendStatus(404) }
-      const wins: number = family[0].victories
-      const percent: number = family[0].victories / family[0].memory.length
+      const wins: number = family[1].victories
+      const percent: number = family[1].victories / family[1].memory.length
       const ret: IPlayersData = { wins: wins, percent: percent }
       res.send(ret)
 
@@ -124,6 +125,74 @@ export class WebController {
         C1: { L1: game[6], L2: game[3], L3: game[0] },
         C2: { L1: game[7], L2: game[4], L3: game[1] },
         C3: { L1: game[8], L2: game[5], L3: game[2] }
+      }
+
+      res.send(ret)
+
+    } catch (error) {
+      res.sendStatus(400).send(error)
+    }
+  }
+
+  /**
+   * return lastest MAS to fill website home screen
+   * @param {Request} req request
+   * @param {Response} res response
+   * @example getMAS()
+   * @returns {Promise<Response | void>} 
+   */
+  async getMAS(req: Request, res: Response): Promise<Response | void> {
+    try {
+      const family: IAgent[] | null = await this.familyRepository.getLastAgent(2)
+      const familyMemories: IAgent[] | null = await this.familyRepository.getAllAgent()
+      const education: IAgent[] | null = await this.educationRepository.getLastAgent(2)
+      const educationMemories: IAgent[] | null = await this.educationRepository.getAllAgent()
+      const religion: IAgent[] | null = await this.religionRepository.getLastAgent(2)
+      const religionMemories: IAgent[] | null = await this.familyRepository.getAllAgent()
+
+      if (family == null || education == null || religion == null) { return res.sendStatus(404) }
+      if (familyMemories == null || educationMemories == null || religionMemories == null) { return res.sendStatus(404) }
+
+      const ret: IMAS = {
+        family: {
+          institution: 'family',
+          id: family[1].id,
+          generation: `${familyMemories.length - 1}º`,
+          progenitor: family[1].progenitor,
+          life: family[1].life,
+          memories: family[1].memory.length,
+          matchAsLearner: family[1].matchsAsLearner,
+          matchAsLeader: family[1].matchsAsLeader,
+          victories: family[1].victories,
+          defeats: family[1].defeats,
+          draws: family[1].draw
+        },
+        education: {
+          institution: 'education',
+          id: education[1].id,
+          generation: `${educationMemories.length - 1}º`,
+          progenitor: education[1].progenitor,
+          life: education[1].life,
+          memories: education[1].memory.length,
+          matchAsLearner: education[1].matchsAsLearner,
+          matchAsLeader: education[1].matchsAsLeader,
+          victories: education[1].victories,
+          defeats: education[1].defeats,
+          draws: education[1].draw
+        },
+        religion: {
+          institution: 'religion',
+          id: religion[1].id,
+          generation: `${religionMemories.length - 1}º`,
+          progenitor: religion[1].progenitor,
+          life: religion[1].life,
+          memories: religion[1].memory.length,
+          matchAsLearner: religion[1].matchsAsLearner,
+          matchAsLeader: religion[1].matchsAsLeader,
+          victories: religion[1].victories,
+          defeats: religion[1].defeats,
+          draws: religion[1].draw
+        }
       }
 
       res.send(ret)
