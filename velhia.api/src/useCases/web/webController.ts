@@ -38,7 +38,7 @@ export class WebController {
   async getGeneralData (req: Request, res: Response): Promise<Response | void> {
     try {
       const mac: IMatch[] | null = await this.matchRepository.getAllMatch()
-      const sa: IAlgorithm[] | null = await this.algorithmRepository.getLastAlgorithm(1)
+      const sa: IAlgorithm[] | null = await this.algorithmRepository.getAlgorithm('1', '1', '{}', undefined, undefined)
 
       if (mac == null) { return res.sendStatus(404) }
       if (sa == null) { return res.sendStatus(404) }
@@ -65,7 +65,7 @@ export class WebController {
    */
   async getSAData (req: Request, res: Response): Promise<Response | void> {
     try {
-      const sa: IAlgorithm[] | null = await this.algorithmRepository.getLastAlgorithm(1)
+      const sa: IAlgorithm[] | null = await this.algorithmRepository.getAlgorithm('{}', undefined, undefined, '1', '1' )
       if (sa == null) { return res.sendStatus(404) }
       const wins: number = sa[0].victories
       const percent: number = sa[0].victories / (sa[0].victories + sa[0].draw + sa[0].defeats)

@@ -21,16 +21,16 @@ export class AlgorithmController {
    */
   async get(req: Request, res: Response): Promise<Response | void> {
     try {
-      const offset = req.query.offset
-      const limit = req.query.limit
-      const fields = req.query.fields
-      const sort = req.query.sort
+      const offset: string | undefined = req.query.offset?.toString()
+      const limit: string | undefined = req.query.limit?.toString()
+      const filters: string | undefined = req.query.filters?.toString()
+      const fields: string | undefined = req.query.fields?.toString()
+      const sort: string | undefined = req.query.sort?.toString()
 
-      const sa: IAlgorithm[] | null = await this.repository.getAllAlgorithm()
-      if (sa == null) {
-        return res.sendStatus(404)
-      }
-      return res.send(sa)
+      const sa: IAlgorithm[] | null = await this.repository.getAlgorithm(filters, fields, sort, offset, limit)
+      if (sa == null) return res.sendStatus(404)
+      res.send(sa)
+      
     } catch (error) {
       res.sendStatus(400).send(error)
     }
