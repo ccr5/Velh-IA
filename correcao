@@ -1,0 +1,7 @@
+Adicionar filtro, paginação e ordenação na API V1
+
+paginação -> offset & limit
+campos -> fields=`<campo>, <campo>`
+filtro -> pré-estruturado + query string
+ordenação -> sort= `<campo>:<asc | desc>, <campo>:<asc | desc>` 
+
