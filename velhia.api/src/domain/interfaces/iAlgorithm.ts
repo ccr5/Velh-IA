@@ -1,5 +1,4 @@
 import { Document } from 'mongoose'
-import { IMemory } from '@interfaces/iMemory'
 
 interface IAlgorithm extends Document {
   birth: Date,

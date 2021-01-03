@@ -1,7 +1,9 @@
-Adicionar filtro, paginação e ordenação na API V1
+Velhia.API
 
-paginação -> offset & limit
-campos -> fields=`<campo>, <campo>`
+Ok - paginação -> offset & limit
+Ok - filtro -> filter=`{}`
+Ok - campos -> fields=`<campo>,<campo>`
+Ok - ordenação -> sort= `<campo>:<asc | desc>`
+
 filtro -> pré-estruturado + query string
-ordenação -> sort= `<campo>:<asc | desc>, <campo>:<asc | desc>` 
 

@@ -21,7 +21,13 @@ export class MatchController {
    */
   async get(req: Request, res: Response): Promise<Response | void> {
     try {
-      const mac: IMatch[] | null = await this.repository.getAllMatch()
+      const offset: string | undefined = req.query.offset?.toString()
+      const limit: string | undefined = req.query.limit?.toString()
+      const filters: string | undefined = req.query.filters?.toString()
+      const fields: string | undefined = req.query.fields?.toString()
+      const sort: string | undefined = req.query.sort?.toString()
+
+      const mac: IMatch[] | null = await this.repository.getMatch(filters, fields, sort, offset, limit)
       if (mac == null) {
         return res.sendStatus(404)
       }

@@ -1,5 +1,4 @@
 import { IAlgorithmRepository, IAlgorithm } from '@interfaces/iAlgorithm'
-import { json } from 'body-parser'
 import { Algorithm } from 'src/domain/entities/algorithm'
 
 export class AlgorithmRepository implements IAlgorithmRepository {
@@ -15,60 +14,35 @@ export class AlgorithmRepository implements IAlgorithmRepository {
     offset: string | undefined, 
     limit: string| undefined): Promise<IAlgorithm[] | null> {
 
-    if (fields != undefined) {
-
       let fieldsString = ''
-      fields.split(',').forEach((field: string) => {
-        fieldsString += ` ${field}`
-      })
+      if (fields != undefined) {
+        fields.split(',').forEach((field: string) => {
+          fieldsString += ` ${field}`
+        })
+      } 
+
+      let sortList = new Array
+      if (sort != undefined) {
+        sort.split(':').forEach((field: string) => {
+          if (field == 'asc') {
+            sortList.push(1)
+          } else if (field == 'desc') {
+            sortList.push(-1)
+          } else {
+            sortList.push(field)
+          }
+        })
+      }
 
       const ret = await Algorithm.find(
         filters != undefined ? JSON.parse(filters) : {},
         fieldsString
       )
-      .skip(
-        offset != undefined ? +offset : +''
-      )
-      .limit(
-        limit != undefined ? +limit : +''
-      )
-
-      return ret
-
-    } else if (sort != undefined) {
-
-      let sortList = new Array
-      sort.split(':').forEach((field: string) => {
-        if (field == 'asc') {
-          sortList.push(1)
-        } else if (field == 'desc') {
-          sortList.push(-1)
-        } else {
-          sortList.push(field)
-        }
-      })
-
-      const ret = await Algorithm.find(
-        filters != undefined ? JSON.parse(filters) : {}
-      )
       .sort([sortList])
-      .skip(
-        offset != undefined ? +offset : +''
-      )
-      .limit(
-        limit != undefined ? +limit : +''
-      )
+      .skip(offset != undefined ? +offset : +'')
+      .limit(limit != undefined ? +limit : +'')
 
       return ret
-
-    } else {
-
-      const ret = await Algorithm.find(
-        filters != undefined ? JSON.parse(filters) : {}
-      )
-
-      return ret
-    }
   }
   
   /**

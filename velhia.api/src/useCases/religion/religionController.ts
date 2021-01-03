@@ -21,7 +21,13 @@ export class ReligionController {
    */
   async get(req: Request, res: Response): Promise<Response | void> {
     try {
-      const mas: IAgent[] | null = await this.repository.getAllAgent()
+      const offset: string | undefined = req.query.offset?.toString()
+      const limit: string | undefined = req.query.limit?.toString()
+      const filters: string | undefined = req.query.filters?.toString()
+      const fields: string | undefined = req.query.fields?.toString()
+      const sort: string | undefined = req.query.sort?.toString()
+
+      const mas: IAgent[] | null = await this.repository.getAgent(filters, fields, sort, offset, limit)
       if (mas == null) {
         return res.sendStatus(404)
       }
