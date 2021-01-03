@@ -8,13 +8,18 @@ from requests import request, exceptions
 from velhia import Velhia
 
 
-def play(vlh):
+load_dotenv(find_dotenv())
+vlh = ''
+
+
+def play():
     """
     Velh-IA Flow Control.
     Execute and control each step of Velh-IA workflow.
     """
 
     try:
+        global vlh
         [match_backup, sa_backup, mas_backup] = vlh.backup()
         [match, sa, mas] = vlh.start()
         vlh.validate(match, sa, mas)
@@ -66,8 +71,6 @@ def main():
     """
 
     try:
-
-        load_dotenv(find_dotenv())
         root_dir = os.path.dirname(
             os.path.abspath(__file__)).replace('\\', '/')
 
@@ -90,24 +93,26 @@ def main():
         response = request('GET', os.getenv('API_ADDRESS'))
         logging.info("Connected with Velhia's API")
 
-        match_db = Database('v1', 'matchs')
-        family_db = Database('v1', 'families')
-        education_db = Database('v1', 'educations')
-        religion_db = Database('v1', 'religions')
-        algorithm_db = Database('v1', 'algorithms')
+        match_db = Database(os.getenv('API_ADDRESS'), 'v1', 'matchs')
+        family_db = Database(os.getenv('API_ADDRESS'), 'v1', 'families')
+        education_db = Database(os.getenv('API_ADDRESS'), 'v1', 'educations')
+        religion_db = Database(os.getenv('API_ADDRESS'), 'v1', 'religions')
+        algorithm_db = Database(os.getenv('API_ADDRESS'), 'v1', 'algorithms')
         logging.info('Databases objects was created!')
 
-        velhia = Velhia(match_db, family_db, education_db,
-                        religion_db, algorithm_db)
+        global vlh
+        vlh = Velhia(match_db, family_db, education_db,
+                     religion_db, algorithm_db)
         logging.info('Velhia object was created!')
 
-        del match_db, algorithm_db, family_db, education_db, religion_db, root_dir
-        logging.info('Unnecessary datas was deleted!')
+        del match_db, algorithm_db, family_db, education_db, religion_db
+        del response, file_name, root_dir
 
+        logging.info('Unnecessary datas was deleted!')
         logging.info('Starting Velh-IA Game')
 
         while True:
-            play(velhia)
+            play()
 
     except exceptions.ConnectionError:
         print("Can't connect with Velh-IA API")
