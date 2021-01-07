@@ -25,7 +25,7 @@ def play():
         vlh.validate(match, sa, mas)
         logging.info('All informations was validated')
         sequence = vlh.get_sequence(match)
-        game_status = vlh.game_status(match, sa.info['_id'])
+        game_status = vlh.game_status(match, sa.id)
 
         if sequence[-1] == 'SA':
             start = datetime.now()
@@ -45,16 +45,16 @@ def play():
 
         vlh.check_draw(match, sa, mas)
 
-        logging.info(f"match: {match.info['_id']}")
-        logging.info(f"sa: {match.info['sa']}")
-        logging.info(f"family: {match.info['mas']['family']}")
-        logging.info(f"education: {match.info['mas']['education']}")
-        logging.info(f"religion: {match.info['mas']['religion']}")
-        logging.info(f"seq: {len(match.info['plays'])}")
+        logging.info(f"match: {match.id}")
+        logging.info(f"sa: {match.sa}")
+        logging.info(f"family: {match.mas['family']}")
+        logging.info(f"education: {match.mas['education']}")
+        logging.info(f"religion: {match.mas['religion']}")
+        logging.info(f"seq: {len(match.plays)}")
         logging.info(f"game: {game_status}")
-        logging.info(f"status: {match.info['status']}")
+        logging.info(f"status: {match.status}")
         logging.info(
-            f"winner: {match.info['winner']}") if match.info['status'] == "WINNER" else ""
+            f"winner: {match.winner}") if match.status == "WINNER" else ""
 
         del match, sa, mas, sequence, game_status, start, position, end, time
 

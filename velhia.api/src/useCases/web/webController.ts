@@ -37,8 +37,8 @@ export class WebController {
    */
   async getGeneralData (req: Request, res: Response): Promise<Response | void> {
     try {
-      const mac: IMatch[] | null = await this.matchRepository.getAllMatch()
-      const sa: IAlgorithm[] | null = await this.algorithmRepository.getAlgorithm('1', '1', '{}', undefined, undefined)
+      const mac: IMatch[] | null = await this.matchRepository.getMatch(undefined, undefined, undefined, undefined, undefined)
+      const sa: IAlgorithm[] | null = await this.algorithmRepository.getAlgorithm(undefined, undefined, undefined, '0', '1')
 
       if (mac == null) { return res.sendStatus(404) }
       if (sa == null) { return res.sendStatus(404) }
@@ -65,7 +65,7 @@ export class WebController {
    */
   async getSAData (req: Request, res: Response): Promise<Response | void> {
     try {
-      const sa: IAlgorithm[] | null = await this.algorithmRepository.getAlgorithm('{}', undefined, undefined, '1', '1' )
+      const sa: IAlgorithm[] | null = await this.algorithmRepository.getAlgorithm(undefined, undefined, undefined, '0', '1' )
       if (sa == null) { return res.sendStatus(404) }
       const wins: number = sa[0].victories
       const percent: number = sa[0].victories / (sa[0].victories + sa[0].draw + sa[0].defeats)
@@ -86,7 +86,7 @@ export class WebController {
    */
   async getMASData (req: Request, res: Response): Promise<Response | void> {
     try {
-      const family: IAgent[] | null = await this.familyRepository.getLastAgent(2)
+      const family: IAgent[] | null = await this.familyRepository.getAgent(undefined, undefined, 'createdAt:desc', '0', '2')
 
       if (family == null) { return res.sendStatus(404) }
       const wins: number = family[1].victories
@@ -108,7 +108,7 @@ export class WebController {
    */
   async getCampData (req: Request, res: Response): Promise<Response | void> {
     try {
-      const match: IMatch[] | null = await this.matchRepository.getLastMatch(1)
+      const match: IMatch[] | null = await this.matchRepository.getMatch(undefined, undefined, 'createdAt:desc', '0', '1')
       if (match == null) { return res.sendStatus(404) }
       let game = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
 
@@ -139,15 +139,15 @@ export class WebController {
    * @param {Response} res response
    * @example getMAS()
    * @returns {Promise<Response | void>} 
-   */
+   */ 
   async getMAS (req: Request, res: Response): Promise<Response | void> {
     try {
-      const family: IAgent[] | null = await this.familyRepository.getLastAgent(2)
-      const familyMemories: IAgent[] | null = await this.familyRepository.getAllAgent()
-      const education: IAgent[] | null = await this.educationRepository.getLastAgent(2)
-      const educationMemories: IAgent[] | null = await this.educationRepository.getAllAgent()
-      const religion: IAgent[] | null = await this.religionRepository.getLastAgent(2)
-      const religionMemories: IAgent[] | null = await this.religionRepository.getAllAgent()
+      const family: IAgent[] | null = await this.familyRepository.getAgent(undefined, undefined, 'createdAt:desc', '0', '2')
+      const familyMemories: IAgent[] | null = await this.familyRepository.getAgent(undefined, undefined, undefined, undefined, undefined)
+      const education: IAgent[] | null = await this.educationRepository.getAgent(undefined, undefined, 'createdAt:desc', '0', '2')
+      const educationMemories: IAgent[] | null = await this.educationRepository.getAgent(undefined, undefined, undefined, undefined, undefined)
+      const religion: IAgent[] | null = await this.religionRepository.getAgent(undefined, undefined, 'createdAt:desc', '0', '2')
+      const religionMemories: IAgent[] | null = await this.religionRepository.getAgent(undefined, undefined, undefined, undefined, undefined)
 
       if (family == null || education == null || religion == null) { return res.sendStatus(404) }
       if (familyMemories == null || educationMemories == null || religionMemories == null) { return res.sendStatus(404) }

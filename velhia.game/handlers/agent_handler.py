@@ -8,7 +8,9 @@ from errors.handler.agent.check_win_error import CheckWinError
 from errors.handler.agent.check_life_error import CheckLifeError
 
 
-def get_latest_agent(db, match_db, match=Match({'_id': ''}), player=''):
+def get_latest_agent(db, match_db, match=Match(dict(
+        _id='', begin='', time='', sa='', mas='', plays='', status='')),
+        player=''):
     """
     Get the lastest agent obj in the database or create if it not exists
     If a match and player was passed, it will get the lastest agents as of a match obj in the database
@@ -25,7 +27,7 @@ def get_latest_agent(db, match_db, match=Match({'_id': ''}), player=''):
     """
 
     try:
-        res = db.get_last(2).json()
+        res = db.get(offset=0, limit=2, sort="createdAt:desc").json()
 
         if len(res) < 2:
             leader = Agent(db.create(json.dumps({
@@ -43,7 +45,7 @@ def get_latest_agent(db, match_db, match=Match({'_id': ''}), player=''):
 
             learner = Agent(db.create(json.dumps({
                 "birth": datetime.now().ctime(),
-                "progenitor": leader.info['_id'],
+                "progenitor": leader.id,
                 "life": 100,
                 "memory": [],
                 "matchsAsLearner": 0,
@@ -55,12 +57,12 @@ def get_latest_agent(db, match_db, match=Match({'_id': ''}), player=''):
 
             return [leader, learner]
 
-        elif match.info['_id'] != '' and player != '':
+        elif match.id != '' and player != '':
 
             if res[1]['_id'] == player['playerId']:
                 [leader, learner] = check_life(db, res)
 
-                if leader.info['_id'] == player['playerId']:
+                if leader.id == player['playerId']:
                     return [leader, learner]
                 else:
                     add_new_mas_player(match_db, match, player, leader)
@@ -100,7 +102,7 @@ def check_life(db, agents):
             leader = Agent(agents[0], ('O', 0))
             learner = Agent(db.create(json.dumps({
                 "birth": datetime.now().ctime(),
-                "progenitor": leader.info['_id'],
+                "progenitor": leader.id,
                 "life": 100,
                 "memory": [],
                 "matchsAsLearner": 0,

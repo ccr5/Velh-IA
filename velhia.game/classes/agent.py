@@ -13,7 +13,18 @@ class Agent:
     """
 
     def __init__(self, obj, my_char):
-        self.info = obj
+        self.id = obj['_id']
+        self.birth = obj['birth']
+        self.progenitor = obj['progenitor']
+        self.becomeLeader = obj['becomeLeader'] if 'becomeLeader' in obj else ''
+        self.death = obj['death'] if 'death' in obj else ''
+        self.life = obj['life']
+        self.memory = obj['memory']
+        self.matchsAsLearner = obj['matchsAsLearner']
+        self.matchsAsLeader = obj['matchsAsLeader']
+        self.victories = obj['victories']
+        self.defeats = obj['defeats']
+        self.draw = obj['draw']
         self.char = my_char
 
     def remember(self, match, game_status):
@@ -31,19 +42,19 @@ class Agent:
         5
         """
 
-        if len(self.info['memory']) > 0:
+        if len(self.memory) > 0:
 
-            if len(self.info['memory'][0]['choices']) == 0:
+            if len(self.memory[0]['choices']) == 0:
                 return r.choice([0, 1, 2, 3, 4, 5, 6, 7, 8])
 
             else:
                 searching = True
                 position = -1
-                memory_lenght = len(self.info['memory'])
+                memory_lenght = len(self.memory)
 
                 while searching and memory_lenght != 0:
 
-                    for memory in reversed(self.info['memory']):
+                    for memory in reversed(self.memory):
 
                         for choices in memory['choices']:
 
@@ -86,7 +97,7 @@ class Agent:
             time = end - start
             time = time.microseconds / 1000000
 
-            self.info['memory'][-1]['choices'].append({
+            self.memory[-1]['choices'].append({
                 'dateRequest': start.ctime(),
                 'gameStatus': game_status,
                 'timeToAct': time,
@@ -111,13 +122,13 @@ class Agent:
         >>> agt.learn(match, game_status, position)
         """
 
-        if self.info['memory'][-1]['matchId'] == match.info['_id']:
+        if self.memory[-1]['matchId'] == match.id:
             start = datetime.now()
             end = datetime.now()
             time = end - start
             time = time.microseconds / 1000000
 
-            self.info['memory'][-1]['choices'].append({
+            self.memory[-1]['choices'].append({
                 'dateRequest': start.ctime(),
                 'gameStatus': game_status,
                 'timeToAct': time,
@@ -126,3 +137,27 @@ class Agent:
 
         else:
             raise LearnError
+
+    def create_object(self):
+        """
+        Create a full obj to use in database functions
+        """
+
+        agent_info = {"_id": self.id,
+                      "birth": self.birth,
+                      "progenitor": self.progenitor,
+                      "life": self.life,
+                      "memory": self.memory,
+                      "matchsAsLearner": self.matchsAsLearner,
+                      "matchsAsLeader": self.matchsAsLeader,
+                      "victories": self.victories,
+                      "defeats": self.defeats,
+                      "draw": self.draw}
+
+        if self.becomeLeader != '':
+            agent_info['becomeLeader'] = self.becomeLeader
+
+        if self.death != '':
+            agent_info['death'] = self.death
+
+        return agent_info

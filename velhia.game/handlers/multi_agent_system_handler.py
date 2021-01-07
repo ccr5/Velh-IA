@@ -12,22 +12,22 @@ def update_mas(vlh, mas):
     try:
 
         vlh.family_db.update(
-            mas.family_leader.info['_id'], json.dumps(mas.family_leader.info))
+            mas.family_leader.id, json.dumps(mas.family_leader.create_object()))
 
         vlh.family_db.update(
-            mas.family_learner.info['_id'], json.dumps(mas.family_learner.info))
+            mas.family_learner.id, json.dumps(mas.family_learner.create_object()))
 
         vlh.religion_db.update(
-            mas.religion_leader.info['_id'], json.dumps(mas.religion_leader.info))
+            mas.religion_leader.id, json.dumps(mas.religion_leader.create_object()))
 
         vlh.religion_db.update(
-            mas.religion_learner.info['_id'], json.dumps(mas.religion_learner.info))
+            mas.religion_learner.id, json.dumps(mas.religion_learner.create_object()))
 
         vlh.education_db.update(
-            mas.education_leader.info['_id'], json.dumps(mas.education_leader.info))
+            mas.education_leader.id, json.dumps(mas.education_leader.create_object()))
 
         vlh.education_db.update(
-            mas.education_learner.info['_id'], json.dumps(mas.education_learner.info))
+            mas.education_learner.id, json.dumps(mas.education_learner.create_object()))
 
     except:
         raise UpdateMASError
