@@ -16,9 +16,8 @@ def check_sa_matchs(sa):
 
     try:
 
-        total_matchs = sa.info['victories'] + \
-            sa.info['defeats'] + sa.info['draw']
-        matchs_info = sa.info['matchs']
+        total_matchs = sa.victories + sa.defeats + sa.draw
+        matchs_info = sa.matchs
 
         if matchs_info == total_matchs + 1:
             pass
@@ -26,7 +25,7 @@ def check_sa_matchs(sa):
             raise SAMatchError
 
     except:
-        raise ValidationError
+        raise SAMatchError
 
 
 def check_agent_matchs(agent):
@@ -42,17 +41,15 @@ def check_agent_matchs(agent):
 
     try:
 
-        total_matchs = agent.info['victories'] + \
-            agent.info['defeats'] + agent.info['draw']
-        total_memories = len(agent.info['memory'])
-        matchs_info = agent.info['matchsAsLeader'] + \
-            agent.info['matchsAsLearner']
+        total_matchs = agent.victories + agent.defeats + agent.draw
+        total_memories = len(agent.memory)
+        matchs_info = agent.matchsAsLeader + agent.matchsAsLearner
 
-        if agent.info['life'] > 0:
+        if agent.life > 0:
 
             if matchs_info == total_memories == total_matchs + 1:
                 pass
-            elif matchs_info == total_memories and agent.info['matchsAsLeader'] == total_matchs + 1:
+            elif matchs_info == total_memories and agent.matchsAsLeader == total_matchs + 1:
                 pass
             else:
                 raise AgentMatchError
@@ -61,8 +58,10 @@ def check_agent_matchs(agent):
 
             if matchs_info == total_memories == total_matchs:
                 pass
+            elif matchs_info == total_memories and agent.matchsAsLeader == total_matchs:
+                pass
             else:
                 raise AgentMatchError
 
     except:
-        raise ValidationError
+        raise AgentMatchError

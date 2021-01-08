@@ -55,4 +55,4 @@ LinkedIn: https://www.linkedin.com/in/mattnobre/
 ------------
 ### Project Status
 
-**Multi Agent System:** Develop an MAS simulating according to the project proposal and storing all the data necessary for its operation and future insights
+**Velhia App:** View on my smartphone the starting field, the current game and the most interesting information relevant to the players and the possible analysis of the research in addition to informing the purpose

@@ -7,33 +7,44 @@ export class AlgorithmRepository implements IAlgorithmRepository {
    * @example getAllAlgorithm()
    * @returns {Promise<IAlgorithm[] | null>} IAlgorithm[] | null
    */
-  async getAllAlgorithm(): Promise<IAlgorithm[] | null> {
-    const ret = await Algorithm.find()
-    return ret
-  }
+  async getAlgorithm(
+    filters:string | undefined, 
+    fields: string | undefined, 
+    sort: string | undefined, 
+    offset: string | undefined, 
+    limit: string| undefined): Promise<IAlgorithm[] | null> {
 
-  /**
-   * Get a Statistical Algorithm in the database by id
-   * @param {string} id ObjectId
-   * @example getOneAlgorithm("11bf9688-699f-49a4-9d8e-b0cc57301bff")
-   * @returns {Promise<IAlgorithm | null>} IAlgorithm | null
-   */
-  async getOneAlgorithm(id: string): Promise<IAlgorithm | null> {
-    const ret = await Algorithm.findById(id)
-    return ret
-  }
+      let fieldsString = ''
+      if (fields != undefined) {
+        fields.split(',').forEach((field: string) => {
+          fieldsString += ` ${field}`
+        })
+      } 
 
-  /**
-   * Get a limit X of Statistical Algorithms in the database by id in desc order
-   * @param {number} limit number
-   * @example getLastAlgorithm(2)
-   * @returns {Promise<IAlgorithm[] | null>} IAlgorithm[2] | null
-   */
-  async getLastAlgorithm(limit: number): Promise<IAlgorithm[] | null> {
-    const ret = await Algorithm.find({}).sort({ createdAt: 'desc' }).limit(limit)
-    return ret
-  }
+      let sortList = new Array
+      if (sort != undefined) {
+        sort.split(':').forEach((field: string) => {
+          if (field == 'asc') {
+            sortList.push(1)
+          } else if (field == 'desc') {
+            sortList.push(-1)
+          } else {
+            sortList.push(field)
+          }
+        })
+      }
 
+      const ret = await Algorithm.find(
+        filters != undefined ? JSON.parse(filters) : {},
+        fieldsString
+      )
+      .sort([sortList])
+      .skip(offset != undefined ? +offset : +'')
+      .limit(limit != undefined ? +limit : +'')
+
+      return ret
+  }
+  
   /**
    * save a new Statistical Algorithm in the database
    * @param {IAlgorithm[]} data IAlgorithm[]
