@@ -8,9 +8,10 @@ from errors.handler.agent.check_win_error import CheckWinError
 from errors.handler.agent.check_life_error import CheckLifeError
 
 
-def get_latest_agent(db, match_db, match=Match(dict(
-        _id='', begin='', time='', sa='', mas='', plays='', status='')),
-        player=''):
+def get_latest_agent(db, match_db,
+                     match=Match(dict(id='', begin='', time='',
+                                      sa='', mas='', plays='', status='')),
+                     player=''):
     """
     Get the lastest agent obj in the database or create if it not exists
     If a match and player was passed, it will get the lastest agents as of a match obj in the database

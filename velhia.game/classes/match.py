@@ -1,7 +1,7 @@
 class Match:
 
     def __init__(self, obj):
-        self.id = obj['_id']
+        self.id = obj['_id'] if '_id' in obj else obj['id']
         self.begin = obj['begin']
         self.end = obj['end'] if 'end' in obj else ''
         self.time = obj['time']

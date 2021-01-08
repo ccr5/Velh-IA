@@ -25,7 +25,7 @@ def check_sa_matchs(sa):
             raise SAMatchError
 
     except:
-        raise ValidationError
+        raise SAMatchError
 
 
 def check_agent_matchs(agent):
@@ -58,8 +58,10 @@ def check_agent_matchs(agent):
 
             if matchs_info == total_memories == total_matchs:
                 pass
+            elif matchs_info == total_memories and agent.matchsAsLeader == total_matchs:
+                pass
             else:
                 raise AgentMatchError
 
     except:
-        raise ValidationError
+        raise AgentMatchError

@@ -28,23 +28,21 @@ class MultiAgentSystem:
         family_start = datetime.now()
         validation = False
         while not validation:
-            family_position = self.family_leader.remember(match, game_status)
+            family_position = self.family_leader.remember(game_status)
             validation = True if game_status[family_position] == -1 else False
         family_end = datetime.now()
 
         education_start = datetime.now()
         validation = False
         while not validation:
-            education_position = self.education_leader.remember(
-                match, game_status)
+            education_position = self.education_leader.remember(game_status)
             validation = True if game_status[education_position] == -1 else False
         education_end = datetime.now()
 
         religion_start = datetime.now()
         validation = False
         while not validation:
-            religion_position = self.religion_leader.remember(
-                match, game_status)
+            religion_position = self.religion_leader.remember(game_status)
             validation = True if game_status[religion_position] == -1 else False
         religion_end = datetime.now()
 

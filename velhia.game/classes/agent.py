@@ -27,10 +27,9 @@ class Agent:
         self.draw = obj['draw']
         self.char = my_char
 
-    def remember(self, match, game_status):
+    def remember(self, game_status):
         """
         Remember a game when was received a game status like now
-        :param match: `Match` a Match obj
         :param game_status: `List` a game status
 
         usage
