@@ -27,4 +27,4 @@ RUN yarn add ts-node tsconfig-paths
 
 COPY ["tsconfig.json", "/app/"]
 
-CMD ["yarn", "start:dev"]
+CMD ["yarn", "prod"]

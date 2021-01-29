@@ -4,29 +4,28 @@ services:
   db:
     image: mongo
     restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
     ports: 
       - "27017:27017"
   api:
     build: ./velhia.api
     ports:
       - "3000:3000"
+    links:
+      - db
     depends_on:
       - db
-  web:
-    build:
-      context: ./velhia.web
-    ports:
-      - "3000:3000"
-    depends_on: 
-      - api
-  play:
-    build: ./velhia.game
-    command: python main.py
-    depends_on: 
-      - api
+  # web:
+  #   build:
+  #     context: ./velhia.web
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on: 
+  #     - api
+  # play:
+  #   build: ./velhia.game
+  #   command: python main.py
+  #   depends_on: 
+  #     - api
 
 volumes: 
   velhia:
