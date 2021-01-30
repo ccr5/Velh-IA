@@ -27,10 +27,10 @@ def add_new_match(db, sa, mas):
         ret = db.create(json.dumps({
             "begin": datetime.now().ctime(),
             "time": 0,
-            "sa": {"playerId": sa.info['_id'], "symbol": sa.char[0]},
-            "mas": {"family": {"playerId": mas.family_leader.info['_id'], "symbol": mas.char[0]},
-                    "religion": {"playerId": mas.religion_leader.info['_id'], "symbol": mas.char[0]},
-                    "education": {"playerId": mas.education_leader.info['_id'], "symbol": mas.char[0]}},
+            "sa": {"playerId": sa.id, "symbol": sa.char[0]},
+            "mas": {"family": {"playerId": mas.family_leader.id, "symbol": mas.char[0]},
+                    "religion": {"playerId": mas.religion_leader.id, "symbol": mas.char[0]},
+                    "education": {"playerId": mas.education_leader.id, "symbol": mas.char[0]}},
             "plays": [],
             "status": "PENDENT"}))
 
@@ -50,44 +50,38 @@ def add_new_memory(match, sa, mas):
 
     try:
 
-        sa.info['memory'].append({
-            'matchId': match.info['_id'],
+        mas.religion_leader.memory.append({
+            'matchId': match.id,
             'isLearner': False,
             'choices': []
         })
 
-        mas.religion_leader.info['memory'].append({
-            'matchId': match.info['_id'],
-            'isLearner': False,
-            'choices': []
-        })
-
-        mas.religion_learner.info['memory'].append({
-            'matchId': match.info['_id'],
+        mas.religion_learner.memory.append({
+            'matchId': match.id,
             'isLearner': True,
             'choices': []
         })
 
-        mas.education_leader.info['memory'].append({
-            'matchId': match.info['_id'],
+        mas.education_leader.memory.append({
+            'matchId': match.id,
             'isLearner': False,
             'choices': []
         })
 
-        mas.education_learner.info['memory'].append({
-            'matchId': match.info['_id'],
+        mas.education_learner.memory.append({
+            'matchId': match.id,
             'isLearner': True,
             'choices': []
         })
 
-        mas.family_leader.info['memory'].append({
-            'matchId': match.info['_id'],
+        mas.family_leader.memory.append({
+            'matchId': match.id,
             'isLearner': False,
             'choices': []
         })
 
-        mas.family_learner.info['memory'].append({
-            'matchId': match.info['_id'],
+        mas.family_learner.memory.append({
+            'matchId': match.id,
             'isLearner': True,
             'choices': []
         })
@@ -107,17 +101,15 @@ def add_new_mas_player(db, match, old_leader, new_leader):
 
     try:
 
-        for institution, players in match.info['mas']:
+        for institution, players in match.mas:
 
             if players[-1]['playerId'] == old_leader:
 
-                obj = {
-                    'playerId': new_leader.info['_id'],
-                    'symbol': 'O'
-                }
+                obj = {'playerId': new_leader.id,
+                       'symbol': 'O'}
 
-                match.info['mas'][institution].append(obj)
-                db.update(match.info['_id'], json.dumps(match.info))
+                match.mas[institution].append(obj)
+                db.update(match.id, json.dumps(match.create_object()))
 
     except:
         raise NewPlayerInMASError

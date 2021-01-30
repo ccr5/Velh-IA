@@ -13,63 +13,28 @@ export class ReligionController {
 
   /**
    * Receive a get request and
-   * return all Agent saved in the db
+   * return all Agent filter by a query in the db
    * @param {Request} req request
    * @param {Response} res response
-   * @example getAll()
+   * @example get()
    * @returns {Promise<Response | void>} IAgent[] | 404 
    */
-  async getAll(req: Request, res: Response): Promise<Response | void> {
+  async get(req: Request, res: Response): Promise<Response | void> {
     try {
-      const mas: IAgent[] | null = await this.repository.getAllAgent()
-      if (mas == null) {
-        return res.sendStatus(404)
-      }
-      return res.send(mas)
-    } catch (error) {
-      res.sendStatus(400).send(error)
-    }
-  }
+      const offset: string | undefined = req.query.offset?.toString()
+      const limit: string | undefined = req.query.limit?.toString()
+      const filters: string | undefined = req.query.filters?.toString()
+      const fields: string | undefined = req.query.fields?.toString()
+      const sort: string | undefined = req.query.sort?.toString()
 
-  /**
-   * Receive a get request with id and
-   * return this Agent saved in the db
-   * @param {Request} req request
-   * @param {Response} res response
-   * @example getOne('5f9db3a3fc7c860a3e316712')
-   * @returns {Promise<Response | void>} IAgent | 404
-   */
-  async getOne(req: Request, res: Response): Promise<Response | void> {
-    try {
-      const masId: string = req.params.id
-      const mas: IAgent | null = await this.repository.getOneAgent(masId)
+      const mas: IAgent[] | null = await this.repository.getAgent(filters, fields, sort, offset, limit)
       if (mas == null) {
         return res.sendStatus(404)
       }
       return res.send(mas)
     } catch (error) {
       res.sendStatus(400).send(error)
-    }
-  }
-
-  /**
-   * receive a get request with limit X to get the  
-   * X latest Agent created in the db
-   * @param {Request} req request
-   * @param {Response} res response
-   * @example getLast(2)
-   * @returns {Promise<Response | void>} IAgent[2] | 404
-   */
-  async getLast(req: Request, res: Response): Promise<Response | void> {
-    try {
-      const limit: number = +req.params.limit
-      const mas: IAgent[] | null = await this.repository.getLastAgent(limit)
-      if (mas == null) {
-        return res.sendStatus(404)
-      }
-      return res.send(mas)
-    } catch (error) {
-      res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 
@@ -88,6 +53,7 @@ export class ReligionController {
       return res.json(mas)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 
@@ -110,6 +76,7 @@ export class ReligionController {
       return res.json(mas)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 
@@ -131,6 +98,7 @@ export class ReligionController {
       return res.send(mas)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 }

@@ -5,6 +5,7 @@ import Footer from './structure/Footer'
 import Camp from './mainscreen/Camp'
 import Board from './mainscreen/Board'
 import Welcome from './mainscreen/Welcome'
+import MASBoard from './mainscreen/MASBoard'
 
 import './App.css'
 
@@ -34,6 +35,11 @@ class App extends Component<Record<string, unknown>, myState> {
               <div className="col-1"></div>
               <div className="col-7" id="Game">
                 <Camp height={this.state.height - 110} />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <MASBoard />
               </div>
             </div>
           </div>

@@ -23,6 +23,8 @@ app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }))
 app.use(bodyParser.json({ limit: '5mb' }))
 app.use(cors(options))
 app.use(routes)
-app.get('*', (req, res) => res.send({ message: 'Welcome Velh-IA API' }))
+app.get('*', (req, res) => {
+  res.send({ message: 'Welcome Velh-IA API' })
+})
 
 export { app }

@@ -17,7 +17,12 @@ class StatisticalAlgorithm:
     """
 
     def __init__(self, obj, my_char, my_enemy):
-        self.info = obj
+        self.id = obj['_id']
+        self.birth = obj['birth']
+        self.matchs = obj['matchs']
+        self.victories = obj['victories']
+        self.defeats = obj['defeats']
+        self.draw = obj['draw']
         self.char = my_char
         self.enemy = my_enemy
         self.empty = ['', -1]
@@ -44,42 +49,18 @@ class StatisticalAlgorithm:
             end = datetime.now()
             time = end - start
             time = time.microseconds / 1000000
-
-            self.info['memory'][-1]['choices'].append({
-                'dateRequest': start.ctime(),
-                'gameStatus': moves,
-                'timeToAct': time,
-                'action': winner
-            })
-
             return winner
 
         elif winner is not None and loser is None:
             end = datetime.now()
             time = end - start
             time = time.microseconds / 1000000
-
-            self.info['memory'][-1]['choices'].append({
-                'dateRequest': start.ctime(),
-                'gameStatus': moves,
-                'timeToAct': time,
-                'action': winner
-            })
-
             return winner
 
         elif winner is None and loser is not None:
             end = datetime.now()
             time = end - start
             time = time.microseconds / 1000000
-
-            self.info['memory'][-1]['choices'].append({
-                'dateRequest': start.ctime(),
-                'gameStatus': moves,
-                'timeToAct': time,
-                'action': loser
-            })
-
             return loser
 
         elif winner is None and loser is None:
@@ -87,14 +68,6 @@ class StatisticalAlgorithm:
             end = datetime.now()
             time = end - start
             time = time.microseconds / 1000000
-
-            self.info['memory'][-1]['choices'].append({
-                'dateRequest': start.ctime(),
-                'gameStatus': moves,
-                'timeToAct': time,
-                'action': position
-            })
-
             return position
 
         else:
@@ -197,11 +170,8 @@ class StatisticalAlgorithm:
 
                 for x in range(0, len(moves)):
 
-                    if moves[x] == -1:
-                        new_moves.append(
-                            r.choice([self.char[1], self.enemy[1]]))
-                    else:
-                        new_moves.append(moves[x])
+                    new_moves.append(r.choice(
+                        [self.char[1], self.enemy[1]])) if moves[x] == -1 else new_moves.append(moves[x])
 
                 if new_moves in matrix:
                     del new_moves
@@ -383,3 +353,15 @@ class StatisticalAlgorithm:
 
         except:
             raise SequenceListError
+
+    def create_object(self):
+        """
+        Create a full obj to use in database functions
+        """
+
+        return {"_id": self.id,
+                "birth": self.birth,
+                "matchs": self.matchs,
+                "victories": self.victories,
+                "defeats": self.defeats,
+                "draw": self.draw}

@@ -20,10 +20,9 @@ def get_lastest_sa(db):
 
     try:
 
-        if len(db.get_last(1).json()) == 0:
+        if len(db.get(offset=0, limit=1).json()) == 0:
             sa = StatisticalAlgorithm(db.create(json.dumps({
                 "birth": datetime.now().ctime(),
-                "memory": [],
                 "matchs": 0,
                 "victories": 0,
                 "defeats": 0,
@@ -31,7 +30,7 @@ def get_lastest_sa(db):
             })).json(), ('X', 1), ('O', 0))
         else:
             sa = StatisticalAlgorithm(
-                db.get_last(1).json()[0],
+                db.get(offset=0, limit=1).json()[0],
                 ('X', 1), ('O', 0))
 
         return sa

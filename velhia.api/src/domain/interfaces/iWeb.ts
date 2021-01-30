@@ -27,4 +27,24 @@ interface ICamp {
   }
 }
 
-export {IGeneralData, IPlayersData, ICamp}
+interface IResume {
+  institution: string,
+  id: string,
+  generation: string,
+  progenitor: string,
+  life: number,
+  memories: number,
+  matchAsLearner: number,
+  matchAsLeader: number,
+  victories: number,
+  defeats: number,
+  draws: number
+}
+
+interface IMAS {
+  family: IResume,
+  education: IResume,
+  religion: IResume
+}
+
+export {IGeneralData, IPlayersData, ICamp, IMAS}

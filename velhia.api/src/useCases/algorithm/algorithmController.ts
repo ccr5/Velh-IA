@@ -13,63 +13,27 @@ export class AlgorithmController {
 
   /**
    * Receive a get request and
-   * return all Statistical Algorithm saved in the db
+   * return all Statistical Algorithm filter by a query in the db
    * @param {Request} req request
    * @param {Response} res response
-   * @example getAll()
+   * @example get()
    * @returns {Promise<Response | void>} IAlgorithm[] | 404 
    */
-  async getAll(req: Request, res: Response): Promise<Response | void> {
+  async get(req: Request, res: Response): Promise<Response | void> {
     try {
-      const sa: IAlgorithm[] | null = await this.repository.getAllAlgorithm()
-      if (sa == null) {
-        return res.sendStatus(404)
-      }
-      return res.send(sa)
-    } catch (error) {
-      res.sendStatus(400).send(error)
-    }
-  }
+      const offset: string | undefined = req.query.offset?.toString()
+      const limit: string | undefined = req.query.limit?.toString()
+      const filters: string | undefined = req.query.filters?.toString()
+      const fields: string | undefined = req.query.fields?.toString()
+      const sort: string | undefined = req.query.sort?.toString()
 
-  /**
-   * Receive a get request with id and
-   * return this Statistical Algorithm saved in the db
-   * @param {Request} req request
-   * @param {Response} res response
-   * @example getOne('5f9db3a3fc7c860a3e316712')
-   * @returns {Promise<Response | void>} IAlgorithm | 404
-   */
-  async getOne(req: Request, res: Response): Promise<Response | void> {
-    try {
-      const saId: string = req.params.id
-      const sa: IAlgorithm | null = await this.repository.getOneAlgorithm(saId)
-      if (sa == null) {
-        return res.sendStatus(404)
-      }
+      const sa: IAlgorithm[] | null = await this.repository.getAlgorithm(filters, fields, sort, offset, limit)
+      if (sa == null) return res.sendStatus(404)
       return res.send(sa)
+      
     } catch (error) {
       res.sendStatus(400).send(error)
-    }
-  }
-
-  /**
-   * receive a get request with limit X to get the  
-   * X latest Statistical Algorithm created in the db
-   * @param {Request} req request
-   * @param {Response} res response
-   * @example getLast(2)
-   * @returns {Promise<Response | void>} IAlgorithm[2] | 404
-   */
-  async getLast(req: Request, res: Response): Promise<Response | void> {
-    try {
-      const limit: number = +req.params.limit
-      const sa: IAlgorithm[] | null = await this.repository.getLastAlgorithm(limit)
-      if (sa == null) {
-        return res.sendStatus(404)
-      }
-      return res.send(sa)
-    } catch (error) {
-      res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 
@@ -88,6 +52,7 @@ export class AlgorithmController {
       return res.json(sas)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 
@@ -110,6 +75,7 @@ export class AlgorithmController {
       return res.json(sa)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 
@@ -131,6 +97,7 @@ export class AlgorithmController {
       return res.send(sa)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 }

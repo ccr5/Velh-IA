@@ -7,31 +7,42 @@ export class FamilyRepository implements IAgentRepository {
    * @example getAllAgent()
    * @returns {Promise<IAgent[] | null>} IAgent[] | null
    */
-  async getAllAgent(): Promise<IAgent[] | null> {
-    const ret = await Family.find()
-    return ret
-  }
+  async getAgent(
+    filters:string | undefined, 
+    fields: string | undefined, 
+    sort: string | undefined, 
+    offset: string | undefined, 
+    limit: string| undefined): Promise<IAgent[] | null> {
 
-  /**
-   * Get a Agent in the database by id
-   * @param {string} id ObjectId
-   * @example getOneAgent("11bf9688-699f-49a4-9d8e-b0cc57301bff")
-   * @returns {Promise<IAgent | null>} IAgent | null
-   */
-  async getOneAgent(id: string): Promise<IAgent | null> {
-    const ret = await Family.findById(id)
-    return ret
-  }
+      let fieldsString = ''
+      if (fields != undefined) {
+        fields.split(',').forEach((field: string) => {
+          fieldsString += ` ${field}`
+        })
+      } 
 
-  /**
-   * Get a limit X of Agents in the database by id in desc order
-   * @param {number} limit number
-   * @example getLastAgent(2)
-   * @returns {Promise<IAgent[] | null>} IAgent[2] | null
-   */
-  async getLastAgent(limit: number): Promise<IAgent[] | null> {
-    const ret = await Family.find({}).sort({ createdAt: 'desc' }).limit(limit)
-    return ret
+      let sortList = new Array
+      if (sort != undefined) {
+        sort.split(':').forEach((field: string) => {
+          if (field == 'asc') {
+            sortList.push(1)
+          } else if (field == 'desc') {
+            sortList.push(-1)
+          } else {
+            sortList.push(field)
+          }
+        })
+      }
+
+      const ret = await Family.find(
+        filters != undefined ? JSON.parse(filters) : {},
+        fieldsString
+      )
+      .sort([sortList])
+      .skip(offset != undefined ? +offset : +'')
+      .limit(limit != undefined ? +limit : +'')
+
+      return ret
   }
 
   /**

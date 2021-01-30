@@ -7,31 +7,42 @@ export class MatchRepository implements IMatchRepository {
    * @example getAllMatch()
    * @returns {Promise<IMatch[] | null>} IMatch[] | null
    */
-  async getAllMatch(): Promise<IMatch[] | null> {
-    const ret = await Match.find()
-    return ret
-  }
+  async getMatch(
+    filters:string | undefined, 
+    fields: string | undefined, 
+    sort: string | undefined, 
+    offset: string | undefined, 
+    limit: string| undefined): Promise<IMatch[] | null> {
 
-  /**
-   * Get a Match in the database by id
-   * @param {string} id ObjectId
-   * @example getOneMatch("11bf9688-699f-49a4-9d8e-b0cc57301bff")
-   * @returns {Promise<IMatch | null>} IMatch | null
-   */
-  async getOneMatch(id: string): Promise<IMatch | null> {
-    const ret = await Match.findById(id)
-    return ret
-  }
+      let fieldsString = ''
+      if (fields != undefined) {
+        fields.split(',').forEach((field: string) => {
+          fieldsString += ` ${field}`
+        })
+      } 
 
-  /**
-   * Get a limit X of Matchs in the database by id in desc order
-   * @param {number} limit number
-   * @example getLastMatch(2)
-   * @returns {Promise<IMatch[] | null>} IMatch[2] | null
-   */
-  async getLastMatch(limit: number): Promise<IMatch[] | null> {
-    const ret = await Match.find({}).sort({ createdAt: 'desc' }).limit(limit)
-    return ret
+      let sortList = new Array
+      if (sort != undefined) {
+        sort.split(':').forEach((field: string) => {
+          if (field == 'asc') {
+            sortList.push(1)
+          } else if (field == 'desc') {
+            sortList.push(-1)
+          } else {
+            sortList.push(field)
+          }
+        })
+      }
+
+      const ret = await Match.find(
+        filters != undefined ? JSON.parse(filters) : {},
+        fieldsString
+      )
+      .sort([sortList])
+      .skip(offset != undefined ? +offset : +'')
+      .limit(limit != undefined ? +limit : +'')
+
+      return ret
   }
 
   /**

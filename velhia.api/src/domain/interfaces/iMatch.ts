@@ -17,9 +17,12 @@ interface IMatch extends Document {
 }
 
 interface IMatchRepository {
-  getAllMatch(): Promise<IMatch[] | null>
-  getOneMatch(id: string): Promise<IMatch | null>
-  getLastMatch(limit: number): Promise<IMatch[] | null>
+  getMatch(
+    filters:string | undefined, 
+    fields: string | undefined, 
+    sort: string | undefined, 
+    offset: string | undefined, 
+    limit: string | undefined): Promise<IMatch[] | null>
   createMatch(data: IMatch[]): Promise<IMatch[]>
   updateMatch(id: string, data: IMatch): Promise<IMatch | null>
   deleteMatch(id: string): Promise<IMatch | null>

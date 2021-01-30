@@ -7,7 +7,7 @@ dotenv.config({
 
 const connectionString =
   process.env.DATABASE_CONNECTION_STRING ||
-  'mongodb://localhost:27017/velhia'
+  'mongodb://db:27017/velhia'
 
 const database = mongoose.connect(connectionString, {
   useNewUrlParser: true,
