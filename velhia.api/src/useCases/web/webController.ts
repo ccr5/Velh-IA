@@ -52,8 +52,7 @@ export class WebController {
       return res.send(ret)
 
     } catch (error) {
-      res.sendStatus(400).send(error)
-      res.end(error)
+      res.sendStatus(400)
     }
   }
 
@@ -74,7 +73,7 @@ export class WebController {
       return res.send(ret)
 
     } catch (error) {
-      res.sendStatus(400).send(error)
+      res.sendStatus(400)
     }
   }
 
@@ -96,8 +95,7 @@ export class WebController {
       return res.send(ret)
 
     } catch (error) {
-      res.sendStatus(400).send(error)
-      res.end(error)
+      res.sendStatus(400)
     }
   }
 
@@ -131,8 +129,7 @@ export class WebController {
       return res.send(ret)
 
     } catch (error) {
-      res.sendStatus(400).send(error)
-      res.end(error)
+      res.sendStatus(400)
     }
   }
 
@@ -200,8 +197,7 @@ export class WebController {
       return res.send(ret)
 
     } catch (error) {
-      res.sendStatus(400).send(error)
-      res.end(error)
+      res.sendStatus(400)
     }
   }
 }
