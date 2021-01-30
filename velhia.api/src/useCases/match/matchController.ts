@@ -34,6 +34,7 @@ export class MatchController {
       return res.send(mac)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 
@@ -52,6 +53,7 @@ export class MatchController {
       return res.json(mac)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 
@@ -74,6 +76,7 @@ export class MatchController {
       return res.json(mac)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 
@@ -95,6 +98,7 @@ export class MatchController {
       return res.send(mac)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 }

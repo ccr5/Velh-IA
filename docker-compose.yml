@@ -23,8 +23,8 @@ services:
       - "5000:5000"
     depends_on: 
       - api
-  # play:
-  #   build: ./velhia.game
-  #   command: python main.py
-  #   depends_on: 
-  #     - api
+  play:
+    build: ./velhia.game
+    command: python main.py
+    depends_on: 
+      - api

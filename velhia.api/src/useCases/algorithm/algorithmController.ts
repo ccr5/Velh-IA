@@ -29,10 +29,11 @@ export class AlgorithmController {
 
       const sa: IAlgorithm[] | null = await this.repository.getAlgorithm(filters, fields, sort, offset, limit)
       if (sa == null) return res.sendStatus(404)
-      res.send(sa)
+      return res.send(sa)
       
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 
@@ -51,6 +52,7 @@ export class AlgorithmController {
       return res.json(sas)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 
@@ -73,6 +75,7 @@ export class AlgorithmController {
       return res.json(sa)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 
@@ -94,6 +97,7 @@ export class AlgorithmController {
       return res.send(sa)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 }
