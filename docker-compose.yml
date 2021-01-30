@@ -16,15 +16,17 @@ services:
       - db
     depends_on:
       - db
-  # web:
-  #   build:
-  #     context: ./velhia.web
-  #   ports:
-  #     - "5000:5000"
-  #   depends_on: 
-  #     - api
-  # play:
-  #   build: ./velhia.game
-  #   command: python main.py
-  #   depends_on: 
-  #     - api
+  web:
+    build:
+      context: ./velhia.web
+    ports:
+      - "5000:5000"
+    depends_on: 
+      - api
+  play:
+    build: ./velhia.game
+    command: python main.py
+    links:
+      - api
+    depends_on: 
+      - api
