@@ -6,6 +6,8 @@ services:
     restart: always
     ports: 
       - "27017:27017"
+    volumes:
+      - ./data/db:/data/db 
   api:
     build: ./velhia.api
     ports:
@@ -14,18 +16,15 @@ services:
       - db
     depends_on:
       - db
-  # web:
-  #   build:
-  #     context: ./velhia.web
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on: 
-  #     - api
+  web:
+    build:
+      context: ./velhia.web
+    ports:
+      - "5000:5000"
+    depends_on: 
+      - api
   # play:
   #   build: ./velhia.game
   #   command: python main.py
   #   depends_on: 
   #     - api
-
-volumes: 
-  velhia:
