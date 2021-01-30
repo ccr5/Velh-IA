@@ -4,7 +4,9 @@
   "main": "src/server.js",
   "author": "Matheus Gomes CCR5",
   "scripts": {
+    "prod": "node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/server.js",
     "serve": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules src/server.ts",
+    "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "test": "jest"
   },
   "dependencies": {
@@ -42,6 +44,7 @@
     "ts-node": "^8.10.2",
     "ts-node-dev": "^1.0.0-pre.56",
     "tsconfig-paths": "^3.9.0",
+    "tscpaths": "^0.0.9",
     "typescript": "^3.9.7"
   }
 }

@@ -1,6 +1,8 @@
-FROM node:12
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-RUN npm install react-scripts@3.4.1 -g --silent
-COPY . .
+FROM node:10
+WORKDIR /usr/src/app
+COPY . ./velhia.web/
+WORKDIR /usr/src/app/velhia.web
+RUN npm install -g serve
+RUN yarn && yarn build
+cmd serve -s build
+EXPOSE 5000

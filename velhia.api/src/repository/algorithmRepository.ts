@@ -1,5 +1,5 @@
+import { Algorithm } from '@entities/algorithm'
 import { IAlgorithmRepository, IAlgorithm } from '@interfaces/iAlgorithm'
-import { Algorithm } from 'src/domain/entities/algorithm'
 
 export class AlgorithmRepository implements IAlgorithmRepository {
   /**

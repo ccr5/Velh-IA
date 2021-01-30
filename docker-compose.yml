@@ -2,39 +2,31 @@ version: '3'
     
 services:
   db:
-    image: postgres
-    environment:
-      - POSTGRES_DB=velhia
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+    image: mongo
+    restart: always
     ports: 
-      - "5432:5432"
-    volumes: 
-      - velhia:/var/lib/postgresql/data
+      - "27017:27017"
+    volumes:
+      - ./data/db:/data/db 
   api:
     build: ./velhia.api
-    command: python manage.py runserver 0.0.0.0:5000
-    volumes:
-      - .:/Velh-IA-api
     ports:
-      - "5000:5000"
+      - "3000:3000"
+    links:
+      - db
     depends_on:
       - db
   web:
     build:
       context: ./velhia.web
-    command: npm start
-    volumes:
-      - ./velhia.web:/app
     ports:
-      - "3000:3000"
+      - "5000:5000"
     depends_on: 
       - api
   play:
     build: ./velhia.game
     command: python main.py
+    links:
+      - api
     depends_on: 
       - api
-
-volumes: 
-  velhia:

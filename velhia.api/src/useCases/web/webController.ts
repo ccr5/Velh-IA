@@ -49,10 +49,10 @@ export class WebController {
         nDraws: sa[0].draw
       }
 
-      res.send(ret)
+      return res.send(ret)
 
     } catch (error) {
-      res.sendStatus(400).send(error)
+      res.sendStatus(400)
     }
   }
 
@@ -70,10 +70,10 @@ export class WebController {
       const wins: number = sa[0].victories
       const percent: number = sa[0].victories / (sa[0].victories + sa[0].draw + sa[0].defeats)
       const ret: IPlayersData = { wins: wins, percent: percent }
-      res.send(ret)
+      return res.send(ret)
 
     } catch (error) {
-      res.sendStatus(400).send(error)
+      res.sendStatus(400)
     }
   }
 
@@ -92,10 +92,10 @@ export class WebController {
       const wins: number = family[1].victories
       const percent: number = family[1].victories / family[1].memory.length
       const ret: IPlayersData = { wins: wins, percent: percent }
-      res.send(ret)
+      return res.send(ret)
 
     } catch (error) {
-      res.sendStatus(400).send(error)
+      res.sendStatus(400)
     }
   }
 
@@ -126,10 +126,10 @@ export class WebController {
         C3: { L1: game[8], L2: game[5], L3: game[2] }
       }
 
-      res.send(ret)
+      return res.send(ret)
 
     } catch (error) {
-      res.sendStatus(400).send(error)
+      res.sendStatus(400)
     }
   }
 
@@ -194,10 +194,10 @@ export class WebController {
         }
       }
 
-      res.send(ret)
+      return res.send(ret)
 
     } catch (error) {
-      res.sendStatus(400).send(error)
+      res.sendStatus(400)
     }
   }
 }

@@ -34,6 +34,7 @@ export class ReligionController {
       return res.send(mas)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 
@@ -52,6 +53,7 @@ export class ReligionController {
       return res.json(mas)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 
@@ -74,6 +76,7 @@ export class ReligionController {
       return res.json(mas)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 
@@ -95,6 +98,7 @@ export class ReligionController {
       return res.send(mas)
     } catch (error) {
       res.sendStatus(400).send(error)
+      res.end(error)
     }
   }
 }
