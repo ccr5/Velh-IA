@@ -1,5 +1,5 @@
-import { IAgentRepository, IAgent } from '@interfaces/iAgent'
-import { FamilyTest } from '@entities/family'
+import { IAgentRepository, IAgent } from '@interfaces/v1/iAgent'
+import { FamilyTest } from '@entities/v1/family'
 
 export class FamilyTestRepository implements IAgentRepository {
   /**

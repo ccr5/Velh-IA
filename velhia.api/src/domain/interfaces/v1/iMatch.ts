@@ -1,9 +1,9 @@
 import { Document } from 'mongoose'
 import { status } from '@enums/status'
 import { winner } from '@enums/winners'
-import { IPlay } from '@interfaces/iPlay'
-import { IMultiAgentSystem } from '@interfaces/iMultiAgentSystem'
-import { IPlayer } from '@interfaces/iPlayer'
+import { IPlay } from '@interfaces/v1/iPlay'
+import { IMultiAgentSystem } from '@interfaces/v1/iMultiAgentSystem'
+import { IPlayer } from '@interfaces/v1/iPlayer'
 
 interface IMatch extends Document {
   begin: Date,

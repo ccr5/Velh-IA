@@ -1,8 +1,8 @@
 import { Schema, model } from 'mongoose'
 import { environmentReaction } from '@enums/environmentReaction'
-import { IAgent } from '@interfaces/iAgent'
+import { IAgent } from '@interfaces/v1/iAgent'
 
-const FamilySchema: Schema = new Schema<IAgent>(
+const EducationSchema: Schema = new Schema<IAgent>(
   {
     progenitor: { type: String, required: true },
     birth: { type: Date, required: true },
@@ -34,7 +34,7 @@ const FamilySchema: Schema = new Schema<IAgent>(
   }
 )
 
-const Family = model<IAgent>('family', FamilySchema)
-const FamilyTest = model<IAgent>('familyTest', FamilySchema)
+const Education = model<IAgent>('education', EducationSchema)
+const EducationTest = model<IAgent>('educationTest', EducationSchema)
 
-export { Family, FamilyTest }
+export { Education, EducationTest }

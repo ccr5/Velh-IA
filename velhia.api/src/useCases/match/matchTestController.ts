@@ -4,10 +4,10 @@ import { TYPES } from '@config/container/v1/types'
 import { IMatchRepository, IMatch } from '@interfaces/v1/iMatch'
 
 @injectable()
-export class MatchController {
+export class MatchTestController {
   private repository: IMatchRepository
 
-  constructor(@inject(TYPES.MatchRepository) matchRepository: IMatchRepository) {
+  constructor(@inject(TYPES.MatchTestRepository) matchRepository: IMatchRepository) {
     this.repository = matchRepository
   }
 

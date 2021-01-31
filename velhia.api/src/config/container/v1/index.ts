@@ -2,9 +2,9 @@ import 'reflect-metadata'
 import { TYPES } from './types'
 import { container } from 'tsyringe'
 
-import { IAgentRepository } from '@interfaces/iAgent'
-import { IAlgorithmRepository } from '@interfaces/iAlgorithm'
-import { IMatchRepository } from '@interfaces/iMatch'
+import { IAgentRepository } from '@interfaces/v1/iAgent'
+import { IAlgorithmRepository } from '@interfaces/v1/iAlgorithm'
+import { IMatchRepository } from '@interfaces/v1/iMatch'
 
 import { AlgorithmRepository } from '@repository/v1/algorithmRepository'
 import { EducationRepository } from '@repository/v1/educationRepository'

@@ -1,23 +1,23 @@
 import { Request, Response } from 'express'
 import { inject, injectable } from 'tsyringe'
 import { TYPES } from '@config/container/v1/types'
-import { IMatchRepository, IMatch } from '@interfaces/v1/iMatch'
+import { IAgentRepository, IAgent } from '@interfaces/v1/iAgent'
 
 @injectable()
-export class MatchController {
-  private repository: IMatchRepository
+export class FamilyTestController {
+  private repository: IAgentRepository
 
-  constructor(@inject(TYPES.MatchRepository) matchRepository: IMatchRepository) {
-    this.repository = matchRepository
+  constructor(@inject(TYPES.FamilyTestRepository) familyRepository: IAgentRepository) {
+    this.repository = familyRepository
   }
 
   /**
    * Receive a get request and
-   * return all Match filter by a query in the db
+   * return all Agent filter by a query in the db
    * @param {Request} req request
    * @param {Response} res response
    * @example get()
-   * @returns {Promise<Response | void>} IMatch[] | 404 
+   * @returns {Promise<Response | void>} IAgent[] | 404 
    */
   async get(req: Request, res: Response): Promise<Response | void> {
     try {
@@ -27,11 +27,11 @@ export class MatchController {
       const fields: string | undefined = req.query.fields?.toString()
       const sort: string | undefined = req.query.sort?.toString()
 
-      const mac: IMatch[] | null = await this.repository.getMatch(filters, fields, sort, offset, limit)
-      if (mac == null) {
+      const mas: IAgent[] | null = await this.repository.getAgent(filters, fields, sort, offset, limit)
+      if (mas == null) {
         return res.sendStatus(404)
       }
-      return res.send(mac)
+      return res.send(mas)
     } catch (error) {
       res.sendStatus(400).send(error)
       res.end(error)
@@ -40,17 +40,17 @@ export class MatchController {
 
   /**
    * receive a post request with data to insert a 
-   * new Match in the db
+   * new Agent in the db
    * @param {Request} req request
    * @param {Response} res response
-   * @example create(IMatch[])
-   * @returns {Promise<Response | void>} IMatch[]
+   * @example create(IAgent[])
+   * @returns {Promise<Response | void>} IAgent[]
    */
   async create(req: Request, res: Response): Promise<Response | void> {
     try {
-      const data: IMatch[] = req.body
-      const mac: IMatch[] = await this.repository.createMatch(data)
-      return res.json(mac)
+      const data: IAgent[] = req.body
+      const mas: IAgent[] = await this.repository.createAgent(data)
+      return res.json(mas)
     } catch (error) {
       res.sendStatus(400).send(error)
       res.end(error)
@@ -59,21 +59,21 @@ export class MatchController {
 
   /**
    * receive a put request with a id to
-   * update this Match in the db
+   * update this Agent in the db
    * @param {Request} req request
    * @param {Response} res response
-   * @example update(IMatch)
-   * @returns {Promise<Response | void>} IMatch | 404
+   * @example update(IAgent)
+   * @returns {Promise<Response | void>} IAgent | 404
    */
   async update(req: Request, res: Response): Promise<Response | void> {
     try {
-      const macId: string = req.params.id
-      const data: IMatch = req.body
-      const mac: IMatch | null = await this.repository.updateMatch(macId, data)
-      if (mac == null) {
+      const masId: string = req.params.id
+      const data: IAgent = req.body
+      const mas: IAgent | null = await this.repository.updateAgent(masId, data)
+      if (mas == null) {
         return res.sendStatus(404)
       }
-      return res.json(mac)
+      return res.json(mas)
     } catch (error) {
       res.sendStatus(400).send(error)
       res.end(error)
@@ -82,20 +82,20 @@ export class MatchController {
 
   /**
    * receive a delete request with a id to
-   * delete this Match in the db
+   * delete this Agent in the db
    * @param {Request} req request
    * @param {Response} res response
-   * @example delete(IMatch)
-   * @returns {Promise<Response | void>} IMatch | 404
+   * @example delete(IAgent)
+   * @returns {Promise<Response | void>} IAgent | 404
    */
   async delete(req: Request, res: Response): Promise<Response | void> {
     try {
-      const macId: string = req.params.id
-      const mac: IMatch | null = await this.repository.deleteMatch(macId)
-      if (mac == null) {
+      const masId: string = req.params.id
+      const mas: IAgent | null = await this.repository.deleteAgent(masId)
+      if (mas == null) {
         return res.sendStatus(404)
       }
-      return res.send(mac)
+      return res.send(mas)
     } catch (error) {
       res.sendStatus(400).send(error)
       res.end(error)

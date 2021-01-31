@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { inject, injectable } from 'tsyringe'
-import { IAlgorithmRepository, IAlgorithm } from '@interfaces/iAlgorithm'
-import { TYPES } from '@config/container/types'
+import { IAlgorithmRepository, IAlgorithm } from '@interfaces/v1/iAlgorithm'
+import { TYPES } from '@config/container/v1/types'
 
 @injectable()
 export class AlgorithmController {

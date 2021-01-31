@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { inject, injectable } from 'tsyringe'
-import { TYPES } from '@config/container/types'
-import { IAgentRepository, IAgent } from '@interfaces/iAgent'
+import { TYPES } from '@config/container/v1/types'
+import { IAgentRepository, IAgent } from '@interfaces/v1/iAgent'
 
 @injectable()
 export class EducationController {

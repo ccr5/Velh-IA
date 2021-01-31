@@ -1,5 +1,5 @@
 import { Document } from 'mongoose'
-import { IMemory } from '@interfaces/iMemory'
+import { IMemory } from '@interfaces/v1/iMemory'
 
 interface IAgent extends Document {
   progenitor: string,

@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose'
 import { environmentReaction } from '@enums/environmentReaction'
-import { IAgent } from '@interfaces/iAgent'
+import { IAgent } from '@interfaces/v1/iAgent'
 
 const ReligionSchema: Schema = new Schema<IAgent>(
   {

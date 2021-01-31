@@ -1,5 +1,5 @@
-import { IAgentRepository, IAgent } from '@interfaces/iAgent'
-import { ReligionTest } from '@entities/religion'
+import { IAgentRepository, IAgent } from '@interfaces/v1/iAgent'
+import { ReligionTest } from '@entities/v1/religion'
 
 export class ReligionTestRepository implements IAgentRepository {
   /**

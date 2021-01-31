@@ -1,5 +1,5 @@
-import { IMatchRepository, IMatch } from '@interfaces/iMatch'
-import { Match } from '@entities/matchs'
+import { IMatchRepository, IMatch } from '@interfaces/v1/iMatch'
+import { Match } from '@entities/v1/matchs'
 
 export class MatchRepository implements IMatchRepository {
   /**

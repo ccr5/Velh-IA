@@ -1,8 +1,8 @@
-import { TYPES } from '@config/container/types'
-import { IAgent, IAgentRepository } from '@interfaces/iAgent'
-import { IAlgorithm, IAlgorithmRepository } from '@interfaces/iAlgorithm'
-import { IMatch, IMatchRepository } from '@interfaces/iMatch'
-import { ICamp, IGeneralData, IPlayersData, IMAS } from '@interfaces/iWeb'
+import { TYPES } from '@config/container/v1/types'
+import { IAgent, IAgentRepository } from '@interfaces/v1/iAgent'
+import { IAlgorithm, IAlgorithmRepository } from '@interfaces/v1/iAlgorithm'
+import { IMatch, IMatchRepository } from '@interfaces/v1/iMatch'
+import { ICamp, IGeneralData, IPlayersData, IMAS } from '@interfaces/v1/iWeb'
 import { Request, Response } from 'express'
 import { inject, injectable } from 'tsyringe'
 

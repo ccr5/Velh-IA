@@ -1,23 +1,23 @@
 import { Request, Response } from 'express'
 import { inject, injectable } from 'tsyringe'
+import { IAlgorithmRepository, IAlgorithm } from '@interfaces/v1/iAlgorithm'
 import { TYPES } from '@config/container/v1/types'
-import { IMatchRepository, IMatch } from '@interfaces/v1/iMatch'
 
 @injectable()
-export class MatchController {
-  private repository: IMatchRepository
+export class AlgorithmTestController {
+  private repository: IAlgorithmRepository
 
-  constructor(@inject(TYPES.MatchRepository) matchRepository: IMatchRepository) {
-    this.repository = matchRepository
+  constructor(@inject(TYPES.AlgorithmTestRepository) algorithmRepository: IAlgorithmRepository) {
+    this.repository = algorithmRepository
   }
 
   /**
    * Receive a get request and
-   * return all Match filter by a query in the db
+   * return all Statistical Algorithm filter by a query in the db
    * @param {Request} req request
    * @param {Response} res response
    * @example get()
-   * @returns {Promise<Response | void>} IMatch[] | 404 
+   * @returns {Promise<Response | void>} IAlgorithm[] | 404 
    */
   async get(req: Request, res: Response): Promise<Response | void> {
     try {
@@ -27,11 +27,10 @@ export class MatchController {
       const fields: string | undefined = req.query.fields?.toString()
       const sort: string | undefined = req.query.sort?.toString()
 
-      const mac: IMatch[] | null = await this.repository.getMatch(filters, fields, sort, offset, limit)
-      if (mac == null) {
-        return res.sendStatus(404)
-      }
-      return res.send(mac)
+      const sa: IAlgorithm[] | null = await this.repository.getAlgorithm(filters, fields, sort, offset, limit)
+      if (sa == null) return res.sendStatus(404)
+      return res.send(sa)
+      
     } catch (error) {
       res.sendStatus(400).send(error)
       res.end(error)
@@ -40,17 +39,17 @@ export class MatchController {
 
   /**
    * receive a post request with data to insert a 
-   * new Match in the db
+   * new Statistical Algorithm in the db
    * @param {Request} req request
    * @param {Response} res response
-   * @example create(IMatch[])
-   * @returns {Promise<Response | void>} IMatch[]
+   * @example create(IAlgorithm[])
+   * @returns {Promise<Response | void>} IAlgorithm[]
    */
   async create(req: Request, res: Response): Promise<Response | void> {
     try {
-      const data: IMatch[] = req.body
-      const mac: IMatch[] = await this.repository.createMatch(data)
-      return res.json(mac)
+      const data: IAlgorithm[] = req.body
+      const sas: IAlgorithm[] = await this.repository.createAlgorithm(data)
+      return res.json(sas)
     } catch (error) {
       res.sendStatus(400).send(error)
       res.end(error)
@@ -59,21 +58,21 @@ export class MatchController {
 
   /**
    * receive a put request with a id to
-   * update this Match in the db
+   * update this Statistical Algorithm in the db
    * @param {Request} req request
    * @param {Response} res response
-   * @example update(IMatch)
-   * @returns {Promise<Response | void>} IMatch | 404
+   * @example update(IAlgorithm)
+   * @returns {Promise<Response | void>} IAlgorithm | 404
    */
   async update(req: Request, res: Response): Promise<Response | void> {
     try {
-      const macId: string = req.params.id
-      const data: IMatch = req.body
-      const mac: IMatch | null = await this.repository.updateMatch(macId, data)
-      if (mac == null) {
+      const saId: string = req.params.id
+      const data: IAlgorithm = req.body
+      const sa: IAlgorithm | null = await this.repository.updateAlgorithm(saId, data)
+      if (sa == null) {
         return res.sendStatus(404)
       }
-      return res.json(mac)
+      return res.json(sa)
     } catch (error) {
       res.sendStatus(400).send(error)
       res.end(error)
@@ -82,20 +81,20 @@ export class MatchController {
 
   /**
    * receive a delete request with a id to
-   * delete this Match in the db
+   * delete this Statistical Algorithm in the db
    * @param {Request} req request
    * @param {Response} res response
-   * @example delete(IMatch)
-   * @returns {Promise<Response | void>} IMatch | 404
+   * @example delete(IAlgorithm)
+   * @returns {Promise<Response | void>} IAlgorithm | 404
    */
   async delete(req: Request, res: Response): Promise<Response | void> {
     try {
-      const macId: string = req.params.id
-      const mac: IMatch | null = await this.repository.deleteMatch(macId)
-      if (mac == null) {
+      const saId: string = req.params.id
+      const sa: IAlgorithm | null = await this.repository.deleteAlgorithm(saId)
+      if (sa == null) {
         return res.sendStatus(404)
       }
-      return res.send(mac)
+      return res.send(sa)
     } catch (error) {
       res.sendStatus(400).send(error)
       res.end(error)
