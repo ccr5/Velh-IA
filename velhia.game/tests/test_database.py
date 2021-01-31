@@ -7,16 +7,6 @@ class TestDatabase:
     db = Database('http://localhost:3000/api/', 'v1', 'algorithms')
     obj_id = ''
     obj = {"birth": "Thu Jan 05 2017 22:12:46 GMT-0100 (CET)",
-           "memory": [{
-               "isLearner": True,
-               "choices": [{
-                   "dateRequest": "Thu Jan 05 2017 22:12:46 GMT-0100 (CET)",
-                   "gameStatus": [1, -1, 0],
-                   "timeToAct": 30,
-                   "action": 2
-               }],
-               "environmentReaction": "DRAW"
-           }],
            "matchs": 1,
            "victories": 0,
            "defeats": 0,
@@ -38,5 +28,6 @@ class TestDatabase:
     def test_update(self):
         alg = self.db.create(json.dumps(self.obj))
         self.obj_id = alg.json()['_id']
+        self.obj = alg.json()
         alg = self.db.update(object_id=self.obj_id, obj=json.dumps(self.obj))
         assert alg.status_code == 200
