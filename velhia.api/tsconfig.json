@@ -22,7 +22,7 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@entities/*":["src/domain/entities/*"],
+      "@entities/*":["./src/domain/entities/*"],
       "@schemas/*":["./src/domain/schemas/*"],
       "@repository/*":["./src/repository/*"],
       "@config/*":["./src/config/*"],
