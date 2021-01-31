@@ -10,7 +10,7 @@ class Database:
         self.address = address
         self.version = api_version
         self.collection = collection
-        self.url = f'{address}api/{api_version}/{collection}/'
+        self.url = f'{address}{api_version}/{collection}/'
 
     def get(self, filters={}, fields='', sort='', offset=-1, limit=-1):
         """
