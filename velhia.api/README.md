@@ -1,17 +1,17 @@
 # Velh-IA API
 
-Where all data is saved
+Where all data is managed
 
 ### Sumary
-1. Description
-2. Structure
-3. Language and tools
-4. Requirements
-5. Usage
+1. [Description](https://github.com/ccr5/Velh-IA/tree/master/velhia.api#description "Description")
+2. [Structure](https://github.com/ccr5/Velh-IA/tree/master/velhia.api#structure "Structure")
+3. [Language and tools](https://github.com/ccr5/Velh-IA/tree/master/velhia.api#langauge-and-tools "Language and tools")
+4. [Requirements](https://github.com/ccr5/Velh-IA/tree/master/velhia.api#requirements "Requirements")
+5. [Usage](https://github.com/ccr5/Velh-IA/tree/master/velhia.api#usage "Usage")
 
 ------------
 ### Description
-This is a microservice to provide a web app to save and get data to show or make analysis.
+This is a microservice to provide a RESTFul API to save and get data to show or make analysis.
 
 ### Structure
 * tests: all project's test
@@ -39,4 +39,5 @@ This is a microservice to provide a web app to save and get data to show or make
 ### Usage
 1. run cd velhia.api
 2. run yarn
+3. Change environment variables
 3. run yarn serve 
