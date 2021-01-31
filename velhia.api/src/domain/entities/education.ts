@@ -35,5 +35,6 @@ const EducationSchema: Schema = new Schema<IAgent>(
 )
 
 const Education = model<IAgent>('education', EducationSchema)
+const EducationTest = model<IAgent>('educationTest', EducationSchema)
 
-export { Education }
+export { Education, EducationTest }

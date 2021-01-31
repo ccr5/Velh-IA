@@ -35,5 +35,6 @@ const FamilySchema: Schema = new Schema<IAgent>(
 )
 
 const Family = model<IAgent>('family', FamilySchema)
+const FamilyTest = model<IAgent>('familyTest', FamilySchema)
 
-export { Family }
+export { Family, FamilyTest }

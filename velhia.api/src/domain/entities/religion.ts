@@ -35,5 +35,6 @@ const ReligionSchema: Schema = new Schema<IAgent>(
 )
 
 const Religion = model<IAgent>('religion', ReligionSchema)
+const ReligionTest = model<IAgent>('religionTest', ReligionSchema)
 
-export { Religion }
+export { Religion, ReligionTest }

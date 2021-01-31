@@ -65,5 +65,6 @@ const matchSchema: Schema = new Schema<IMatch>(
 )
 
 const Match = model<IMatch>('match', matchSchema)
+const MatchTest = model<IMatch>('matchTest', matchSchema)
 
-export { Match }
+export { Match, MatchTest }

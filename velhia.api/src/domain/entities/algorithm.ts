@@ -16,5 +16,6 @@ const AlgorithmSchema: Schema = new Schema<IAlgorithm>(
 )
 
 const Algorithm = model<IAlgorithm>('algorithm', AlgorithmSchema)
+const AlgorithmTest = model<IAlgorithm>('algorithmTest', AlgorithmSchema)
 
-export { Algorithm }
+export { Algorithm, AlgorithmTest }
