@@ -26,10 +26,10 @@
       "@schemas/*":["./src/domain/schemas/*"],
       "@repository/*":["./src/repository/*"],
       "@config/*":["./src/config/*"],
-      "@useCases/*":["./src/useCases/*"],
+      "@useCases/*":["src/use/*"],
       "@enums/*":["./src/domain/enums/*"],
       "@interfaces/*":["./src/domain/interfaces/*"],
-      "@utils/*":["./src/utils/*"]
+      "@utils/*":["src/shared/*"]
     }
   }
 }
