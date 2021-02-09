@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { container } from 'tsyringe'
-import { MatchController } from 'src/adapters/controllers/matchController'
+import { MatchController } from '@adapters/controllers/matchController'
 
 const matchRoutes = Router()
 const matchController = container.resolve(MatchController)

@@ -1,15 +1,15 @@
 import { Request, Response } from 'express'
 import { inject, injectable } from 'tsyringe'
-import TYPES from '@utils/types'
-import IAlgorithmUseCase from 'src/useCases/algorithm/iAlgorithmUseCase'
-import Algorithm from 'src/entities/algorithm/algorithm'
+import TYPES from '@external/container/types'
+import IAlgorithmUseCase from '@useCases/algorithm/iAlgorithmUseCase'
+import IAlgorithm from '@entities/algorithm/iAlgorithm'
 
 @injectable()
 export class AlgorithmController {
   private useCase: IAlgorithmUseCase
 
-  constructor(@inject(TYPES.AlgorithmUseCase) algorithmUseAlgorithmUseCase: IAlgorithmUseCase) {
-    this.useCase = algorithmUseAlgorithmUseCase
+  constructor(@inject(TYPES.AlgorithmUseCase) _usecase: IAlgorithmUseCase) {
+    this.useCase = _usecase
   }
 
   /**
@@ -28,7 +28,7 @@ export class AlgorithmController {
       const fields: string | undefined = req.query.fields?.toString()
       const sort: string | undefined = req.query.sort?.toString()
 
-      const sa: Algorithm[] | null = await this.useCase.getAlgorithm(filters, fields, sort, offset, limit)
+      const sa: IAlgorithm[] | null = await this.useCase.getAlgorithm(filters, fields, sort, offset, limit)
       if (sa == null) return res.sendStatus(404)
       return res.send(sa)
       
@@ -48,8 +48,8 @@ export class AlgorithmController {
    */
   async create(req: Request, res: Response): Promise<Response | void> {
     try {
-      const data: Algorithm[] = req.body
-      const sas: Algorithm[] = await this.useCase.createAlgorithm(data)
+      const data: IAlgorithm[] = req.body
+      const sas: IAlgorithm[] = await this.useCase.createAlgorithm(data)
       return res.json(sas)
     } catch (error) {
       res.sendStatus(400).send(error)
@@ -68,8 +68,8 @@ export class AlgorithmController {
   async update(req: Request, res: Response): Promise<Response | void> {
     try {
       const saId: string = req.params.id
-      const data: Algorithm = req.body
-      const sa: Algorithm | null = await this.useCase.updateAlgorithm(saId, data)
+      const data: IAlgorithm = req.body
+      const sa: IAlgorithm | null = await this.useCase.updateAlgorithm(saId, data)
       if (sa == null) {
         return res.sendStatus(404)
       }
@@ -91,7 +91,7 @@ export class AlgorithmController {
   async delete(req: Request, res: Response): Promise<Response | void> {
     try {
       const saId: string = req.params.id
-      const sa: Algorithm | null = await this.useCase.deleteAlgorithm(saId)
+      const sa: IAlgorithm | null = await this.useCase.deleteAlgorithm(saId)
       if (sa == null) {
         return res.sendStatus(404)
       }

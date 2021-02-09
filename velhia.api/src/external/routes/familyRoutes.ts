@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { container } from 'tsyringe'
-import { FamilyController } from 'src/adapters/controllers/familyController'
+import { FamilyController } from '@adapters/controllers/familyController'
 
 const familyRoutes = Router()
 const familyController = container.resolve(FamilyController)

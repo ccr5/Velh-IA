@@ -1,7 +1,7 @@
-import { IAgentRepository, IAgent } from 'src/external/container/node_modules/src/use/family/node_modules/src/entities/interfaces/iAgenttt
-import { Education } from '@entities/education'
+import IAgent from "@entities/multiAgentSystem/iAgent"
+import EducationDB from "@external/database/entities/education"
+import IAgentRepository from "@useCases/multiAgentSystem/iAgentRepository"
 
-@injectable()
 export default class EducationRepository implements IAgentRepository {
   /**
    * Get All Agents in the database
@@ -35,7 +35,7 @@ export default class EducationRepository implements IAgentRepository {
         })
       }
 
-      const ret = await Education.find(
+      const ret: IAgent[] | null = await EducationDB.find(
         filters != undefined ? JSON.parse(filters) : {},
         fieldsString
       )
@@ -53,7 +53,7 @@ export default class EducationRepository implements IAgentRepository {
    * @returns {Promise<IAgent[]>} IAgent[] with id
    */
   async createAgent(data: IAgent[]): Promise<IAgent[]> {
-    const ret = await Education.create(data)
+    const ret: IAgent[] = await EducationDB.create(data)
     return ret
   }
 
@@ -65,7 +65,7 @@ export default class EducationRepository implements IAgentRepository {
    * @returns {Promise<IAgent | null>} IAgent | null
    */
   async updateAgent(id: string, data: IAgent): Promise<IAgent | null> {
-    const ret = await Education.findByIdAndUpdate(id, data)
+    const ret: IAgent | null = await EducationDB.findByIdAndUpdate(id, data)
     return ret
   }
 
@@ -76,7 +76,7 @@ export default class EducationRepository implements IAgentRepository {
    * @returns {Promise<IAgent | null>} IAgent | null
    */
   async deleteAgent(id: string): Promise<IAgent | null> {
-    const ret = await Education.findByIdAndDelete(id)
+    const ret: IAgent | null = await EducationDB.findByIdAndDelete(id)
     return ret
   }
 }

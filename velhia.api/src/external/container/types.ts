@@ -9,13 +9,7 @@ const TYPES = {
   EducationUseCase: Symbol.for('EducationUseCase'),
   FamilyUseCase: Symbol.for('FamilyUseCase'),
   ReligionUseCase: Symbol.for('ReligionUseCase'),
-  MatchUseCase: Symbol.for('MatchUseCase'),
-
-  AlgorithmDB: Symbol.for('AlgorithmDB'),
-  EducationDB: Symbol.for('EducationDB'),
-  FamilyDB: Symbol.for('FamilyDB'),
-  ReligionDB: Symbol.for('ReligionDB'),
-  MatchDB: Symbol.for('MatchDB')
+  MatchUseCase: Symbol.for('MatchUseCase')
 }
 
 export default TYPES

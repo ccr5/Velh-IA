@@ -1,7 +1,7 @@
-import { IAgentRepository, IAgent } from 'src/external/container/node_modules/src/use/family/node_modules/src/entities/interfaces/iAgenttt
-import { Religion } from '@entities/religion'
+import IAgent from "@entities/multiAgentSystem/iAgent"
+import ReligionDB from "@external/database/entities/religion"
+import IAgentRepository from "@useCases/multiAgentSystem/iAgentRepository"
 
-@injectable()
 export default class ReligionRepository implements IAgentRepository {
   /**
    * Get All Agents in the database
@@ -35,7 +35,7 @@ export default class ReligionRepository implements IAgentRepository {
         })
       }
 
-      const ret = await Religion.find(
+      const ret: IAgent[] | null = await ReligionDB.find(
         filters != undefined ? JSON.parse(filters) : {},
         fieldsString
       )
@@ -53,7 +53,7 @@ export default class ReligionRepository implements IAgentRepository {
    * @returns {Promise<IAgent[]>} IAgent[] with id
    */
   async createAgent(data: IAgent[]): Promise<IAgent[]> {
-    const ret = await Religion.create(data)
+    const ret: IAgent[] = await ReligionDB.create(data)
     return ret
   }
 
@@ -65,7 +65,7 @@ export default class ReligionRepository implements IAgentRepository {
    * @returns {Promise<IAgent | null>} IAgent | null
    */
   async updateAgent(id: string, data: IAgent): Promise<IAgent | null> {
-    const ret = await Religion.findByIdAndUpdate(id, data)
+    const ret: IAgent | null = await ReligionDB.findByIdAndUpdate(id, data)
     return ret
   }
 
@@ -76,7 +76,7 @@ export default class ReligionRepository implements IAgentRepository {
    * @returns {Promise<IAgent | null>} IAgent | null
    */
   async deleteAgent(id: string): Promise<IAgent | null> {
-    const ret = await Religion.findByIdAndDelete(id)
+    const ret: IAgent | null = await ReligionDB.findByIdAndDelete(id)
     return ret
   }
 }

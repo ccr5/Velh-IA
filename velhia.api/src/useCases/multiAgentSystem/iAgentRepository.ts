@@ -1,6 +1,6 @@
 import IAgent from "@entities/multiAgentSystem/iAgent";
 
-export default interface IAgentUseCase {
+export default interface IAgentRepository {
   getAgent(
     filters:string | undefined, 
     fields: string | undefined, 

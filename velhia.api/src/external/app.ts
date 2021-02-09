@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-import { routes } from 'src/external/routes'
+import { routes } from '@external/routes'
 
 const app = express()
 const options: cors.CorsOptions = {

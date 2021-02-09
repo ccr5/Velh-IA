@@ -1,14 +1,15 @@
 import { Request, Response } from 'express'
 import { inject, injectable } from 'tsyringe'
-import { TYPES } from '@utils/types'
-import { IMatchRepository, IMatch } from 'src/external/database/entities/node_modules/@interfaces/iMatch'
+import TYPES from '@external/container/types'
+import IMatchUseCase from '@useCases/match/iMatchUseCase'
+import IMatch from '@entities/match/iMatch'
 
 @injectable()
 export class MatchController {
-  private repository: IMatchRepository
+  private usecase: IMatchUseCase
 
-  constructor(@inject(TYPES.MatchRepository) matchRepository: IMatchRepository) {
-    this.repository = matchRepository
+  constructor(@inject(TYPES.MatchUseCase) _usecase: IMatchUseCase) {
+    this.usecase = _usecase
   }
 
   /**
@@ -27,7 +28,7 @@ export class MatchController {
       const fields: string | undefined = req.query.fields?.toString()
       const sort: string | undefined = req.query.sort?.toString()
 
-      const mac: IMatch[] | null = await this.repository.getMatch(filters, fields, sort, offset, limit)
+      const mac: IMatch[] | null = await this.usecase.getMatch(filters, fields, sort, offset, limit)
       if (mac == null) {
         return res.sendStatus(404)
       }
@@ -49,7 +50,7 @@ export class MatchController {
   async create(req: Request, res: Response): Promise<Response | void> {
     try {
       const data: IMatch[] = req.body
-      const mac: IMatch[] = await this.repository.createMatch(data)
+      const mac: IMatch[] = await this.usecase.createMatch(data)
       return res.json(mac)
     } catch (error) {
       res.sendStatus(400).send(error)
@@ -69,7 +70,7 @@ export class MatchController {
     try {
       const macId: string = req.params.id
       const data: IMatch = req.body
-      const mac: IMatch | null = await this.repository.updateMatch(macId, data)
+      const mac: IMatch | null = await this.usecase.updateMatch(macId, data)
       if (mac == null) {
         return res.sendStatus(404)
       }
@@ -91,7 +92,7 @@ export class MatchController {
   async delete(req: Request, res: Response): Promise<Response | void> {
     try {
       const macId: string = req.params.id
-      const mac: IMatch | null = await this.repository.deleteMatch(macId)
+      const mac: IMatch | null = await this.usecase.deleteMatch(macId)
       if (mac == null) {
         return res.sendStatus(404)
       }

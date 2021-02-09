@@ -1,7 +1,7 @@
-import { IMatchRepository, IMatch } from 'src/external/container/node_modules/src/use/match/node_modules/src/entities/interfaces/iMatchhh
-import { Match } from '@entities/matchs'
+import IMatch from "@entities/match/iMatch"
+import MatchDB from "@external/database/entities/matchs"
+import IMatchRepository from "@useCases/match/iMatchRepository"
 
-@injectable()
 export default class MatchRepository implements IMatchRepository {
   /**
    * Get All Matchs in the database
@@ -35,7 +35,7 @@ export default class MatchRepository implements IMatchRepository {
         })
       }
 
-      const ret = await Match.find(
+      const ret: IMatch[] | null = await MatchDB.find(
         filters != undefined ? JSON.parse(filters) : {},
         fieldsString
       )
@@ -53,7 +53,7 @@ export default class MatchRepository implements IMatchRepository {
    * @returns {Promise<IMatch[]>} IMatch[] with id
    */
   async createMatch(data: IMatch[]): Promise<IMatch[]> {
-    const ret = await Match.create(data)
+    const ret: IMatch[] = await MatchDB.create(data)
     return ret
   }
 
@@ -65,7 +65,7 @@ export default class MatchRepository implements IMatchRepository {
    * @returns {Promise<IMatch | null>} IMatch | null
    */
   async updateMatch(id: string, data: IMatch): Promise<IMatch | null> {
-    const ret = await Match.findByIdAndUpdate(id, data)
+    const ret: IMatch | null = await MatchDB.findByIdAndUpdate(id, data)
     return ret
   }
 
@@ -76,7 +76,7 @@ export default class MatchRepository implements IMatchRepository {
    * @returns {Promise<IMatch | null>} IMatch | null
    */
   async deleteMatch(id: string): Promise<IMatch | null> {
-    const ret = await Match.findByIdAndDelete(id)
+    const ret: IMatch | null = await MatchDB.findByIdAndDelete(id)
     return ret
   }
 }

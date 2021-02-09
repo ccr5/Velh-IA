@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { container } from 'tsyringe'
-import { EducationController } from 'src/adapters/controllers/educationController'
+import { EducationController } from '@adapters/controllers/educationController'
 
 const educationRoutes = Router()
 const educationController = container.resolve(EducationController)

@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv'
-import 'src/external/container'
-import { database } from 'src/external/database/databaseConfig'
+import '@external/container'
+import { database } from '@external/database/databaseConfig'
 import { app } from './app'
 
 dotenv.config({

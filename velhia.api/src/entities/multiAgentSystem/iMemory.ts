@@ -1,4 +1,4 @@
-import { environmentReaction } from "@utils/enums/environmentReaction";
+import { environmentReaction } from "@shared/enums/environmentReaction";
 import IChoices from "./iChoice";
 
 export default interface IMemory {

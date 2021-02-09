@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { container } from 'tsyringe'
-import { WebController } from 'src/adapters/controllers/webController'
+import { WebController } from '@adapters/controllers/webController'
 
 const webRoutes = Router()
 const webController = container.resolve(WebController)

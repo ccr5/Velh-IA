@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe'
 import IMatchUseCase from './iMatchUseCase'
-import IMatchRepository from 'src/adapters/repository/interfaces/iMatchRepository'
-import Match from 'src/entities/match/match'
-import TYPES from '@utils/types'
+import IMatch from '@entities/match/iMatch'
+import TYPES from '@external/container/types'
+import IMatchRepository from '@useCases/match/iMatchRepository'
 
 @injectable()
 export default class MatchUseCase implements IMatchUseCase {
@@ -26,11 +26,11 @@ export default class MatchUseCase implements IMatchUseCase {
     sort: string | undefined, 
     offset: string | undefined, 
     limit: string | undefined
-    ): Promise<Match[] | null> {
+    ): Promise<IMatch[] | null> {
 
     try {
 
-      const sa: Match[] | null = await this.repository.getMatch(filters, fields, sort, offset, limit)
+      const sa: IMatch[] | null = await this.repository.getMatch(filters, fields, sort, offset, limit)
       return sa
       
     } catch (error) {
@@ -46,9 +46,9 @@ export default class MatchUseCase implements IMatchUseCase {
    * @example create(IAlgorithm[])
    * @returns {Promise<Response | void>} IAlgorithm[]
    */
-  async createMatch(data: Match[]): Promise<Match[]> {
+  async createMatch(data: IMatch[]): Promise<IMatch[]> {
     try {
-      const sas: Match[] = await this.repository.createMatch(data)
+      const sas: IMatch[] = await this.repository.createMatch(data)
       return sas
     } catch (error) {
       throw new Error(error);
@@ -63,9 +63,9 @@ export default class MatchUseCase implements IMatchUseCase {
    * @example create(Match[])
    * @returns {Promise<Response | void>} Match[]
    */
-  async updateMatch(id: string, data: Match): Promise<Match | null> {
+  async updateMatch(id: string, data: IMatch): Promise<IMatch | null> {
     try {
-      const sas: Match | null = await this.repository.updateMatch(id, data)
+      const sas: IMatch | null = await this.repository.updateMatch(id, data)
       return sas
     } catch (error) {
       throw new Error(error);
@@ -80,9 +80,9 @@ export default class MatchUseCase implements IMatchUseCase {
    * @example create(IAlgorithm[])
    * @returns {Promise<Response | void>} IAlgorithm[]
    */
-  async deleteMatch(id: string): Promise<Match | null> {
+  async deleteMatch(id: string): Promise<IMatch | null> {
     try {
-      const sas: Match | null = await this.repository.deleteMatch(id)
+      const sas: IMatch | null = await this.repository.deleteMatch(id)
       return sas
     } catch (error) {
       throw new Error(error);

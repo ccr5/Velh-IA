@@ -1,14 +1,15 @@
 import { Request, Response } from 'express'
 import { inject, injectable } from 'tsyringe'
-import TYPES from '@utils/types'
-import { IAgentRepository, IAgent } from 'src/external/database/entities/node_modules/@interfaces/iAgent'
+import TYPES from '@external/container/types'
+import IAgent from '@entities/multiAgentSystem/iAgent'
+import IAgentUseCase from '@useCases/multiAgentSystem/iAgentUseCase'
 
 @injectable()
 export class EducationController {
-  private repository: IAgentRepository
+  private usecase: IAgentUseCase
 
-  constructor(@inject(TYPES.EducationRepository) educationRepository: IAgentRepository) {
-    this.repository = educationRepository
+  constructor(@inject(TYPES.EducationUseCase) _usecase: IAgentUseCase) {
+    this.usecase = _usecase
   }
 
   /**
@@ -27,7 +28,7 @@ export class EducationController {
       const fields: string | undefined = req.query.fields?.toString()
       const sort: string | undefined = req.query.sort?.toString()
 
-      const mas: IAgent[] | null = await this.repository.getAgent(filters, fields, sort, offset, limit)
+      const mas: IAgent[] | null = await this.usecase.getAgent(filters, fields, sort, offset, limit)
       if (mas == null) {
         return res.sendStatus(404)
       }
@@ -49,7 +50,7 @@ export class EducationController {
   async create(req: Request, res: Response): Promise<Response | void> {
     try {
       const data: IAgent[] = req.body
-      const mas: IAgent[] = await this.repository.createAgent(data)
+      const mas: IAgent[] = await this.usecase.createAgent(data)
       return res.json(mas)
     } catch (error) {
       res.sendStatus(400).send(error)
@@ -69,7 +70,7 @@ export class EducationController {
     try {
       const masId: string = req.params.id
       const data: IAgent = req.body
-      const mas: IAgent | null = await this.repository.updateAgent(masId, data)
+      const mas: IAgent | null = await this.usecase.updateAgent(masId, data)
       if (mas == null) {
         return res.sendStatus(404)
       }
@@ -91,7 +92,7 @@ export class EducationController {
   async delete(req: Request, res: Response): Promise<Response | void> {
     try {
       const masId: string = req.params.id
-      const mas: IAgent | null = await this.repository.deleteAgent(masId)
+      const mas: IAgent | null = await this.usecase.deleteAgent(masId)
       if (mas == null) {
         return res.sendStatus(404)
       }

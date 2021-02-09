@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { container } from 'tsyringe'
-import { ReligionController } from 'src/adapters/controllers/religionController'
+import { ReligionController } from '@adapters/controllers/religionController'
 
 const religionRoutes = Router()
 const religionController = container.resolve(ReligionController)

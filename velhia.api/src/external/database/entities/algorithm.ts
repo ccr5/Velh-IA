@@ -1,7 +1,7 @@
 import { Schema, model, Document, Model } from 'mongoose'
-import Algorithm from 'src/entities/algorithm/algorithm'
+import IAlgorithmDB from '../interfaces/iAlgorithmDB'
 
-const AlgorithmSchema: Schema = new Schema<Algorithm>(
+const AlgorithmSchema: Schema = new Schema<IAlgorithmDB>(
   {
     birth: { type: Date, required: true },
     matchs: { type: Number, required: true },
@@ -14,6 +14,6 @@ const AlgorithmSchema: Schema = new Schema<Algorithm>(
   }
 )
 
-const AlgorithmDB = model<Algorithm extends Document>('algorithm', AlgorithmSchema)
+const AlgorithmDB = model<IAlgorithmDB>('algorithm', AlgorithmSchema)
 
 export default AlgorithmDB

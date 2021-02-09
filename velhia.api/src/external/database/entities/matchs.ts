@@ -1,8 +1,10 @@
-import { symbolEnvironment } from '@utils/enums/symbols'
-import { winner } from '@utils/enums/winners'
+import { status } from '@shared/enums/status'
+import { symbolEnvironment } from '@shared/enums/symbols'
+import { winner } from '@shared/enums/winners'
 import { Schema, model } from 'mongoose'
+import iMatchDB from '../interfaces/iMatchDB'
 
-const matchSchema: Schema = new Schema (
+const matchSchema: Schema = new Schema<iMatchDB> (
   {
     begin: { type: Date, required: true },
     end: { type: Date },
@@ -62,6 +64,6 @@ const matchSchema: Schema = new Schema (
   }
 )
 
-const MatchDB = model('match', matchSchema)
+const MatchDB = model<iMatchDB>('match', matchSchema)
 
 export default  MatchDB

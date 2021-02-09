@@ -1,31 +1,34 @@
-import { TYPES } from '@utils/types'
-import { IAgent, IAgentRepository } from 'src/external/database/entities/node_modules/@interfaces/iAgent'
-import { IAlgorithm, IAlgorithmRepository } from 'src/external/database/entities/node_modules/@interfaces/iAlgorithm'
-import { IMatch, IMatchRepository } from 'src/external/database/entities/node_modules/@interfaces/iMatch'
-import { ICamp, IGeneralData, IPlayersData, IMAS } from '@interfaces/iWeb'
+import TYPES from '@external/container/types'
 import { Request, Response } from 'express'
 import { inject, injectable } from 'tsyringe'
+import IAlgorithm from '@entities/algorithm/iAlgorithm'
+import IMatch from '@entities/match/iMatch'
+import IAgent from '@entities/multiAgentSystem/iAgent'
+import IAlgorithmUseCase from '@useCases/algorithm/iAlgorithmUseCase'
+import IMatchUseCase from '@useCases/match/iMatchUseCase'
+import IAgentUseCase from '@useCases/multiAgentSystem/iAgentUseCase'
+import { IGeneralData, IPlayersData, ICamp, IMAS } from '@adapters/interfaces/iWeb'
 
 @injectable()
 export class WebController {
-  private matchRepository: IMatchRepository
-  private algorithmRepository: IAlgorithmRepository
-  private familyRepository: IAgentRepository
-  private educationRepository: IAgentRepository
-  private religionRepository: IAgentRepository
+  private matchUseCase: IMatchUseCase
+  private algorithmUseCase: IAlgorithmUseCase
+  private familyUseCase: IAgentUseCase
+  private educationUseCase: IAgentUseCase
+  private religionUseCase: IAgentUseCase
 
   constructor(
-    @inject(TYPES.MatchRepository) matchRepository: IMatchRepository,
-    @inject(TYPES.AlgorithmRepository) algorithmRepository: IAlgorithmRepository,
-    @inject(TYPES.FamilyRepository) familyRepository: IAgentRepository,
-    @inject(TYPES.EducationRepository) educationRepository: IAgentRepository,
-    @inject(TYPES.ReligionRepository) religionRepository: IAgentRepository
+    @inject(TYPES.MatchUseCase) _matchUseCase: IMatchUseCase,
+    @inject(TYPES.AlgorithmUseCase) _algorithmUseCase: IAlgorithmUseCase,
+    @inject(TYPES.FamilyUseCase) _familyUseCase: IAgentUseCase,
+    @inject(TYPES.EducationUseCase) _educationUseCase: IAgentUseCase,
+    @inject(TYPES.ReligionUseCase) _religionUseCase: IAgentUseCase
   ) {
-    this.matchRepository = matchRepository
-    this.algorithmRepository = algorithmRepository
-    this.familyRepository = familyRepository
-    this.educationRepository = educationRepository
-    this.religionRepository = religionRepository
+    this.matchUseCase = _matchUseCase
+    this.algorithmUseCase = _algorithmUseCase
+    this.familyUseCase = _familyUseCase
+    this.educationUseCase = _educationUseCase
+    this.religionUseCase = _religionUseCase
   }
 
   /**
@@ -37,8 +40,8 @@ export class WebController {
    */
   async getGeneralData (req: Request, res: Response): Promise<Response | void> {
     try {
-      const mac: IMatch[] | null = await this.matchRepository.getMatch(undefined, undefined, undefined, undefined, undefined)
-      const sa: IAlgorithm[] | null = await this.algorithmRepository.getAlgorithm(undefined, undefined, undefined, '0', '1')
+      const mac: IMatch[] | null = await this.matchUseCase.getMatch(undefined, undefined, undefined, undefined, undefined)
+      const sa: IAlgorithm[] | null = await this.algorithmUseCase.getAlgorithm(undefined, undefined, undefined, '0', '1')
 
       if (mac == null) { return res.sendStatus(404) }
       if (sa == null) { return res.sendStatus(404) }
@@ -65,7 +68,7 @@ export class WebController {
    */
   async getSAData (req: Request, res: Response): Promise<Response | void> {
     try {
-      const sa: IAlgorithm[] | null = await this.algorithmRepository.getAlgorithm(undefined, undefined, undefined, '0', '1' )
+      const sa: IAlgorithm[] | null = await this.algorithmUseCase.getAlgorithm(undefined, undefined, undefined, '0', '1' )
       if (sa == null) { return res.sendStatus(404) }
       const wins: number = sa[0].victories
       const percent: number = sa[0].victories / (sa[0].victories + sa[0].draw + sa[0].defeats)
@@ -86,7 +89,7 @@ export class WebController {
    */
   async getMASData (req: Request, res: Response): Promise<Response | void> {
     try {
-      const family: IAgent[] | null = await this.familyRepository.getAgent(undefined, undefined, 'createdAt:desc', '0', '2')
+      const family: IAgent[] | null = await this.familyUseCase.getAgent(undefined, undefined, 'createdAt:desc', '0', '2')
 
       if (family == null) { return res.sendStatus(404) }
       const wins: number = family[1].victories
@@ -108,7 +111,7 @@ export class WebController {
    */
   async getCampData (req: Request, res: Response): Promise<Response | void> {
     try {
-      const match: IMatch[] | null = await this.matchRepository.getMatch(undefined, undefined, 'createdAt:desc', '0', '1')
+      const match: IMatch[] | null = await this.matchUseCase.getMatch(undefined, undefined, 'createdAt:desc', '0', '1')
       if (match == null) { return res.sendStatus(404) }
       let game = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
 
@@ -142,12 +145,12 @@ export class WebController {
    */ 
   async getMAS (req: Request, res: Response): Promise<Response | void> {
     try {
-      const family: IAgent[] | null = await this.familyRepository.getAgent(undefined, undefined, 'createdAt:desc', '0', '2')
-      const familyMemories: IAgent[] | null = await this.familyRepository.getAgent(undefined, undefined, undefined, undefined, undefined)
-      const education: IAgent[] | null = await this.educationRepository.getAgent(undefined, undefined, 'createdAt:desc', '0', '2')
-      const educationMemories: IAgent[] | null = await this.educationRepository.getAgent(undefined, undefined, undefined, undefined, undefined)
-      const religion: IAgent[] | null = await this.religionRepository.getAgent(undefined, undefined, 'createdAt:desc', '0', '2')
-      const religionMemories: IAgent[] | null = await this.religionRepository.getAgent(undefined, undefined, undefined, undefined, undefined)
+      const family: IAgent[] | null = await this.familyUseCase.getAgent(undefined, undefined, 'createdAt:desc', '0', '2')
+      const familyMemories: IAgent[] | null = await this.familyUseCase.getAgent(undefined, undefined, undefined, undefined, undefined)
+      const education: IAgent[] | null = await this.educationUseCase.getAgent(undefined, undefined, 'createdAt:desc', '0', '2')
+      const educationMemories: IAgent[] | null = await this.educationUseCase.getAgent(undefined, undefined, undefined, undefined, undefined)
+      const religion: IAgent[] | null = await this.religionUseCase.getAgent(undefined, undefined, 'createdAt:desc', '0', '2')
+      const religionMemories: IAgent[] | null = await this.religionUseCase.getAgent(undefined, undefined, undefined, undefined, undefined)
 
       if (family == null || education == null || religion == null) { return res.sendStatus(404) }
       if (familyMemories == null || educationMemories == null || religionMemories == null) { return res.sendStatus(404) }
@@ -155,7 +158,6 @@ export class WebController {
       const ret: IMAS = {
         family: {
           institution: 'family',
-          id: family[1].id,
           generation: `${familyMemories.length - 1}º`,
           progenitor: family[1].progenitor,
           life: family[1].life,
@@ -168,7 +170,6 @@ export class WebController {
         },
         education: {
           institution: 'education',
-          id: education[1].id,
           generation: `${educationMemories.length - 1}º`,
           progenitor: education[1].progenitor,
           life: education[1].life,
@@ -181,7 +182,6 @@ export class WebController {
         },
         religion: {
           institution: 'religion',
-          id: religion[1].id,
           generation: `${religionMemories.length - 1}º`,
           progenitor: religion[1].progenitor,
           life: religion[1].life,

@@ -1,7 +1,7 @@
-import { IAgentRepository, IAgent } from 'src/external/container/node_modules/src/use/family/node_modules/src/entities/interfaces/iAgenttt
-import { Family } from '@entities/family'
+import IAgent from "@entities/multiAgentSystem/iAgent"
+import FamilyDB from "@external/database/entities/family"
+import IAgentRepository from "@useCases/multiAgentSystem/iAgentRepository"
 
-@injectable()
 export default class FamilyRepository implements IAgentRepository {
   /**
    * Get All Agents in the database
@@ -35,7 +35,7 @@ export default class FamilyRepository implements IAgentRepository {
         })
       }
 
-      const ret = await Family.find(
+      const ret: IAgent[] | null = await FamilyDB.find(
         filters != undefined ? JSON.parse(filters) : {},
         fieldsString
       )
@@ -53,7 +53,7 @@ export default class FamilyRepository implements IAgentRepository {
    * @returns {Promise<IAgent[]>} IAgent[] with id
    */
   async createAgent(data: IAgent[]): Promise<IAgent[]> {
-    const ret = await Family.create(data)
+    const ret: IAgent[] = await FamilyDB.create(data)
     return ret
   }
 
@@ -65,7 +65,7 @@ export default class FamilyRepository implements IAgentRepository {
    * @returns {Promise<IAgent | null>} IAgent | null
    */
   async updateAgent(id: string, data: IAgent): Promise<IAgent | null> {
-    const ret = await Family.findByIdAndUpdate(id, data)
+    const ret: IAgent | null = await FamilyDB.findByIdAndUpdate(id, data)
     return ret
   }
 
@@ -76,7 +76,7 @@ export default class FamilyRepository implements IAgentRepository {
    * @returns {Promise<IAgent | null>} IAgent | null
    */
   async deleteAgent(id: string): Promise<IAgent | null> {
-    const ret = await Family.findByIdAndDelete(id)
+    const ret: IAgent | null = await FamilyDB.findByIdAndDelete(id)
     return ret
   }
 }

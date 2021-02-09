@@ -1,6 +1,6 @@
 import IAlgorithm from '@entities/algorithm/iAlgorithm'
 
-export default interface IAlgorithmUseCase {
+export default interface IAlgorithmRepository {
   getAlgorithm(
     filters:string | undefined, 
     fields: string | undefined, 

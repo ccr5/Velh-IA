@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { container } from 'tsyringe'
-import { AlgorithmController } from 'src/adapters/controllers/algorithmController'
+import { AlgorithmController } from '@adapters/controllers/algorithmController'
 
 const algorithmRoutes = Router()
 const algorithmController = container.resolve(AlgorithmController)

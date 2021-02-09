@@ -1,5 +1,5 @@
-import { winner } from "@utils/enums/winners";
-import { status } from "@utils/enums/status";
+import { winner } from "@shared/enums/winners";
+import { status } from "@shared/enums/status";
 import IMultiAgentSystem from "./iMultiAgentSystem";
 import IPlay from "./iPlay";
 import IPlayer from "./iPlayer";

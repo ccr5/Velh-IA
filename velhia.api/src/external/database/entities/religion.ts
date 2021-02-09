@@ -1,7 +1,8 @@
-import { environmentReaction } from '@utils/enums/environmentReaction'
+import { environmentReaction } from '@shared/enums/environmentReaction'
 import { Schema, model } from 'mongoose'
+import iAgentDB from '../interfaces/iAgentDB'
 
-const ReligionSchema: Schema = new Schema (
+const ReligionSchema: Schema = new Schema<iAgentDB> (
   {
     progenitor: { type: String, required: true },
     birth: { type: Date, required: true },
@@ -33,6 +34,6 @@ const ReligionSchema: Schema = new Schema (
   }
 )
 
-const ReligionDB = model('religion', ReligionSchema)
+const ReligionDB = model<iAgentDB>('religion', ReligionSchema)
 
 export default  ReligionDB

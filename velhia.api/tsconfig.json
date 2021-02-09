@@ -22,14 +22,12 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@entities/*":["src/domain/entities/*"],
-      "@schemas/*":["./src/domain/schemas/*"],
-      "@repository/*":["./src/repository/*"],
-      "@config/*":["./src/config/*"],
-      "@useCases/*":["src/use/*"],
-      "@enums/*":["./src/domain/enums/*"],
+      "@entities/*":["src/entities/*"],
+      "@external/*":["src/external/*"],
+      "@adapters/*":["./src/adapters/*"],
+      "@useCases/*":["src/useCases/*"],
       "@interfaces/*":["./src/domain/interfaces/*"],
-      "@utils/*":["src/shared/*"]
+      "@shared/*":["src/shared/*"]
     }
   }
 }

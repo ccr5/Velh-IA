@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe'
 import IAgentUseCase from './iAgentUseCase'
-import IAgentRepository from 'src/adapters/repository/iAgentRepository'
-import Agent from 'src/entities/multiAgentSystem/agent'
-import TYPES from '@utils/types'
+import IAgentRepository from '@useCases/multiAgentSystem/iAgentRepository'
+import IAgent from '@entities/multiAgentSystem/iAgent'
+import TYPES from '@external/container/types'
 
 @injectable()
 export default class EducationUseCase implements IAgentUseCase {
@@ -22,10 +22,10 @@ export default class EducationUseCase implements IAgentUseCase {
     fields: string | undefined, 
     sort: string | undefined, 
     offset: string | undefined, 
-    limit: string| undefined): Promise<Agent[] | null> {
+    limit: string| undefined): Promise<IAgent[] | null> {
 
       try {
-        const ret: Agent[] | null = await this.repository.getAgent(filters,fields,sort,offset,limit)
+        const ret: IAgent[] | null = await this.repository.getAgent(filters,fields,sort,offset,limit)
         return ret
       } catch (error) {
         throw new Error(error);
@@ -38,9 +38,9 @@ export default class EducationUseCase implements IAgentUseCase {
    * @example createAgent(IAgent[] "without id" )
    * @returns {Promise<IAgent[]>} IAgent[] with id
    */
-  async createAgent(data: Agent[]): Promise<Agent[]> {
+  async createAgent(data: IAgent[]): Promise<IAgent[]> {
     try {
-      const ret: Agent[] = await this.repository.createAgent(data)
+      const ret: IAgent[] = await this.repository.createAgent(data)
       return ret
     } catch (error) {
       throw new Error(error);
@@ -55,9 +55,9 @@ export default class EducationUseCase implements IAgentUseCase {
    * @example updateAgent("11bf9688-699f-49a4-9d8e-b0cc57301bff", IAgent)
    * @returns {Promise<IAgent | null>} IAgent | null
    */
-  async updateAgent(id: string, data: Agent): Promise<Agent | null> {
+  async updateAgent(id: string, data: IAgent): Promise<IAgent | null> {
     try {
-      const ret: Agent | null = await this.repository.updateAgent(id, data)
+      const ret: IAgent | null = await this.repository.updateAgent(id, data)
       return ret
     } catch (error) {
       throw new Error(error);
@@ -70,9 +70,9 @@ export default class EducationUseCase implements IAgentUseCase {
    * @example deleteAgent('11bf9688-699f-49a4-9d8e-b0cc57301bff')
    * @returns {Promise<IAgent | null>} IAgent | null
    */
-  async deleteAgent(id: string): Promise<Agent | null> {
+  async deleteAgent(id: string): Promise<IAgent | null> {
     try {
-      const ret: Agent | null = await this.repository.deleteAgent(id)
+      const ret: IAgent | null = await this.repository.deleteAgent(id)
       return ret
     } catch (error) {
       throw new Error(error);    

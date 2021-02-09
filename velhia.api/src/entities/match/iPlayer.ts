@@ -1,4 +1,4 @@
-import { symbolEnvironment } from "@utils/enums/symbols";
+import { symbolEnvironment } from "@shared/enums/symbols";
 
 export default interface IPlayer {
   playerId: string,

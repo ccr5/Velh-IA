@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe'
-import TYPES from '@utils/types'
-import Algorithm from 'src/entities/algorithm/algorithm'
+import TYPES from '@external/container/types'
+import IAlgorithm from '@entities/algorithm/iAlgorithm'
 import IAlgorithmUseCase from './iAlgorithmUseCase'
-import IAlgorithmRepository from 'src/adapters/repository/interfaces/iAlgorithmRepository'
+import IAlgorithmRepository from '@useCases/algorithm/iAlgorithmRepository'
 
 @injectable()
 export default class AlgorithmUseCase implements IAlgorithmUseCase {
@@ -26,11 +26,11 @@ export default class AlgorithmUseCase implements IAlgorithmUseCase {
     sort: string | undefined, 
     offset: string | undefined, 
     limit: string | undefined
-    ): Promise<Algorithm[] | null> {
+    ): Promise<IAlgorithm[] | null> {
 
     try {
 
-      const sa: Algorithm[] | null = await this.repository.getAlgorithm(filters, fields, sort, offset, limit)
+      const sa: IAlgorithm[] | null = await this.repository.getAlgorithm(filters, fields, sort, offset, limit)
       return sa      
     } catch (error) {
       throw new Error(error);
@@ -45,9 +45,9 @@ export default class AlgorithmUseCase implements IAlgorithmUseCase {
    * @example create(IAlgorithm[])
    * @returns {Promise<Response | void>} IAlgorithm[]
    */
-  async createAlgorithm(data: Algorithm[]): Promise<Algorithm[]> {
+  async createAlgorithm(data: IAlgorithm[]): Promise<IAlgorithm[]> {
     try {
-      const sas: Algorithm[] = await this.repository.createAlgorithm(data)
+      const sas: IAlgorithm[] = await this.repository.createAlgorithm(data)
       return sas
     } catch (error) {
       throw new Error(error);
@@ -62,9 +62,9 @@ export default class AlgorithmUseCase implements IAlgorithmUseCase {
    * @example create(IAlgorithm[])
    * @returns {Promise<Response | void>} IAlgorithm[]
    */
-  async updateAlgorithm(id: string, data: Algorithm): Promise<Algorithm | null> {
+  async updateAlgorithm(id: string, data: IAlgorithm): Promise<IAlgorithm | null> {
     try {
-      const sas: Algorithm | null = await this.repository.updateAlgorithm(id, data)
+      const sas: IAlgorithm | null = await this.repository.updateAlgorithm(id, data)
       return sas
     } catch (error) {
       throw new Error(error);
@@ -79,9 +79,9 @@ export default class AlgorithmUseCase implements IAlgorithmUseCase {
    * @example create(IAlgorithm[])
    * @returns {Promise<Response | void>} IAlgorithm[]
    */
-  async deleteAlgorithm(id: string): Promise<Algorithm | null> {
+  async deleteAlgorithm(id: string): Promise<IAlgorithm | null> {
     try {
-      const sas: Algorithm | null = await this.repository.deleteAlgorithm(id)
+      const sas: IAlgorithm | null = await this.repository.deleteAlgorithm(id)
       return sas
     } catch (error) {
       throw new Error(error);

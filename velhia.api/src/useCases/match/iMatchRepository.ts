@@ -1,6 +1,6 @@
 import IMatch from "@entities/match/iMatch";
 
-export default interface IMatchUseCase {
+export default interface IMatchRepository {
   getMatch(
     filters:string | undefined, 
     fields: string | undefined, 

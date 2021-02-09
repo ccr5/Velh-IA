@@ -1,6 +1,6 @@
-import AlgorithmDB from 'src/external/database/entities/algorithm'
-import Algorithm from 'src/entities/algorithm/algorithm'
-import IAlgorithmRepository from './iAlgorithmRepository'
+import AlgorithmDB from '@external/database/entities/algorithm'
+import IAlgorithm from '@entities/algorithm/iAlgorithm'
+import IAlgorithmRepository from '@useCases/algorithm/iAlgorithmRepository'
 
 
 export default class AlgorithmRepository implements IAlgorithmRepository {
@@ -15,7 +15,7 @@ export default class AlgorithmRepository implements IAlgorithmRepository {
     fields: string | undefined, 
     sort: string | undefined, 
     offset: string | undefined, 
-    limit: string| undefined): Promise<Algorithm[] | null> {
+    limit: string| undefined): Promise<IAlgorithm[] | null> {
 
       let fieldsString = ''
       if (fields != undefined) {
@@ -37,7 +37,7 @@ export default class AlgorithmRepository implements IAlgorithmRepository {
         })
       }
 
-      const ret = await AlgorithmDB.find(
+      const ret: IAlgorithm[] | null = await AlgorithmDB.find(
         filters != undefined ? JSON.parse(filters) : {},
         fieldsString
       )
@@ -54,8 +54,8 @@ export default class AlgorithmRepository implements IAlgorithmRepository {
    * @example createAlgorithm(Algorithm[] "without id" )
    * @returns {Promise<Algorithm[]>} Algorithm[] with id
    */
-  async createAlgorithm(data: Algorithm[]): Promise<Algorithm[]> {
-    const ret = await AlgorithmDB.create(data)
+  async createAlgorithm(data: IAlgorithm[]): Promise<IAlgorithm[]> {
+    const ret: IAlgorithm[] = await AlgorithmDB.create(data)
     return ret
   }
 
@@ -66,8 +66,8 @@ export default class AlgorithmRepository implements IAlgorithmRepository {
    * @example updateAlgorithm("11bf9688-699f-49a4-9d8e-b0cc57301bff", Algorithm)
    * @returns {Promise<Algorithm | null>} Algorithm | null
    */
-  async updateAlgorithm(id: string, data: Algorithm): Promise<Algorithm | null> {
-    const ret = await AlgorithmDB.findByIdAndUpdate(id, data)
+  async updateAlgorithm(id: string, data: IAlgorithm): Promise<IAlgorithm | null> {
+    const ret: IAlgorithm | null = await AlgorithmDB.findByIdAndUpdate(id, data)
     return ret
   }
 
@@ -77,8 +77,8 @@ export default class AlgorithmRepository implements IAlgorithmRepository {
    * @example deleteAlgorithm('11bf9688-699f-49a4-9d8e-b0cc57301bff')
    * @returns {Promise<Algorithm | null>} Algorithm | null
    */
-  async deleteAlgorithm(id: string): Promise<Algorithm | null> {
-    const ret = await AlgorithmDB.findByIdAndDelete(id)
+  async deleteAlgorithm(id: string): Promise<IAlgorithm | null> {
+    const ret: IAlgorithm | null = await AlgorithmDB.findByIdAndDelete(id)
     return ret
   }
 }
