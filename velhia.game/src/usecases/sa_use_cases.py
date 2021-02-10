@@ -1,31 +1,16 @@
 import random as r
 from datetime import datetime
-from errors.statistical_algorithm.play_error import PlayError
-from errors.statistical_algorithm.strategy_plan_error import StrategyPlanError
-from errors.statistical_algorithm.sequence_list_error import SequenceListError
-from errors.statistical_algorithm.check_error import CheckError
-from errors.statistical_algorithm.count_error import CountError
-from errors.statistical_algorithm.create_matrix_error import CreateMatrixError
+from src.entities.sa import StatisticalAlgorithm
+from src.shared.errors.statistical_algorithm.play_error import PlayError
+from src.shared.errors.statistical_algorithm.strategy_plan_error import StrategyPlanError
+from src.shared.errors.statistical_algorithm.sequence_list_error import SequenceListError
+from src.shared.errors.statistical_algorithm.check_error import CheckError
+from src.shared.errors.statistical_algorithm.count_error import CountError
+from src.shared.errors.statistical_algorithm.create_matrix_error import CreateMatrixError
 
 
-class StatisticalAlgorithm:
-    """
-    Statistical Algorithm Class
-    :param obj: `IAlgorithm` Algorithm object saved in MongoDB
-    :param my_char: `list` List with its number and symbol ['X', 1]
-    :param my_enemy: `list` List with its number and symbol ['O', 0]
-    """
-
-    def __init__(self, obj, my_char, my_enemy):
-        self.id = obj['_id']
-        self.birth = obj['birth']
-        self.matchs = obj['matchs']
-        self.victories = obj['victories']
-        self.defeats = obj['defeats']
-        self.draw = obj['draw']
-        self.char = my_char
-        self.enemy = my_enemy
-        self.empty = ['', -1]
+class SaUseCase(StatisticalAlgorithm):
+    """ Agent Use Case Class """
 
     def play(self, moves):
         """

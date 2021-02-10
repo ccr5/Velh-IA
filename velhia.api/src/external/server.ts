@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv'
-import '@external/container'
+import './container'
 import { database } from '@external/database/databaseConfig'
 import { app } from './app'
 

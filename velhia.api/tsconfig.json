@@ -26,7 +26,6 @@
       "@external/*":["src/external/*"],
       "@adapters/*":["./src/adapters/*"],
       "@useCases/*":["src/useCases/*"],
-      "@interfaces/*":["./src/domain/interfaces/*"],
       "@shared/*":["src/shared/*"]
     }
   }

@@ -1,22 +1,11 @@
 import random as r
 from datetime import datetime
+from src.entities.mas import MultiAgentSystem
 from errors.multi_agent_system.play_error import MASPlayError
 
 
-class MultiAgentSystem:
-
-    def __init__(self,
-                 family_leader, family_learner,
-                 education_leader, education_learner,
-                 religion_leader, religion_learner
-                 ):
-        self.char = ['O', 0]
-        self.family_leader = family_leader
-        self.family_learner = family_learner
-        self.education_leader = education_leader
-        self.education_learner = education_learner
-        self.religion_leader = religion_leader
-        self.religion_learner = religion_learner
+class MasUseCase(MultiAgentSystem):
+    """ Multi Agent System Use Case Class """
 
     def play(self, match, game_status):
         """
