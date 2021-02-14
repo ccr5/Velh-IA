@@ -1,8 +1,9 @@
 from typing import TypedDict
 
+
 class Play(TypedDict):
 
     seq: int,
     player: str,
-    time: int,
+    time: float,
     position: int

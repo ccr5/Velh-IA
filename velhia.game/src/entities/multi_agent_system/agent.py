@@ -2,6 +2,7 @@ from typing import TypedDict, List
 from .memory import Memory
 from src.shared.types.char import Char
 
+
 class Agent(TypedDict):
 
     _id: str

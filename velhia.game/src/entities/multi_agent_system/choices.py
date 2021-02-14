@@ -5,5 +5,5 @@ class Choices(TypedDict):
 
     dateRequest: str
     gameStatus: List[int]
-    timeToAct: int
+    timeToAct: float
     action: int

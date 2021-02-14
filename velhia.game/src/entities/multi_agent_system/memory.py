@@ -1,6 +1,7 @@
 from typing import TypedDict, List
 from .choices import Choices
 
+
 class Memory(TypedDict):
 
     matchId: str

@@ -1,25 +1,24 @@
 import os
 import sys
 import logging
-from config.database import Database
+from src.adapters.repository.database_types import DatabaseType
 from dotenv import load_dotenv, find_dotenv
 from datetime import datetime
-from requests import request, exceptions
-from velhia import Velhia
+from requests import request, exceptions, Response
 
 
 load_dotenv(find_dotenv())
-vlh = ''
 
 
-def play():
+def play(match_db: DatabaseType, algorithm_db: DatabaseType,
+         family_db: DatabaseType, education_db: DatabaseType,
+         religion_db: DatabaseType) -> None:
     """
     Velh-IA Flow Control.
     Execute and control each step of Velh-IA workflow.
     """
 
     try:
-        global vlh
         [match_backup, sa_backup, mas_backup] = vlh.backup()
         [match, sa, mas] = vlh.start()
         vlh.validate(match, sa, mas)
@@ -64,18 +63,18 @@ def play():
         raise e
 
 
-def main():
+def main() -> None:
     """
     Velh-IA's Main function.
     Load environment variables, check requirements and connections before to start the game
     """
 
     try:
-        root_dir = os.path.dirname(
+        root_dir: str = os.path.dirname(
             os.path.abspath(__file__)).replace('\\', '/')
 
         try:
-            file_name = f'{datetime.now()}.log'
+            file_name: str = f'{datetime.now()}.log'
             logging.basicConfig(filename=f'{root_dir}/logs/{file_name}', filemode='w',
                                 format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                                 level=logging.DEBUG)
@@ -89,37 +88,60 @@ def main():
                                 level=logging.DEBUG)
             logging.info(f'log file app.log was created')
 
-        logging.info('Check all requirements to starting Velh-IA Game')
-        response = request('GET', os.getenv('API_ADDRESS'))
+        response: Response = request('GET', os.getenv('API_ADDRESS'))
         logging.info("Connected with Velhia's API")
+        logging.info('Check all requirements to starting Velh-IA Game')
 
-        match_db = Database(os.getenv('API_ADDRESS'), 'v1', 'matchs')
-        family_db = Database(os.getenv('API_ADDRESS'), 'v1', 'families')
-        education_db = Database(os.getenv('API_ADDRESS'), 'v1', 'educations')
-        religion_db = Database(os.getenv('API_ADDRESS'), 'v1', 'religions')
-        algorithm_db = Database(os.getenv('API_ADDRESS'), 'v1', 'algorithms')
-        logging.info('Databases objects was created!')
+        match_db: DatabaseType = {
+            'address': os.getenv('API_ADDRESS'),
+            'version': os.getenv('API_VERSION'),
+            'collection': 'matchs',
+            'url': f'{os.getenv('API_ADDRESS')}api/{os.getenv('API_VERSION')}/matchs/'
+        }
 
-        global vlh
-        vlh = Velhia(match_db, family_db, education_db,
-                     religion_db, algorithm_db)
-        logging.info('Velhia object was created!')
+        family_db: DatabaseType = {
+            'address': os.getenv('API_ADDRESS'),
+            'version': os.getenv('API_VERSION'),
+            'collection': 'families',
+            'url': f'{os.getenv('API_ADDRESS')}api/{os.getenv('API_VERSION')}/families/'
+        }
 
-        del match_db, algorithm_db, family_db, education_db, religion_db
+        education_db: DatabaseType = {
+            'address': os.getenv('API_ADDRESS'),
+            'version': os.getenv('API_VERSION'),
+            'collection': 'educations',
+            'url': f'{os.getenv('API_ADDRESS')}api/{os.getenv('API_VERSION')}/educations/'
+        }
+
+        religion_db: DatabaseType = {
+            'address': os.getenv('API_ADDRESS'),
+            'version': os.getenv('API_VERSION'),
+            'collection': 'religions',
+            'url': f'{os.getenv('API_ADDRESS')}api/{os.getenv('API_VERSION')}/religions/'
+        }
+
+        algorithm_db: DatabaseType = {
+            'address': os.getenv('API_ADDRESS'),
+            'version': os.getenv('API_VERSION'),
+            'collection': 'algorithms',
+            'url': f'{os.getenv('API_ADDRESS')}api/{os.getenv('API_VERSION')}/algorithms/'
+        }
+
+        logging.info('Databases was created!')
         del response, file_name, root_dir
-
         logging.info('Unnecessary datas was deleted!')
         logging.info('Starting Velh-IA Game')
 
         while True:
-            play()
+            play(match_db, algorithm_db, family_db,
+                 education_db, religion_db)
 
     except exceptions.ConnectionError:
         print("Can't connect with Velh-IA API")
         logging.exception("Can't connect with Velh-IA API")
 
     except:
-        print('Error (main.py): ', sys.exc_info())
+        print('Error: ', sys.exc_info())
         logging.exception('Exception occurred')
 
 

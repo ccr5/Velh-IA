@@ -1,130 +1,131 @@
 import os
 import json
-from requests import request
+from requests import request, Response
+from src.entities.algorithm.sa import StatisticalAlgorithm
+from src.entities.match.match import Match
+from src.entities.multi_agent_system.agent import Agent
+from .database_types import DatabaseType
 from errors.database.invalid_response import InvalidResponse
 
 
-class Database:
+def get(db: DatabaseType, filters: dict = {}, fields: str = '',
+        sort: str = '', offset: int = -1, limit: int = -1) -> Response:
+    """
+    Get objects in a collection
+    :param filters: `{<str>:<value>,<str>:<value>}` all filters to find the objects
+    :param fields: `<str>,<str>` all fields to take
+    :param sort: `<campo>:<asc | desc>` how to order the objects
+    :param offset: `int` index to start to get the objects
+    :param limit: `int` how many objects get from offset
+    :return: `Response` response
 
-    def __init__(self, address, api_version, collection):
-        self.address = address
-        self.version = api_version
-        self.collection = collection
-        self.url = f'{address}api/{api_version}/{collection}/'
+    import
+    >>> from config.database import Database
+    >>> db = Database('http://localhost:3000/', 'v1', 'algorithms')
 
-    def get(self, filters={}, fields='', sort='', offset=-1, limit=-1):
-        """
-        Get objects in a collection
-        :param filters: `{<str>:<value>,<str>:<value>}` all filters to find the objects
-        :param fields: `<str>,<str>` all fields to take
-        :param sort: `<campo>:<asc | desc>` how to order the objects
-        :param offset: `int` index to start to get the objects
-        :param limit: `int` how many objects get from offset
-        :return: `Response` response
+    get all objects
+    >>> res = db.get()
+    >>> res.json()
 
-        import
-        >>> from config.database import Database
-        >>> db = Database('http://localhost:3000/', 'v1', 'algorithms')
+    get by id
+    >>> res = db.get(filters="{'_id': 'hash'}")
+    >>> res.json()
 
-        get all objects
-        >>> res = db.get()
-        >>> res.json()
+    get just some fields
+    >>> res = db.get(fields="-_id,victories")
+    >>> res.json()
 
-        get by id
-        >>> res = db.get(filters="{'_id': 'hash'}")
-        >>> res.json()
+    get sorted objects
+    >>> res = db.get(sort="createdAt:desc")
+    >>> res.json() 
 
-        get just some fields
-        >>> res = db.get(fields="-_id,victories")
-        >>> res.json()
+    get a list
+    >>> res = db.get(offset=0, limit=2) # from the first one, get more 2 objects
+    >>> res.json()
+    """
 
-        get sorted objects
-        >>> res = db.get(sort="createdAt:desc")
-        >>> res.json() 
+    complete_url = f'{db['url']}?filters={json.dumps(filters)}'
+    complete_url += f'&fields={fields}' if fields != '' else ''
+    complete_url += f'&sort={sort}' if sort != '' else ''
+    complete_url += f'&offset={str(offset)}&limit={str(limit)}' if str(
+        offset) != '-1' and str(limit) != '-1' else ''
 
-        get a list
-        >>> res = db.get(offset=0, limit=2) # from the first one, get more 2 objects
-        >>> res.json()
-        """
+    response = request('GET', complete_url)
 
-        complete_url = f'{self.url}?filters={json.dumps(filters)}'
-        complete_url += f'&fields={fields}' if fields != '' else ''
-        complete_url += f'&sort={sort}' if sort != '' else ''
-        complete_url += f'&offset={str(offset)}&limit={str(limit)}' if str(
-            offset) != '-1' and str(limit) != '-1' else ''
+    if response.status_code is 200:
+        return response
+    else:
+        raise InvalidResponse(response.status_code, 200)
 
-        response = request('GET', complete_url)
 
-        if response.status_code is 200:
-            return response
-        else:
-            raise InvalidResponse(response.status_code, 200)
+def create(db: DatabaseType, obj: Agent | Match | StatisticalAlgorithm) -> Response:
+    """
+    Insert a object in a collection
+    :param obj: `list` List of objects
+    :return: `Response` response
 
-    def create(self, obj):
-        """
-        Insert a object in a collection
-        :param obj: `list` List of objects
-        :return: `Response` response
+    Usage
+    >>> from config.database import Database
+    >>> db = Database('http://localhost:3000/', 'v1', 'algorithms')
+    >>> res = db.create(IAlgorithm)
+    >>> res
+    """
 
-        Usage
-        >>> from config.database import Database
-        >>> db = Database('http://localhost:3000/', 'v1', 'algorithms')
-        >>> res = db.create(IAlgorithm)
-        >>> res
-        """
+    head = {'Content-Type': 'application/json',
+            'cache-control': 'no-cache'}
+    response = request('POST', db['url'], data=obj, headers=head)
 
-        head = {'Content-Type': 'application/json',
-                'cache-control': 'no-cache'}
-        response = request('POST', self.url, data=obj, headers=head)
+    if response.status_code is 200:
+        return response
+    else:
+        raise InvalidResponse(response.status_code, 200)
 
-        if response.status_code is 200:
-            return response
-        else:
-            raise InvalidResponse(response.status_code, 200)
 
-    def update(self, object_id, obj):
-        """
-        Update a object in a collection
-        :param object_id: `str` ObjectId
-        :param obj: `dict` Object
-        :return: `dict` lastest object version
+def update(db: DatabaseType, object_id: str,
+           obj: Agent | Match | StatisticalAlgorithm) -> Response:
+    """
+    Update a object in a collection
+    :param object_id: `str` ObjectId
+    :param obj: `dict` Object
+    :return: `dict` lastest object version
 
-        Usage
-        >>> from config.database import Database
-        >>> db = Database('http://localhost:3000/', 'v1', 'algorithms')
-        >>> res = db.update(IAlgorithm id, IAlgorithm object)
-        >>> res
-        """
+    Usage
+    >>> from config.database import Database
+    >>> db = Database('http://localhost:3000/', 'v1', 'algorithms')
+    >>> res = db.update(IAlgorithm id, IAlgorithm object)
+    >>> res
+    """
 
-        head = {'Content-Type': 'application/json',
-                'cache-control': 'no-cache'}
-        response = request('PUT', f'{self.url}{str(object_id)}',
-                           data=obj, headers=head)
+    head = {'Content-Type': 'application/json',
+            'cache-control': 'no-cache'}
+    response = request('PUT', f'{db['url']}{str(object_id)}',
+                       data=obj, headers=head)
 
-        if response.status_code is 200:
-            return response
-        else:
-            raise InvalidResponse(response.status_code, 200)
+    if response.status_code is 200:
+        return response
+    else:
+        raise InvalidResponse(response.status_code, 200)
 
-    def delete(self, object_id):
-        """
-        Delete a object in a collection
-        :param object_id: `str` ObjectId
-        :return: `dict` lastest object version
 
-        Usage
-        >>> from config.database import Database
-        >>> db = Database('http://localhost:3000/', 'v1', 'algorithms')
-        >>> res = db.delete(IAlgorithm id)
-        >>> res
-        """
+def delete(db: DatabaseType, object_id: str) -> Response:
+    """
+    Delete a object in a collection
+    :param object_id: `str` ObjectId
+    :return: `dict` lastest object version
 
-        head = {'Content-Type': 'application/json',
-                'cache-control': 'no-cache'}
-        response = request(
-            'DELETE', f'{self.url}{str(object_id)}', headers=head)
+    Usage
+    >>> from config.database import Database
+    >>> db = Database('http://localhost:3000/', 'v1', 'algorithms')
+    >>> res = db.delete(IAlgorithm id)
+    >>> res
+    """
 
-        if response.status_code is 200:
-            return response
-        else:
-            raise InvalidResponse(response.status_code, 200)
+    head = {'Content-Type': 'application/json',
+            'cache-control': 'no-cache'}
+    response = request(
+        'DELETE', f'{db['url']}{str(object_id)}', headers=head)
+
+    if response.status_code is 200:
+        return response
+    else:
+        raise InvalidResponse(response.status_code, 200)

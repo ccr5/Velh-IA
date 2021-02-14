@@ -4,7 +4,7 @@ from src.entities.multi_agent_system.choices import Choices
 from src.shared.types.game_status import GameStatus
 
 
-def looking_for_choices(choices: List[Choices], 
+def looking_for_choices(choices: List[Choices],
                         choices_lenght: int,
                         game_status: GameStatus) -> int:
     """
@@ -13,16 +13,19 @@ def looking_for_choices(choices: List[Choices],
 
     try:
 
-        if choices[choices_lenght]['gameStatus'] == game_status:
-            return choices[choices_lenght]['action']
+        if choices_lenght == -1:
+            return -1
         else:
-            looking_for_choices(choices, choices_lenght - 1, game_status)
+            if choices[choices_lenght]['gameStatus'] == game_status:
+                return choices[choices_lenght]['action']
+            else:
+                looking_for_choices(choices, choices_lenght - 1, game_status)
 
     except:
         raise SystemError
 
 
-def looking_for_memory(memories: List[Memory], 
+def looking_for_memory(memories: List[Memory],
                        memory_lenght: int,
                        game_status: GameStatus) -> int:
     """
@@ -30,15 +33,15 @@ def looking_for_memory(memories: List[Memory],
     with choices equals game status
     """
 
-    lenght: int = len(memories[memory_lenght]['choices'])
-    position: int = looking_for_choices(
-        memories[memory_lenght]['choices'], 
-        lenght, game_status
-    )
-
     try:
 
-        if position = -1 and memory_lenght > 0:
+        lenght: int = len(memories[memory_lenght]['choices'])
+        position: int = looking_for_choices(
+            memories[memory_lenght]['choices'],
+            lenght, game_status
+        )
+
+        if position == -1 and memory_lenght > 0:
             looking_for_memory(memories, memory_lenght - 1, game_status)
         else:
             return position
@@ -47,19 +50,29 @@ def looking_for_memory(memories: List[Memory],
         raise SystemError
 
 
-def create_new_choice(match: Match, game_status: GameStatus, 
-                      start: datetime, end: datetime, 
-                      position: int) -> Choices:
+def create_new_choice(game_status: GameStatus,
+                      time: float, position: int) -> Choices:
     """
     Create a choice object
     """
-    
+
     try:
 
         return Choices({'dateRequest': start.ctime(),
                         'gameStatus': game_status,
                         'timeToAct': time,
                         'action': position})
-    
+
+    except:
+        raise SystemError
+
+
+def add_new_choices(choices: List[Choices], choice: Choices) -> List[Choices]:
+    """ update a list of choices """
+
+    try:
+
+        return choices + list(choice)
+
     except:
         raise SystemError
