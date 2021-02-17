@@ -1,9 +1,9 @@
 from typing import TypedDict
-from .agent import Agent
+from src.entities.agent.agent import Agent
 from src.shared.types.char import Char
 
 
-class MultiAgentSystem(TypedDict):
+class MultiAgentSystemAdapter(TypedDict):
 
     char: Char
     family_leader: Agent

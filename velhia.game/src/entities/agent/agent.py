@@ -1,6 +1,5 @@
 from typing import TypedDict, List, Optional
 from .memory import Memory
-from src.shared.types.char import Char
 
 
 class Agent(TypedDict):
@@ -17,4 +16,3 @@ class Agent(TypedDict):
     victories: int
     defeats: int
     draw: int
-    char: Char

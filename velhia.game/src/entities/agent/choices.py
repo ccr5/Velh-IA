@@ -1,4 +1,4 @@
-from typing import TypedDict, List
+from typing import TypedDict
 from src.shared.types.game_status import GameStatus
 
 

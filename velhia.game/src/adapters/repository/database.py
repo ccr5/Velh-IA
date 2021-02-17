@@ -1,8 +1,8 @@
 import json
-from requests import request, Response
 from typing import List
-from src.entities.algorithm.sa import StatisticalAlgorithm
+from requests import request, Response
 from src.entities.match.match import Match
+from src.entities.algorithm.sa import StatisticalAlgorithm
 from src.entities.multi_agent_system.agent import Agent
 from src.adapters.types.database_types import DatabaseType
 from src.shared.errors.database.invalid_response import InvalidResponse
@@ -33,7 +33,7 @@ def get(db: DatabaseType, filters: dict = {},
     >>> res.json()
 
     get just some fields
-    >>> res = db.get(fields="-_id,victories")\n
+    >>> res = db.get(fielfrom .agent import Agentds="-_id,victories")\n
     >>> res.json()
 
     get sorted objects
@@ -75,6 +75,7 @@ def get(db: DatabaseType, filters: dict = {},
                                    f'{db["url"]}?filters={json.dumps(filters)}')
 
     if type(url) == str:
+
         response: Response = request('GET', url)
 
         if response.status_code is 200:

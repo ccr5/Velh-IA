@@ -1,11 +1,9 @@
 import json
-from typing import Dict, List, Callable
+from typing import Dict, List, Callable, NoReturn
 from src.adapters.repository.database import get, create, update, delete
 from src.entities.algorithm.sa import StatisticalAlgorithm
 from src.entities.match.match import Match
 from src.entities.multi_agent_system.agent import Agent
-from src.entities.multi_agent_system.mas import MultiAgentSystem
-from src.adapters.types.backup import BackupType
 from src.adapters.types.database_types import DatabaseType
 from src.shared.objects import merge_objects, remove_objects
 from src.shared.errors.handler.mas.update_mas_error import UpdateMASError
@@ -45,10 +43,11 @@ def update_mas(family_db: DatabaseType, education_db: DatabaseType,
 
 def backup(match_db: DatabaseType, algorithm_db: DatabaseType,
            family_db: DatabaseType, education_db: DatabaseType,
-           religion_db: DatabaseType) -> BackupType | List[None, None, None]:
+           religion_db: DatabaseType
+           ) -> Callable[[Match, StatisticalAlgorithm, MultiAgentSystem], NoReturn] | List[None, None, None]:
     """ Get the lastest datas to use in rollback function """
 
-    ret = get(db=match_db, offset=0, limit=1).json()
+    ret: list = get(db=match_db, offset=0, limit=1).json()
 
     if len(ret) > 0:
 
@@ -56,7 +55,8 @@ def backup(match_db: DatabaseType, algorithm_db: DatabaseType,
 
         sa_backup: StatisticalAlgorithm = merge_objects(
             get(db=algorithm_db, offset=0, limit=1).json()[0],
-            {'char': ['X', 1], 'enemy': ['O', 0], 'empty': ['', -1]}
+            {'char': ['X', 1], 'enemy': ['O', 0], 'empty': ['', -1]},
+            StatisticalAlgorithm
         )
 
         mas_backup: MultiAgentSystem = {
@@ -129,12 +129,7 @@ def backup(match_db: DatabaseType, algorithm_db: DatabaseType,
             else:
                 pass
 
-        return {
-            'match_backup': match_backup,
-            'sa_backup': sa_backup,
-            'mas_backup': mas_backup,
-            'rollback': rollback
-        }
+        return rollback
 
     else:
         return [None, None, None]

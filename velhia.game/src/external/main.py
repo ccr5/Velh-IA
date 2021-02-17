@@ -7,6 +7,7 @@ from typing import Callable
 from src.adapters.controllers.database_controller import backup
 from .database_config import load_database_entities
 from src.adapters.types.database_types import DatabaseType
+from src.shared.system import root_dir, log_file_name, check_dir
 
 
 from requests import request, exceptions, Response
@@ -79,25 +80,22 @@ def main() -> Callable:
     """
 
     try:
-        root_dir: str = os.path.dirname(
-            os.path.abspath(__file__)).replace('\\', '/')
 
         try:
-            file_name: str = f'{datetime.now()}.log'
-            logging.basicConfig(filename=f'{root_dir}/logs/{file_name}', filemode='w',
+            logging.basicConfig(filename=f'{root_dir()}/logs/{log_file_name()}', filemode='w',
                                 format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                                 level=logging.DEBUG)
-            logging.info(f'log file {file_name} was created')
+            logging.info(f'log file {log_file_name()} was created')
         except:
-            if not os.path.exists(f'{root_dir}/logs/app.log'):
-                open(f'{root_dir}/logs/app.log', 'x')
+            if not check_dir(f'{root_dir()}/logs/app.log'):
+                open(f'{root_dir()}/logs/app.log', 'x')
 
-            logging.basicConfig(filename=f'{root_dir}/logs/app.log', filemode='w',
+            logging.basicConfig(filename=f'{root_dir()}/logs/app.log', filemode='w',
                                 format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                                 level=logging.DEBUG)
             logging.info(f'log file app.log was created')
 
-        response: Response = request('GET', os.getenv('API_ADDRESS'))
+        request('GET', os.getenv('API_ADDRESS'))
         logging.info("Connected with Velhia's API")
         logging.info('Check all requirements to starting Velh-IA Game')
 
@@ -108,7 +106,6 @@ def main() -> Callable:
         )
 
         logging.info('Databases was created!')
-        del response, file_name, root_dir
         logging.info('Unnecessary datas was deleted!')
         logging.info('Starting Velh-IA Game')
 

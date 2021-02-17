@@ -1,5 +1,4 @@
 from typing import TypedDict
-from src.shared.types.char import Char
 
 
 class StatisticalAlgorithm(TypedDict):
@@ -10,6 +9,3 @@ class StatisticalAlgorithm(TypedDict):
     victories: int
     defeats: int
     draw: int
-    char: Char
-    enemy: Char
-    empty: Char

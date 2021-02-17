@@ -1,7 +1,8 @@
-from typing import List
+from typing import List, Callable
 from datetime import datetime
-from src.entities.multi_agent_system.memory import Memory
-from src.entities.multi_agent_system.choices import Choices
+from src.entities.agent.agent import Agent
+from src.entities.agent.memory import Memory
+from src.entities.agent.choices import Choices
 from src.shared.types.game_status import GameStatus
 
 
