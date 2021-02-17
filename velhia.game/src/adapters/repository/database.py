@@ -48,7 +48,7 @@ def get(db: DatabaseType, filters: dict = {},
     def complete_url(splits: List[str], validations: List[bool],
                      nValidations: int, res='') -> str | bool:
 
-        if len(splits) == len(validations) == nValidations:
+        if len(splits) == len(validations):
 
             if nValidations > 0:
 

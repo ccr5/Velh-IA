@@ -1,12 +1,14 @@
 import os
 import sys
 import logging
+from dotenv import load_dotenv, find_dotenv
+from datetime import datetime
 from typing import Callable
 from src.adapters.controllers.database_controller import backup
 from .database_config import load_database_entities
 from src.adapters.types.database_types import DatabaseType
-from dotenv import load_dotenv, find_dotenv
-from datetime import datetime
+
+
 from requests import request, exceptions, Response
 
 
@@ -118,7 +120,7 @@ def main() -> Callable:
         logging.exception("Can't connect with Velh-IA API")
 
     except:
-        print('Error: ', sys.exc_info())
+        print('Main error: ', sys.exc_info())
         logging.exception('Exception occurred')
 
 
