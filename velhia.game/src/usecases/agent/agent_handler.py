@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime
 from src.entities.multi_agent_system.memory import Memory
 from src.entities.multi_agent_system.choices import Choices
 from src.shared.types.game_status import GameStatus
@@ -50,11 +51,9 @@ def looking_for_memory(memories: List[Memory],
         raise SystemError
 
 
-def create_new_choice(game_status: GameStatus,
+def create_new_choice(game_status: GameStatus, start: datetime,
                       time: float, position: int) -> Choices:
-    """
-    Create a choice object
-    """
+    """ Create a choice object """
 
     try:
 

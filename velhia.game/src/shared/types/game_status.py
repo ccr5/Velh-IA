@@ -1,4 +1,7 @@
-from typing import NewType, List
+from typing import NewType, Tuple
 
 
-GameStatus = NewType('GameStatus', List[int])
+GameStatus = NewType(
+    'GameStatus',
+    Tuple[int, int, int, int, int, int, int, int, int]
+)

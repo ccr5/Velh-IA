@@ -1,9 +1,10 @@
 from typing import TypedDict, List
+from src.shared.types.game_status import GameStatus
 
 
 class Choices(TypedDict):
 
     dateRequest: str
-    gameStatus: List[int]
+    gameStatus: GameStatus
     timeToAct: float
     action: int

@@ -1,7 +1,10 @@
 import os
 import sys
 import logging
-from src.adapters.repository.database_types import DatabaseType
+from typing import Callable
+from src.adapters.controllers.database_controller import backup
+from .database_config import load_database_entities
+from src.adapters.types.database_types import DatabaseType
 from dotenv import load_dotenv, find_dotenv
 from datetime import datetime
 from requests import request, exceptions, Response
@@ -14,12 +17,13 @@ def play(match_db: DatabaseType, algorithm_db: DatabaseType,
          family_db: DatabaseType, education_db: DatabaseType,
          religion_db: DatabaseType) -> None:
     """
-    Velh-IA Flow Control.
+    Velh-IA Flow Control.\n
     Execute and control each step of Velh-IA workflow.
     """
 
     try:
-        [match_backup, sa_backup, mas_backup] = vlh.backup()
+        _backup = backup(match_db, algorithm_db, family_db,
+                         education_db, religion_db)
         [match, sa, mas] = vlh.start()
         vlh.validate(match, sa, mas)
         logging.info('All informations was validated')
@@ -57,15 +61,18 @@ def play(match_db: DatabaseType, algorithm_db: DatabaseType,
 
         del match, sa, mas, sequence, game_status, start, position, end, time
 
+        return play(match_db, algorithm_db, family_db,
+                    education_db, religion_db)
+
     except Exception as e:
         vlh.rollback(match, match_backup, sa, sa_backup, mas, mas_backup)
         logging.info('Rollback function is successfully')
         raise e
 
 
-def main() -> None:
+def main() -> Callable:
     """
-    Velh-IA's Main function.
+    Velh-IA's Main function.\n
     Load environment variables, check requirements and connections before to start the game
     """
 
@@ -92,49 +99,19 @@ def main() -> None:
         logging.info("Connected with Velhia's API")
         logging.info('Check all requirements to starting Velh-IA Game')
 
-        match_db: DatabaseType = {
-            'address': os.getenv('API_ADDRESS'),
-            'version': os.getenv('API_VERSION'),
-            'collection': 'matchs',
-            'url': f'{os.getenv('API_ADDRESS')}api/{os.getenv('API_VERSION')}/matchs/'
-        }
-
-        family_db: DatabaseType = {
-            'address': os.getenv('API_ADDRESS'),
-            'version': os.getenv('API_VERSION'),
-            'collection': 'families',
-            'url': f'{os.getenv('API_ADDRESS')}api/{os.getenv('API_VERSION')}/families/'
-        }
-
-        education_db: DatabaseType = {
-            'address': os.getenv('API_ADDRESS'),
-            'version': os.getenv('API_VERSION'),
-            'collection': 'educations',
-            'url': f'{os.getenv('API_ADDRESS')}api/{os.getenv('API_VERSION')}/educations/'
-        }
-
-        religion_db: DatabaseType = {
-            'address': os.getenv('API_ADDRESS'),
-            'version': os.getenv('API_VERSION'),
-            'collection': 'religions',
-            'url': f'{os.getenv('API_ADDRESS')}api/{os.getenv('API_VERSION')}/religions/'
-        }
-
-        algorithm_db: DatabaseType = {
-            'address': os.getenv('API_ADDRESS'),
-            'version': os.getenv('API_VERSION'),
-            'collection': 'algorithms',
-            'url': f'{os.getenv('API_ADDRESS')}api/{os.getenv('API_VERSION')}/algorithms/'
-        }
+        [match_db, family_db, education_db, religion_db, algorithm_db] = load_database_entities(
+            os.getenv('API_ADDRESS'),
+            os.getenv('API_VERSION'),
+            os.getenv('COLLECTIONS').split(',')
+        )
 
         logging.info('Databases was created!')
         del response, file_name, root_dir
         logging.info('Unnecessary datas was deleted!')
         logging.info('Starting Velh-IA Game')
 
-        while True:
-            play(match_db, algorithm_db, family_db,
-                 education_db, religion_db)
+        return play(match_db, algorithm_db, family_db,
+                    education_db, religion_db)
 
     except exceptions.ConnectionError:
         print("Can't connect with Velh-IA API")

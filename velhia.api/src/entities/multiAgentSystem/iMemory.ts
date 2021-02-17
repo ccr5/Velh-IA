@@ -5,5 +5,5 @@ export default interface IMemory {
   matchId: string,
   isLearner: boolean,
   choices: IChoices[],
-  environmentReaction: environmentReaction
+  environmentReaction?: environmentReaction
 }
