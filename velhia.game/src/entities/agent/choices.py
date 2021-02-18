@@ -1,5 +1,5 @@
 from typing import TypedDict
-from src.shared.types.game_status import GameStatus
+from shared.types.game_status import GameStatus
 
 
 class Choices(TypedDict):

@@ -11,4 +11,4 @@ def log_file_name() -> str:
 
 
 def check_dir(path: str) -> bool:
-    return os.path.exists(f'{root_dir()}/logs/app.log')
+    return os.path.exists(path)

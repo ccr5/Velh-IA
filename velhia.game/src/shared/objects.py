@@ -13,9 +13,8 @@ def remove_objects(obj: dict, keys: List[str], nKeys: int) -> dict:
         return obj
 
 
-def create_object(
-        key_list: List[Tuple[Char]], lenght: int,
-        filters: List[str] = [], obj: dict = {}) -> dict:
+def create_object(key_list: List[Tuple[Char]], lenght: int,
+                  filters: List[str] = [], obj: dict = {}) -> dict:
 
     index: int = lenght - 1
 

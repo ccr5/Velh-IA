@@ -1,5 +1,5 @@
 from typing import List
-from src.adapters.types.database_types import DatabaseType
+from usecases.database.database_types import DatabaseType
 
 
 def load_database_entities(
