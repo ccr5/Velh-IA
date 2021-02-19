@@ -1,5 +1,5 @@
-from src.entities.agent.agent import Agent
-from src.shared.types.char import Char
+from entities.agent.agent import Agent
+from shared.types.char import Char
 
 
 class AgentAdapter(Agent):

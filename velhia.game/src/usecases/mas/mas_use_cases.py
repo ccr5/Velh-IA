@@ -1,7 +1,7 @@
 import random as r
 from datetime import datetime
-from src.entities.multi_agent_system.mas import MultiAgentSystem
-from src.shared.errors.multi_agent_system.play_error import MASPlayError
+from usecases.mas.mas_adapter_type import MultiAgentSystemAdapter
+from shared.errors.multi_agent_system.play_error import MASPlayError
 
 
 class MasUseCase(MultiAgentSystem):

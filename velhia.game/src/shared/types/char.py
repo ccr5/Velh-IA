@@ -1,4 +1,4 @@
-from typing import NewType, List
+from typing import NewType, Tuple
 
 
-Char = NewType('Char', List[str, str])
+Char = NewType('Char', Tuple[str, str])

@@ -32,47 +32,6 @@ class Velhia:
         self.religion_db = religion_db
         self.algorithm_db = algorithm_db
 
-    def backup(self):
-        """
-        Get the lastest datas to use in rollback function
-
-        usage
-        >>> from velhia import Velhia
-        >>> vlh = Velhia()
-        >>> [match_backup, sa_backup, mas_backup] = vlh.backup()
-
-        <classes.match.Match object at 0x7fe6de3287d0>
-        <classes.statistical_algorithm.StatisticalAlgorithm object at 0x7fe6de328150>
-        <classes.multi_agent_system.MultiAgentSystem object at 0x7fe6de34dd10>
-        """
-
-        ret = self.match_db.get(offset=0, limit=1).json()
-
-        if len(ret) != 0:
-
-            match_backup = Match(ret[0])
-
-            sa_backup = StatisticalAlgorithm(self.algorithm_db.get(offset=0, limit=1).json()[0],
-                                             ['X', 1], ['O', 0])
-
-            mas_backup = MultiAgentSystem(Agent(self.family_db.get(offset=1, limit=1, sort="createdAt:desc").json()[0],
-                                                ['O', 0]),
-                                          Agent(self.family_db.get(offset=0, limit=1, sort="createdAt:desc").json()[0],
-                                                ['O', 0]),
-                                          Agent(self.education_db.get(offset=1, limit=1, sort="createdAt:desc").json()[0],
-                                                ['O', 0]),
-                                          Agent(self.education_db.get(offset=0, limit=1, sort="createdAt:desc").json()[0],
-                                                ['O', 0]),
-                                          Agent(self.religion_db.get(offset=1, limit=1, sort="createdAt:desc").json()[0],
-                                                ['O', 0]),
-                                          Agent(self.religion_db.get(offset=0, limit=1, sort="createdAt:desc").json()[0],
-                                                ['O', 0]))
-
-            return [match_backup, sa_backup, mas_backup]
-
-        else:
-            return [None, None, None]
-
     def start(self):
         """
         Prepare all objects to start the game
@@ -412,39 +371,3 @@ class Velhia:
                 game_status[p['position']] = 0
 
         return game_status
-
-    def rollback(self, match, match_backup, sa, sa_backup, mas, mas_backup):
-        """
-        Rollback function to restore database object if something is wrong
-        :param match_backup: `Match` Match obj
-        :param sa_backup: `StatisticalAlgorithm` Statistical Algorithm obj
-        :param mas_backup: `MultiAgentSystem` Multi Agent System obj
-        """
-
-        if [None, None, None] != [match_backup, sa_backup, mas_backup]:
-
-            if sa.id != sa_backup.id:
-                self.algorithm_db.delete(sa.id)
-
-            if match.id != match_backup.id:
-                self.match_db.delete(match.id)
-
-            if mas.family_learner.id != mas_backup.family_learner.id:
-                self.family_db.delete(mas.family_learner.id)
-
-            if mas.religion_learner.id != mas_backup.religion_learner.id:
-                self.religion_db.delete(mas.religion_learner.id)
-
-            if mas.education_learner.id != mas_backup.education_learner.id:
-                self.education_db.delete(mas.education_learner.id)
-
-            self.match_db.update(
-                match_backup.id, json.dumps(match_backup.create_object()))
-
-            self.algorithm_db.update(
-                sa_backup.id, json.dumps(sa_backup.create_object()))
-
-            update_mas(self, mas_backup)
-
-        else:
-            pass

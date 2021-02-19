@@ -1,5 +1,5 @@
 import json
-from typing import TypedDict, List
+from typing import TypedDict, List, Union
 from requests import request, Response
 from entities.match.match import Match
 from entities.algorithm.sa import StatisticalAlgorithm
@@ -40,25 +40,26 @@ def database(db: DatabaseType) -> DatabaseRepositoryType:
 
         get sorted objects
         >>> res = db.get(sort="createdAt:desc")\n
-        >>> res.json() 
+        >>> res.json()
 
         get a list
-        >>> res = db.get(offset=0, limit=2) # from the first one, get more 2 objects\n
+        # from the first one, get more 2 objects\n
+        >>> res = db.get(offset=0, limit=2)
         >>> res.json()
         """
 
         def complete_url(splits: List[str], validations: List[bool],
-                         nValidations: int, res='') -> str | bool:
+                         nValidations: int, res='') -> Union[str, bool]:
 
             if len(splits) == len(validations):
 
                 if nValidations > 0:
 
-                    index = validations - 1
+                    index = nValidations - 1
 
                     if validations[index] == True:
-                        return complete_url(splits, validations, index,
-                                            str(res + splits[index]))
+                        return complete_url(splits, validations,
+                                            index, str(res + splits[index]))
                     else:
                         return complete_url(splits, validations, index, res)
                 else:
@@ -73,10 +74,10 @@ def database(db: DatabaseType) -> DatabaseRepositoryType:
 
         validations: list = [fields != '',
                              sort != '',
-                             str(offset) != '-1' and str(limit) != '-1']
+                             offset != -1 and limit != -1]
 
-        url: str | bool = complete_url(params, validations, len(params),
-                                       f'{db.url}?filters={json.dumps(filters)}')
+        url: Union[str, bool] = complete_url(params, validations, len(params),
+                                             f'{db["url"]}?filters={json.dumps(filters)}')
 
         if type(url) == str:
 
@@ -90,7 +91,7 @@ def database(db: DatabaseType) -> DatabaseRepositoryType:
         else:
             raise SystemError
 
-    def create(obj: TypedDict) -> Response:
+    def create(obj: Union[Agent, Match, StatisticalAlgorithm]) -> Response:
         """
         Insert a object in a collection
         :param obj: `list` List of objects
@@ -106,14 +107,16 @@ def database(db: DatabaseType) -> DatabaseRepositoryType:
         head = {'Content-Type': 'application/json',
                 'cache-control': 'no-cache'}
 
-        response: Response = request('POST', db.url, data=obj, headers=head)
+        response: Response = request('POST', db["url"],
+                                     data=json.dumps(obj),
+                                     headers=head)
 
         if response.status_code is 200:
             return response
         else:
             raise InvalidResponse(response.status_code, 200)
 
-    def update(object_id: str, obj: TypedDict) -> Response:
+    def update(object_id: str, obj: Union[Agent, Match, StatisticalAlgorithm]) -> Response:
         """
         Update a object in a collection
         :param object_id: `str` ObjectId
@@ -130,8 +133,8 @@ def database(db: DatabaseType) -> DatabaseRepositoryType:
         head = {'Content-Type': 'application/json',
                 'cache-control': 'no-cache'}
 
-        response: Response = request('PUT', f'{db.url}{str(object_id)}',
-                                     data=obj, headers=head)
+        response: Response = request('PUT', f'{db["url"]}{str(object_id)}',
+                                     data=json.dumps(obj), headers=head)
 
         if response.status_code is 200:
             return response
@@ -155,7 +158,7 @@ def database(db: DatabaseType) -> DatabaseRepositoryType:
                 'cache-control': 'no-cache'}
 
         response: Response = request('DELETE',
-                                     f'{db.url}{str(object_id)}',
+                                     f'{db["url"]}{str(object_id)}',
                                      headers=head)
 
         if response.status_code is 200:
@@ -163,9 +166,9 @@ def database(db: DatabaseType) -> DatabaseRepositoryType:
         else:
             raise InvalidResponse(response.status_code, 200)
 
-    return {
+    return DatabaseRepositoryType({
         'get': get,
         'create': create,
         'update': update,
         'delete': delete
-    }
+    })

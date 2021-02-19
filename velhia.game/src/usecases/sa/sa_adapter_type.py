@@ -1,5 +1,5 @@
-from src.entities.algorithm.sa import StatisticalAlgorithm
-from src.shared.types.char import Char
+from entities.algorithm.sa import StatisticalAlgorithm
+from shared.types.char import Char
 
 
 class StatisticalAlgorithmAdapter(StatisticalAlgorithm):

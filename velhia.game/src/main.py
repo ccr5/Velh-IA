@@ -2,8 +2,9 @@ import os
 import sys
 import logging
 from dotenv import load_dotenv, find_dotenv
-from typing import Callable
+from typing import Callable, NoReturn
 from adapters.controllers.database_controller import backup
+from adapters.controllers.match_controller import start
 from usecases.database.database_types import DatabaseRepositoryType
 from system import root_dir, log_file_name, check_dir
 from database_config import load_database_entities
@@ -16,16 +17,18 @@ load_dotenv(find_dotenv())
 
 def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
          family_db: DatabaseRepositoryType, education_db: DatabaseRepositoryType,
-         religion_db: DatabaseRepositoryType) -> None:
+         religion_db: DatabaseRepositoryType) -> NoReturn:
     """
     Velh-IA Flow Control.\n
     Execute and control each step of Velh-IA workflow.
     """
 
     try:
-        _backup = backup(match_db, algorithm_db, family_db,
-                         education_db, religion_db)
-#         [match, sa, mas] = vlh.start()
+        bckp = backup(match_db, algorithm_db, family_db,
+                      education_db, religion_db)
+
+        [match, sa, mas] = start(match_db, algorithm_db, family_db,
+                                 education_db, religion_db)
 #         vlh.validate(match, sa, mas)
 #         logging.info('All informations was validated')
 #         sequence = vlh.get_sequence(match)
@@ -62,16 +65,18 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
 
 #         del match, sa, mas, sequence, game_status, start, position, end, time
 
-#         return play(match_db, algorithm_db, family_db,
-#                     education_db, religion_db)
+        return play(match_db, algorithm_db, family_db,
+                    education_db, religion_db)
 
     except Exception as e:
-        # vlh.rollback(match, match_backup, sa, sa_backup, mas, mas_backup)
+        bckp['rollback'](match, sa, mas)
         logging.info('Rollback function is successfully')
         raise e
 
 
-def main() -> Callable:
+def main() -> Callable[
+    [DatabaseRepositoryType, DatabaseRepositoryType, DatabaseRepositoryType,
+     DatabaseRepositoryType, DatabaseRepositoryType], NoReturn]:
     """
     Velh-IA's Main function.\n
     Load environment variables, check requirements and connections before to start the game

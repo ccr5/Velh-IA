@@ -1,4 +1,4 @@
-from typing import TypedDict, Callable
+from typing import TypedDict, Callable, Union
 from entities.match.match import Match
 from entities.algorithm.sa import StatisticalAlgorithm
 from entities.agent.agent import Agent
@@ -16,6 +16,7 @@ class DatabaseType(TypedDict):
 class DatabaseRepositoryType(DatabaseType):
 
     get: Callable[[dict, str, str, int, int], Response]
-    create: Callable[[Agent, Match, StatisticalAlgorithm], Response]
-    update: Callable[[str, Agent, Match, StatisticalAlgorithm], Response]
+    create: Callable[[Union[Agent, Match, StatisticalAlgorithm]], Response]
+    update: Callable[[str, Union[Agent, Match,
+                                 StatisticalAlgorithm]], Response]
     delete: Callable[[str], Response]

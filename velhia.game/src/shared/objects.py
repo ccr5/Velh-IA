@@ -1,16 +1,9 @@
 from typing import List, TypedDict, Tuple, Any
-from src.shared.types.char import Char
+from shared.types.char import Char
 
 
 def merge_objects(first_dict: dict, second_dict: dict) -> dict:
     return {**first_dict, **second_dict}
-
-
-def remove_objects(obj: dict, keys: List[str], nKeys: int) -> dict:
-    if nKeys > 0:
-        return remove_objects(obj.pop(keys[nKeys - 1], None), keys, nKeys - 1)
-    else:
-        return obj
 
 
 def create_object(key_list: List[Tuple[Char]], lenght: int,

@@ -1,9 +1,11 @@
-from typing import List, Callable
+from typing import List, Callable, Union, Any
 from datetime import datetime
-from src.entities.agent.agent import Agent
-from src.entities.agent.memory import Memory
-from src.entities.agent.choices import Choices
-from src.shared.types.game_status import GameStatus
+from entities.agent.agent import Agent
+from entities.agent.memory import Memory
+from entities.agent.choices import Choices
+from usecases.agent.agent_adapter_type import AgentAdapter
+from shared.types.game_status import GameStatus
+from shared.objects import merge_objects
 
 
 def looking_for_choices(choices: List[Choices],

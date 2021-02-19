@@ -1,20 +1,20 @@
-from src.shared.objects import create_object
-from src.entities.algorithm.sa import StatisticalAlgorithm
-from src.usecases.sa.sa_adapter_type import StatisticalAlgorithmAdapter
+from shared.objects import create_object
+from entities.algorithm.sa import StatisticalAlgorithm
+from usecases.sa.sa_adapter_type import StatisticalAlgorithmAdapter
 
 
-def to_entity(sa_adapter: StatisticalAlgorithmAdapter) -> StatisticalAlgorithm:
+def sa_to_entity(sa_adapter: StatisticalAlgorithmAdapter) -> StatisticalAlgorithm:
 
     items: list = list(sa_adapter.items())
     return StatisticalAlgorithm(
         create_object(
             items, len(items),
-            ['char', 'enemy', 'empty']
+            ['char', 'enemy', 'empty', 'createdAt', 'updatedAt', '__v']
         )
     )
 
 
-def to_repository(sa: StatisticalAlgorithm) -> StatisticalAlgorithmAdapter:
+def sa_to_repository(sa: StatisticalAlgorithm) -> StatisticalAlgorithmAdapter:
 
     items: list = list(sa.items())
     return StatisticalAlgorithmAdapter(
