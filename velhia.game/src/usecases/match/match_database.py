@@ -24,7 +24,7 @@ def get_current_match(match_repository: DatabaseRepositoryType) -> Union[Match, 
 
 def update_match(match_repository: DatabaseRepositoryType, obj: Match) -> bool:
 
-    res: list = match_repository['update'](obj['_id'], obj)
+    res: list = match_repository['update'](obj['_id'], obj).json()
 
     if len(res) == 1:
         return True

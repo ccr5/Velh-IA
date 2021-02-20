@@ -27,7 +27,7 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
         bckp = backup(match_db, algorithm_db, family_db,
                       education_db, religion_db)
 
-        [match, sa, mas] = start(match_db, algorithm_db, family_db,
+        (match, sa, mas) = start(match_db, algorithm_db, family_db,
                                  education_db, religion_db)
 #         vlh.validate(match, sa, mas)
 #         logging.info('All informations was validated')
@@ -65,12 +65,16 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
 
 #         del match, sa, mas, sequence, game_status, start, position, end, time
 
-        return play(match_db, algorithm_db, family_db,
-                    education_db, religion_db)
+        return play(match_db, algorithm_db,
+                    family_db, education_db,
+                    religion_db)
 
     except Exception as e:
-        bckp['rollback'](match, sa, mas)
-        logging.info('Rollback function is successfully')
+        if match is None or sa is None or mas is None:
+            logging.info('There is no objects to Rollback')
+        else:
+            bckp['rollback'](match, sa, mas)
+            logging.info('Rollback function is successfully')
         raise e
 
 
@@ -116,11 +120,9 @@ def main() -> Callable[
         logging.info('Databases was created!')
         logging.info('Starting Velh-IA Game')
 
-        return play(
-            match_db, algorithm_db,
-            family_db, education_db,
-            religion_db
-        )
+        return play(match_db, algorithm_db,
+                    family_db, education_db,
+                    religion_db)
 
     except exceptions.ConnectionError:
         print("Can't connect with Velh-IA API")

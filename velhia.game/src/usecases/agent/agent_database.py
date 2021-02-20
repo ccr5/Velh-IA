@@ -17,7 +17,7 @@ def save_agent(agent_repository: DatabaseRepositoryType, agent: Agent) -> Agent:
 
 def get_by_id(agent_repository: DatabaseRepositoryType, hash: str) -> Union[Agent, None]:
     obj_id: dict = {'_id': hash}
-    res: list = agent_repository['get'](filters=json.dumps(obj_id)).json()
+    res: list = agent_repository['get'](filters=obj_id).json()
 
     if len(res) == 1:
         return agent_to_entity(res[0])
@@ -27,7 +27,7 @@ def get_by_id(agent_repository: DatabaseRepositoryType, hash: str) -> Union[Agen
 
 def get_by_progenitor(agent_repository: DatabaseRepositoryType, hash: str) -> Union[Agent, None]:
     obj_id: dict = {'progenitor': hash}
-    res: list = agent_repository['get'](filters=json.dumps(obj_id)).json()
+    res: list = agent_repository['get'](filters=obj_id).json()
 
     if len(res) == 1:
         return agent_to_entity(res[0])
@@ -118,9 +118,9 @@ def get_valid_agents(agent_repository: DatabaseRepositoryType) -> Tuple[Agent, A
 
 def update_agent(agent_repository: DatabaseRepositoryType, obj: Agent) -> bool:
 
-    res: list = agent_repository['update'](obj['_id'], obj)
+    res: list = agent_repository['update'](obj['_id'], obj).json()
 
-    if len(res) == 1:
+    if res:
         return True
     else:
         return False

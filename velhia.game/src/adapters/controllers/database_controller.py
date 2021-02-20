@@ -17,8 +17,7 @@ from shared.errors.handler.mas.update_mas_error import UpdateMASError
 def backup(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
            family_db: DatabaseRepositoryType, education_db: DatabaseRepositoryType,
            religion_db: DatabaseRepositoryType
-           ) -> Union[Callable[[Match, StatisticalAlgorithm,
-                                MultiAgentSystemAdapter], NoReturn],
+           ) -> Union[Callable[[Match, StatisticalAlgorithm, MultiAgentSystemAdapter], NoReturn],
                       Tuple[None, None, None]]:
     """ Get the lastest datas to use in rollback function """
 
@@ -61,7 +60,7 @@ def backup(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryTyp
 
                 update_match(match_db, match_backup)
                 update_sa(algorithm_db, sa_backup)
-                update_mas(family_db, education_db, religion_db, mas_backup)
+                update_mas(family_db, religion_db, education_db, mas_backup)
 
             else:
                 pass

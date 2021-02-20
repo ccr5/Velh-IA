@@ -15,8 +15,8 @@ def create_mas(family: DatabaseRepositoryType,
                education: DatabaseRepositoryType) -> MultiAgentSystemAdapter:
 
     [family_leader, family_learner] = get_valid_agents(family)
-    [education_leader, education_learner] = get_valid_agents(religion)
-    [religion_leader, religion_learner] = get_valid_agents(education)
+    [education_leader, education_learner] = get_valid_agents(education)
+    [religion_leader, religion_learner] = get_valid_agents(religion)
 
     return MultiAgentSystemAdapter(
         create_object(
@@ -51,7 +51,7 @@ def update_mas(family: DatabaseRepositoryType,
             update_agent(db_list[index], obj_list[index])
             return update_all_agents(db_list, obj_list, index)
         else:
-            return
+            pass
 
     databases: List[DatabaseRepositoryType] = [
         family, family, religion, religion, education, education

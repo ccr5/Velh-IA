@@ -54,9 +54,9 @@ def start(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType
                         "playerId": sa['_id'],
                         "symbol": sa['char'][0]
                     }),
-                    ("mas", {"family": {"playerId": mas['family_leader']['_id'], "symbol": mas['char'][0]},
-                             "religion": {"playerId": mas['religion_leader']['_id'], "symbol": mas['char'][0]},
-                             "education": {"playerId": mas['education_leader']['_id'], "symbol": mas['char'][0]}}),
+                    ("mas", {"family": [{"playerId": mas['family_leader']['_id'], "symbol": mas['char'][0]}],
+                             "religion": [{"playerId": mas['religion_leader']['_id'], "symbol": mas['char'][0]}],
+                             "education": [{"playerId": mas['education_leader']['_id'], "symbol": mas['char'][0]}]}),
                     ("plays", []),
                     ("status", "PENDENT")
                 ], 6
@@ -65,6 +65,7 @@ def start(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType
 
         updated_mas: MultiAgentSystemAdapter = add_new_match(mas, match)
         update_mas(family_db, religion_db, education_db, updated_mas)
+        return (match, sa, mas)
 
     last_match: Union[Match, None] = get_current_match(match_db)
 

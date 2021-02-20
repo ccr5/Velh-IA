@@ -1,9 +1,9 @@
-from typing import TypedDict
+from typing import TypedDict, List
 from .player import Player
 
 
 class MAS(TypedDict):
 
-    family: Player
-    religion: Player
-    education: Player
+    family: List[Player]
+    religion: List[Player]
+    education: List[Player]

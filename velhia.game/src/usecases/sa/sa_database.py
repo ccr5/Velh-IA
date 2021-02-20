@@ -43,7 +43,7 @@ def get_valid_sa(sa_repository: DatabaseRepositoryType) -> Union[StatisticalAlgo
 
 def update_sa(sa_repository: DatabaseRepositoryType, obj: StatisticalAlgorithm) -> bool:
 
-    res: list = sa_repository['update'](obj['_id'], json.dumps(obj))
+    res: list = sa_repository['update'](obj['_id'], obj).json()
 
     if len(res) == 1:
         return True
