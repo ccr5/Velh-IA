@@ -19,5 +19,6 @@ def agent_to_repository(agent: Agent) -> AgentAdapter:
     return AgentAdapter(create_object(
         key_list=items,
         lenght=len(items),
+        filters=['createdAt', 'updatedAt', '__v'],
         obj={'char': ['O', 0]}
     ))

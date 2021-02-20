@@ -1,15 +1,15 @@
 import os
 import sys
 import logging
+from requests import request, exceptions, Response
 from dotenv import load_dotenv, find_dotenv
 from typing import Callable, NoReturn
+from system import root_dir, log_file_name, check_dir
+from database_config import load_database_entities
+from adapters.repository.database import database
 from adapters.controllers.database_controller import backup
 from adapters.controllers.match_controller import start
 from usecases.database.database_types import DatabaseRepositoryType
-from system import root_dir, log_file_name, check_dir
-from database_config import load_database_entities
-from requests import request, exceptions, Response
-from adapters.repository.database import database
 
 
 load_dotenv(find_dotenv())

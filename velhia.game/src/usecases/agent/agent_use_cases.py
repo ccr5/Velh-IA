@@ -1,7 +1,7 @@
 import random as r
-from typing import List, Union, Any
+from typing import List, Union, Any, Callable
 from datetime import datetime, timedelta
-from usecases.agent.agent_handler import looking_for_memory, create_new_choice, add_new_choices
+from usecases.agent.agent_handler import looking_for_memory, create_new_choice, add_new_choices, kill_agent, add, promote_leader
 from entities.agent.agent import Agent
 from entities.agent.choices import Choices
 from entities.agent.memory import Memory
@@ -15,32 +15,13 @@ from shared.errors.agent.learn_error import LearnError
 from shared.errors.handler.agent.check_life_error import CheckLifeError
 
 
-def kill_agent(agent: Union[AgentAdapter, Agent]) -> Union[AgentAdapter, Agent]:
-    death_obj: dict = {'death': datetime.now().ctime()}
-    return merge_objects(agent, death_obj)
-
-
-def promote_leader(agent: Union[AgentAdapter, Agent]) -> Union[AgentAdapter, Agent]:
-    obj: dict = {'becomeLeader': datetime.now().ctime()}
-    return merge_objects(agent, obj)
-
-
-def add(agent: Union[AgentAdapter, Agent], field: str, value: Any) -> Union[AgentAdapter, Agent]:
-    current_value = agent[field]
-    new_value = current_value + value
-    obj = {field: new_value}
-    return merge_objects(agent, obj)
-
-
-def alter(operation: str) -> Union[AgentAdapter, Agent]:
+def alter(operation: str) -> Callable:
 
     if operation == 'add':
         return add
-
-    if operation == 'kill':
+    elif operation == 'kill':
         return kill_agent
-
-    if operation == 'promote':
+    elif operation == 'promote':
         return promote_leader
 
 

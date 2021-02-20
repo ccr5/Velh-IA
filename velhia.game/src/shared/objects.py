@@ -6,7 +6,7 @@ def merge_objects(first_dict: dict, second_dict: dict) -> dict:
     return {**first_dict, **second_dict}
 
 
-def create_object(key_list: List[Tuple[Char]], lenght: int,
+def create_object(key_list: List[Tuple[str, Any]], lenght: int,
                   filters: List[str] = [], obj: dict = {}) -> dict:
 
     index: int = lenght - 1

@@ -3,9 +3,35 @@ from datetime import datetime
 from entities.agent.agent import Agent
 from entities.agent.memory import Memory
 from entities.agent.choices import Choices
+from usecases.agent.agent_dto import agent_to_entity, agent_to_repository
 from usecases.agent.agent_adapter_type import AgentAdapter
 from shared.types.game_status import GameStatus
 from shared.objects import merge_objects
+
+
+def kill_agent(agent: Union[AgentAdapter, Agent]) -> Union[AgentAdapter, Agent]:
+    death_obj: dict = {'death': datetime.now().ctime()}
+
+    if isinstance(agent, Agent):
+        return agent_to_entity(merge_objects(agent, death_obj))
+    else:
+        return agent_to_repository(merge_objects(agent, death_obj))
+
+
+def promote_leader(agent: Union[AgentAdapter, Agent]) -> Union[AgentAdapter, Agent]:
+    obj: dict = {'becomeLeader': datetime.now().ctime()}
+
+    if isinstance(agent, Agent):
+        return agent_to_entity(merge_objects(agent, obj))
+    else:
+        return agent_to_repository(merge_objects(agent, obj))
+
+
+def add(agent: Union[AgentAdapter, Agent], field: str, value: Any) -> Union[AgentAdapter, Agent]:
+    current_value = agent[field]
+    new_value = current_value + value
+    obj = {field: new_value}
+    return merge_objects(agent, obj)
 
 
 def looking_for_choices(choices: List[Choices],

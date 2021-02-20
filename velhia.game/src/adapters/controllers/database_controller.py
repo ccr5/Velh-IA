@@ -4,7 +4,7 @@ from entities.algorithm.sa import StatisticalAlgorithm
 from entities.match.match import Match
 from entities.agent.agent import Agent
 from usecases.mas.mas_adapter_type import MultiAgentSystemAdapter
-from usecases.mas.mas_database import update_mas
+from usecases.mas.mas_database import update_mas, complete_mas
 from usecases.database.database_types import DatabaseRepositoryType
 from usecases.match.match_database import get_current_match, delete_match, update_match
 from usecases.sa.sa_database import get_sa, delete_sa, update_sa
@@ -17,10 +17,9 @@ from shared.errors.handler.mas.update_mas_error import UpdateMASError
 def backup(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
            family_db: DatabaseRepositoryType, education_db: DatabaseRepositoryType,
            religion_db: DatabaseRepositoryType
-           ) -> Union[
-               Callable[[Match, StatisticalAlgorithm,
-                         MultiAgentSystemAdapter], NoReturn],
-               Tuple[None, None, None]]:
+           ) -> Union[Callable[[Match, StatisticalAlgorithm,
+                                MultiAgentSystemAdapter], NoReturn],
+                      Tuple[None, None, None]]:
     """ Get the lastest datas to use in rollback function """
 
     ret: Union[Match, None] = get_current_match(match_db)
@@ -29,15 +28,10 @@ def backup(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryTyp
 
         match_backup: Match = ret
         sa_backup: StatisticalAlgorithm = get_sa(algorithm_db)
-        mas_backup: MultiAgentSystemAdapter = MultiAgentSystemAdapter({
-            'char': ['O', 0],
-            'family_leader': agent_to_entity(get_by_id(family_db, match_backup['mas']['family'][-1]['playerId'])),
-            'family_learner': agent_to_entity(get_by_progenitor(family_db, match_backup['mas']['family'][-1]['playerId'])),
-            'education_leader': agent_to_entity(get_by_id(education_db, match_backup['mas']['education'][-1]['playerId'])),
-            'education_learner': agent_to_entity(get_by_progenitor(education_db, match_backup['mas']['education'][-1]['playerId'])),
-            'religion_leader': agent_to_entity(get_by_id(religion_db, match_backup['mas']['religion'][-1]['playerId'])),
-            'religion_learner': agent_to_entity(get_by_progenitor(religion_db, match_backup['mas']['religion'][-1]['playerId']))
-        })
+        mas_backup: MultiAgentSystemAdapter = complete_mas(
+            family_db, religion_db,
+            education_db, match_backup, 'entity'
+        )
 
         def rollback(match: Match, sa: StatisticalAlgorithm,
                      mas: MultiAgentSystemAdapter) -> NoReturn:

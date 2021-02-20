@@ -21,6 +21,7 @@ def sa_to_repository(sa: StatisticalAlgorithm) -> StatisticalAlgorithmAdapter:
         create_object(
             key_list=items,
             lenght=len(items),
+            filters=['createdAt', 'updatedAt', '__v'],
             obj={
                 'char': ['X', 1],
                 'enemy': ['O', 0],
