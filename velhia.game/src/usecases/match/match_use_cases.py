@@ -1,0 +1,29 @@
+from datetime import datetime
+from entities.match.match import Match
+from usecases.match.match_database import save_match
+from usecases.database.database_types import DatabaseRepositoryType
+from usecases.sa.sa_adapter_type import StatisticalAlgorithm
+from usecases.mas.mas_adapter_type import MultiAgentSystemAdapter
+from shared.objects import create_object
+
+
+def create_new_match(match_db: DatabaseRepositoryType, sa: StatisticalAlgorithm,
+                     mas: MultiAgentSystemAdapter) -> Match:
+
+    return save_match(
+        match_db, create_object(
+            [
+                ("begin", datetime.now().ctime()),
+                ("time", 0),
+                ("sa", {
+                    "playerId": sa['_id'],
+                    "symbol": sa['char'][0]
+                }),
+                ("mas", {"family": [{"playerId": mas['family_leader']['_id'], "symbol": mas['char'][0]}],
+                         "religion": [{"playerId": mas['religion_leader']['_id'], "symbol": mas['char'][0]}],
+                         "education": [{"playerId": mas['education_leader']['_id'], "symbol": mas['char'][0]}]}),
+                ("plays", []),
+                ("status", "PENDENT")
+            ], 6
+        )
+    )

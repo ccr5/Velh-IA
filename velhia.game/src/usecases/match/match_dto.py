@@ -1,5 +1,5 @@
-from shared.objects import create_object
 from entities.match.match import Match
+from shared.objects import create_object
 
 
 def match_to_entity(obj: Match) -> Match:

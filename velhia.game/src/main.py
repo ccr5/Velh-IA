@@ -29,7 +29,8 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
 
         (match, sa, mas) = start(match_db, algorithm_db, family_db,
                                  education_db, religion_db)
-#         vlh.validate(match, sa, mas)
+
+        validate(match, sa, mas)
 #         logging.info('All informations was validated')
 #         sequence = vlh.get_sequence(match)
 #         game_status = vlh.game_status(match, sa.id)

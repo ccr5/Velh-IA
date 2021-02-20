@@ -1,6 +1,6 @@
-from shared.objects import create_object
 from entities.algorithm.sa import StatisticalAlgorithm
 from usecases.sa.sa_adapter_type import StatisticalAlgorithmAdapter
+from shared.objects import create_object
 
 
 def sa_to_entity(sa_adapter: StatisticalAlgorithmAdapter) -> StatisticalAlgorithm:
@@ -14,7 +14,7 @@ def sa_to_entity(sa_adapter: StatisticalAlgorithmAdapter) -> StatisticalAlgorith
     )
 
 
-def sa_to_repository(sa: StatisticalAlgorithm) -> StatisticalAlgorithmAdapter:
+def sa_to_adapter(sa: StatisticalAlgorithm) -> StatisticalAlgorithmAdapter:
 
     items: list = list(sa.items())
     return StatisticalAlgorithmAdapter(

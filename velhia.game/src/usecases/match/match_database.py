@@ -1,7 +1,7 @@
 from typing import Union
+from entities.match.match import Match
 from usecases.match.match_dto import match_to_entity
 from usecases.database.database_types import DatabaseRepositoryType
-from entities.match.match import Match
 
 
 def save_match(match_repository: DatabaseRepositoryType, obj: Match) -> Match:

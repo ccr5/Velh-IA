@@ -1,12 +1,27 @@
 import random as r
 from datetime import datetime
-from src.entities.sa import StatisticalAlgorithm
-from src.shared.errors.statistical_algorithm.play_error import PlayError
-from src.shared.errors.statistical_algorithm.strategy_plan_error import StrategyPlanError
-from src.shared.errors.statistical_algorithm.sequence_list_error import SequenceListError
-from src.shared.errors.statistical_algorithm.check_error import CheckError
-from src.shared.errors.statistical_algorithm.count_error import CountError
-from src.shared.errors.statistical_algorithm.create_matrix_error import CreateMatrixError
+from typing import Union
+from entities.algorithm.sa import StatisticalAlgorithm
+from usecases.database.database_types import DatabaseRepositoryType
+from usecases.sa.sa_handler import create_sa
+from usecases.sa.sa_database import get_sa
+from usecases.sa.sa_dto import sa_to_entity
+from shared.errors.statistical_algorithm.play_error import PlayError
+from shared.errors.statistical_algorithm.strategy_plan_error import StrategyPlanError
+from shared.errors.statistical_algorithm.sequence_list_error import SequenceListError
+from shared.errors.statistical_algorithm.check_error import CheckError
+from shared.errors.statistical_algorithm.count_error import CountError
+from shared.errors.statistical_algorithm.create_matrix_error import CreateMatrixError
+
+
+def get_valid_sa(sa_repository: DatabaseRepositoryType) -> StatisticalAlgorithm:
+
+    res: Union[StatisticalAlgorithm, None] = get_sa(sa_repository)
+
+    if res is None:
+        return create_sa(sa_repository)
+    else:
+        return sa_to_entity(res)
 
 
 class SaUseCase(StatisticalAlgorithm):
