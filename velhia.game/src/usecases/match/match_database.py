@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, List
 from entities.match.match import Match
 from usecases.match.match_dto import match_to_entity
 from usecases.database.database_types import DatabaseRepositoryType
@@ -20,6 +20,17 @@ def get_current_match(match_repository: DatabaseRepositoryType) -> Union[Match, 
         return match_to_entity(res[0])
     else:
         return None
+
+
+def get_last(match_repository: DatabaseRepositoryType, num: int) -> Union[List[Match], None]:
+
+    res: list = match_repository['get'](offset=0, limit=num,
+                                        sort="createdAt:desc").json()
+
+    if len(res) > 0:
+        return list(map(match_to_entity, res))
+    else:
+        None
 
 
 def update_match(match_repository: DatabaseRepositoryType, obj: Match) -> bool:

@@ -1,6 +1,7 @@
 import os
 import sys
 import logging
+from datetime import datetime
 from requests import request, exceptions, Response
 from dotenv import load_dotenv, find_dotenv
 from typing import Callable, NoReturn
@@ -8,7 +9,8 @@ from system import root_dir, log_file_name, check_dir
 from database_config import load_database_entities
 from adapters.repository.database import database
 from adapters.controllers.database_controller import backup
-from adapters.controllers.match_controller import start
+from adapters.controllers.match_controller import start, get_last, get_sequence, current_game_status
+from adapters.validations.validate import validate
 from usecases.database.database_types import DatabaseRepositoryType
 
 
@@ -30,23 +32,25 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
         (match, sa, mas) = start(match_db, algorithm_db, family_db,
                                  education_db, religion_db)
 
-        validate(match, sa, mas)
-#         logging.info('All informations was validated')
-#         sequence = vlh.get_sequence(match)
-#         game_status = vlh.game_status(match, sa.id)
+        validate(match_db, algorithm_db, family_db, education_db,
+                 religion_db, match, sa, mas)
 
-#         if sequence[-1] == 'SA':
-#             start = datetime.now()
-#             position = sa.play(game_status)
-#             end = datetime.now()
-#             time = end - start
-#             time = time.microseconds / 1000000
-#         else:
-#             start = datetime.now()
-#             position = mas.play(match, game_status)
-#             end = datetime.now()
-#             time = end - start
-#             time = time.microseconds / 1000000
+        logging.info('All informations was validated')
+        sequence = get_sequence(match_db, match)
+        game_status = current_game_status(match, sa['_id'])
+
+        if sequence[-1] == 'SA':
+            begin = datetime.now()
+            position = sa.play(game_status)
+            end = datetime.now()
+            time = end - start
+            time = time.microseconds / 1000000
+        else:
+            begin = datetime.now()
+            # position = mas.play(match, game_status)
+            end = datetime.now()
+            time = end - start
+            time = time.microseconds / 1000000
 
 #         vlh.update_match(match, sa, mas,
 #                          sequence[-1], game_status, position, time)
@@ -66,15 +70,14 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
 
 #         del match, sa, mas, sequence, game_status, start, position, end, time
 
-        return play(match_db, algorithm_db,
-                    family_db, education_db,
-                    religion_db)
+        return play(match_db, algorithm_db, family_db,
+                    education_db, religion_db)
 
     except Exception as e:
         if match is None or sa is None or mas is None:
             logging.info('There is no objects to Rollback')
         else:
-            bckp['rollback'](match, sa, mas)
+            bckp(match, sa, mas)
             logging.info('Rollback function is successfully')
         raise e
 

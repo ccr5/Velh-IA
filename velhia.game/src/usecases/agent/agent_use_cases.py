@@ -57,7 +57,7 @@ def get_valid_agents(agent_repository: DatabaseRepositoryType) -> Tuple[Agent, A
         raise GetAgentError
 
 
-def alter(operation: str) -> Callable:
+def alter_agent(operation: str) -> Callable:
 
     if operation == 'add':
         return add
@@ -65,6 +65,8 @@ def alter(operation: str) -> Callable:
         return kill_agent
     elif operation == 'promote':
         return promote_leader
+    else:
+        None
 
 
 def check_agent(agent: Union[AgentAdapter, Agent], validation: str):

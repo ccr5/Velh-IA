@@ -7,7 +7,7 @@ from entities.agent.agent import Agent
 from usecases.agent.agent_use_cases import get_valid_agents
 from usecases.agent.agent_database import update_agent, get_by_id, get_by_progenitor
 from usecases.agent.agent_dto import agent_to_entity, agent_to_adapter
-from usecases.agent.agent_use_cases import alter
+from usecases.agent.agent_use_cases import alter_agent
 from usecases.mas.mas_adapter_type import MultiAgentSystemAdapter
 from usecases.database.database_types import DatabaseRepositoryType
 from shared.objects import create_object
@@ -17,15 +17,15 @@ from shared.errors.handler.mas.update_mas_error import UpdateMASError
 
 def add_new_match(mas: MultiAgentSystemAdapter, match: Match) -> MultiAgentSystemAdapter:
 
-    add_one_family_leader = alter('add')(
+    add_one_family_leader = alter_agent('add')(
         mas['family_leader'], 'matchsAsLeader', 1
     )
 
-    add_one_family_learner = alter('add')(
+    add_one_family_learner = alter_agent('add')(
         mas['family_learner'], 'matchsAsLearner', 1
     )
 
-    add_empty_memory_family_leader = alter('add')(
+    add_empty_memory_family_leader = alter_agent('add')(
         add_one_family_leader, 'memory', [{
             'matchId': match['_id'],
             'isLearner': False,
@@ -33,7 +33,7 @@ def add_new_match(mas: MultiAgentSystemAdapter, match: Match) -> MultiAgentSyste
         }]
     )
 
-    add_empty_memory_family_learner = alter('add')(
+    add_empty_memory_family_learner = alter_agent('add')(
         add_one_family_learner, 'memory', [{
             'matchId': match['_id'],
             'isLearner': True,
@@ -41,15 +41,15 @@ def add_new_match(mas: MultiAgentSystemAdapter, match: Match) -> MultiAgentSyste
         }]
     )
 
-    add_one_education_leader = alter('add')(
+    add_one_education_leader = alter_agent('add')(
         mas['education_leader'], 'matchsAsLeader', 1
     )
 
-    add_one_education_learner = alter('add')(
+    add_one_education_learner = alter_agent('add')(
         mas['education_learner'], 'matchsAsLearner', 1
     )
 
-    add_empty_memory_education_leader = alter('add')(
+    add_empty_memory_education_leader = alter_agent('add')(
         add_one_education_leader, 'memory', [{
             'matchId': match['_id'],
             'isLearner': False,
@@ -57,7 +57,7 @@ def add_new_match(mas: MultiAgentSystemAdapter, match: Match) -> MultiAgentSyste
         }]
     )
 
-    add_empty_memory_education_learner = alter('add')(
+    add_empty_memory_education_learner = alter_agent('add')(
         add_one_education_learner, 'memory', [{
             'matchId': match['_id'],
             'isLearner': True,
@@ -65,15 +65,15 @@ def add_new_match(mas: MultiAgentSystemAdapter, match: Match) -> MultiAgentSyste
         }]
     )
 
-    add_one_religion_leader = alter('add')(
+    add_one_religion_leader = alter_agent('add')(
         mas['religion_leader'], 'matchsAsLeader', 1
     )
 
-    add_one_religion_learner = alter('add')(
+    add_one_religion_learner = alter_agent('add')(
         mas['religion_learner'], 'matchsAsLearner', 1
     )
 
-    add_empty_memory_religion_leader = alter('add')(
+    add_empty_memory_religion_leader = alter_agent('add')(
         add_one_religion_leader, 'memory', [{
             'matchId': match['_id'],
             'isLearner': False,
@@ -81,7 +81,7 @@ def add_new_match(mas: MultiAgentSystemAdapter, match: Match) -> MultiAgentSyste
         }]
     )
 
-    add_empty_memory_religion_learner = alter('add')(
+    add_empty_memory_religion_learner = alter_agent('add')(
         add_one_religion_learner, 'memory', [{
             'matchId': match['_id'],
             'isLearner': True,

@@ -13,14 +13,12 @@ def save_agent(agent_repository: DatabaseRepositoryType, agent: Agent) -> Agent:
     return agent_to_entity(res)
 
 
-def get_last(agent_repository: DatabaseRepositoryType, num: int) -> List[Agent]:
+def get_last(agent_repository: DatabaseRepositoryType, num: int) -> Union[List[Agent], None]:
 
     res: list = agent_repository['get'](offset=0, limit=num,
                                         sort="createdAt:desc").json()
 
-    if len(res) == 1:
-        raise SystemError
-    elif len(res) == 2:
+    if len(res) > 0:
         return list(map(agent_to_entity, res))
     else:
         None
