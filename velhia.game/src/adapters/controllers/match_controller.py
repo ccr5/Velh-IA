@@ -32,7 +32,7 @@ def complete_match(algorithm_db: DatabaseRepositoryType, family_db: DatabaseRepo
 
     mas: MultiAgentSystemAdapter = complete_mas(
         family_db, religion_db,
-        education_db, match, 'repository'
+        education_db, match, 'adapter'
     )
 
     return (match, sa, mas)

@@ -187,7 +187,7 @@ def complete_mas(family: DatabaseRepositoryType,
                 ], 7
             )
         )
-    elif agent_type == 'repository':
+    elif agent_type == 'adapter':
         return MultiAgentSystemAdapter(
             create_object(
                 [

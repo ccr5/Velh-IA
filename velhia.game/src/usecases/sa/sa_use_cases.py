@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Union, Callable, List, Tuple
+from itertools import repeat
 from entities.algorithm.sa import StatisticalAlgorithm
 from usecases.database.database_types import DatabaseRepositoryType
 from usecases.sa.sa_handler import create_sa, add, highlights, move_options, find_best_ratio, sequence_list
@@ -30,8 +31,12 @@ def alter_sa(operation: str) -> Callable:
 def strategy_plan(sa: StatisticalAlgorithmAdapter, moves: GameStatus) -> int:
     """ Find the best position to play using game status """
 
+    options = move_options(moves, len(moves), sa['char'][-1])
+    moves_options = list(map(lambda x: x[1], options))
+    positions_options = list(map(lambda x: x[0], options))
+
     results: List[Tuple[int, int, int, GameStatus]] = list(
-        map(highlights, move_options(moves, len(moves), sa['char'][-1]))
+        map(highlights, repeat(sa), moves_options, positions_options)
     )
 
     best_play: Tuple[int, int, int, GameStatus] = find_best_ratio(

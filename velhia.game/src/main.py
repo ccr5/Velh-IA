@@ -43,7 +43,7 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
 
         if sequence[-1] == 'SA':
             begin = datetime.now()
-            position = play_sa(game_status)
+            position = play_sa(sa, game_status)
             end = datetime.now()
             time = end - begin
             time = time.microseconds / 1000000

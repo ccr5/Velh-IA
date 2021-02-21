@@ -158,8 +158,8 @@ def highlights(sa: StatisticalAlgorithmAdapter, moves: GameStatus, position: int
     victories = count_victories(sa, matrix)
     defeats = count_defeats(sa, matrix)
 
-    if number_defeats == 0:
-        number_defeats = 1
+    if defeats == 0:
+        defeats = 1
     else:
         pass
 
@@ -176,7 +176,7 @@ def move_options(moves: GameStatus, lenght: int, value: int,
         if moves[index] == -1:
             new_move_list = move_list + [(
                 index,
-                merge_list(move_list, len(move_list), index, value)
+                merge_list(moves, index, value)
             )]
             return move_options(moves, index, value, new_move_list)
         else:
@@ -195,21 +195,24 @@ def find_best_ratio(options: List[Tuple[int, int, int, float]],
     if lenght > 0:
         index: int = lenght - 1
 
-        if ret[3] > options[index][3]:
-            pass
+        if len(ret) == 0:
+            return find_best_ratio(options, index, options[index])
+
+        elif ret[3] > options[index][3]:
+            return find_best_ratio(options, index, ret)
 
         elif ret[3] == options[index][3]:
 
             if options[index][1] > ret[3]:
                 return find_best_ratio(options, index, options[index])
             else:
-                pass
+                return find_best_ratio(options, index, ret)
 
         elif ret[3] < options[index][3]:
             return find_best_ratio(options, index, options[index])
 
         else:
-            pass
+            raise SystemError
 
     else:
         return ret
