@@ -1,43 +1,43 @@
-from config.database import Database
-import json
+# import os
+# from adapters.repository.database import database
+# from usecases.database.database_types import DatabaseType, DatabaseRepositoryType
+# import json
 
 
-class TestDatabase:
+# db_config = DatabaseType = {
+#     'address': os.getenv('API_ADDRESS'),
+#     'version': os.getenv('API_VERSION'),
+#     'collection': 'algorithms',
+#     'url': f"{os.getenv('API_ADDRESS')}api/{os.getenv('API_VERSION')}/algorithms/"
+# }
 
-    db = Database('v1', 'algorithms')
-    obj_id = ''
-    obj = {}
+# db: DatabaseRepositoryType = database(db_config)
+# obj_id = ''
+# obj = {}
 
-    def test_create(self) -> None:
-        obj = {"birth": "Thu Jan 05 2017 22:12:46 GMT-0100 (CET)",
-               "memory": [{
-                   "isLearner": True,
-                   "choices": [{
-                       "dateRequest": "Thu Jan 05 2017 22:12:46 GMT-0100 (CET)",
-                       "gameStatus": [1, -1, 0],
-                       "timeToAct": 30,
-                       "action": 2
-                   }],
-                   "environmentReaction": "DRAW"
-               }],
-               "matchs": 1,
-               "victories": 0,
-               "defeats": 0,
-               "draw": 1}
-        alg = self.db.create(json.dumps(obj))
-        self.obj_id = alg.json()['_id']
-        self.obj = alg.json()
-        assert alg.status_code == 200
 
-    def test_get_one(self) -> None:
-        alg = self.db.get_one(self.obj_id)
-        assert alg.status_code == 200
+# class TestDatabase:
 
-    def test_get_last(self) -> None:
-        limit = 1
-        alg = self.db.get_last(limit)
-        assert alg.text != '[]'
+#     def test_create(self) -> None:
+#         obj = {"draw": 0,
+#                "defeats": 0,
+#                "victories": 0,
+#                "matchs": 1,
+#                "birth": "2021-02-21T14:32:09.000Z"}
+#         alg = db['create'](obj)
+#         obj_id = alg.json()['_id']
+#         obj = alg.json()
+#         assert alg.status_code == 200
 
-    def test_update(self) -> None:
-        alg = self.db.update(object_id=self.obj_id, obj=json.dumps(self.obj))
-        assert alg.status_code == 200
+#     def test_get_one(self) -> None:
+#         alg = db.get_one(obj_id)
+#         assert alg.status_code == 200
+
+#     def test_get_last(self) -> None:
+#         limit = 1
+#         alg = db.get_last(limit)
+#         assert alg.text != '[]'
+
+#     def test_update(self) -> None:
+#         alg = db.update(object_id=obj_id, obj=json.dumps(obj))
+#         assert alg.status_code == 200

@@ -1,9 +1,11 @@
 from datetime import datetime
+from usecases.sa.sa_adapter_type import StatisticalAlgorithmAdapter
 from usecases.sa.sa_use_cases import check_win, check_lose, strategy_plan
+from shared.types.game_status import GameStatus
 from shared.errors.statistical_algorithm.play_error import PlayError
 
 
-def play_sa(moves):
+def play_sa(sa: StatisticalAlgorithmAdapter, moves: GameStatus) -> int:
     """
     Choose a position to play 
     :param moves: game status
@@ -18,8 +20,8 @@ def play_sa(moves):
     """
 
     start = datetime.now()
-    winner = check_win(moves)
-    loser = check_lose(moves)
+    winner = check_win(sa, moves)
+    loser = check_lose(sa, moves)
 
     if winner is not None and loser is not None:
         end = datetime.now()
@@ -40,7 +42,7 @@ def play_sa(moves):
         return loser
 
     elif winner is None and loser is None:
-        position = strategy_plan(moves)
+        position = strategy_plan(sa, moves)
         end = datetime.now()
         time = end - start
         time = time.microseconds / 1000000

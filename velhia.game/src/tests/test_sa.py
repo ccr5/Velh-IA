@@ -1,45 +1,58 @@
+from adapters.controllers.sa_controller import play_sa
+from usecases.sa.sa_adapter_type import StatisticalAlgorithmAdapter
+from usecases.sa.sa_use_cases import check_win, check_lose
+from usecases.sa.sa_handler import create_matrix, count_defeats, count_victories, sequence_list
+from shared.objects import create_object
+
+
+sa: StatisticalAlgorithmAdapter = create_object(
+    [
+        ('birth', '2021-02-21 14:32:09.000Z'),
+        ('matchs', 0),
+        ('victories', 0),
+        ('defeats', 0),
+        ('draw', 0),
+        ('char', ['X', 1]),
+        ('enemy', ['O', 0]),
+        ('empty', ['O', 0])
+    ], 8
+)
+
+
 class TestSA:
 
     def test_play(self) -> None:
-        sa = StatisticalAlgorithm({}, ('X', 1), ('O', 0))
-        position = sa.play([-1, -1, -1, -1, -1, -1, -1, -1, -1])
+        position = play_sa(sa, [-1, -1, -1, -1, -1, -1, -1, -1, -1])
         assert position == 4
 
     def test_strategy_plan(self) -> None:
-        sa = StatisticalAlgorithm({}, ('X', 1), ('O', 0))
-        position = sa.play([-1, -1, -1, -1, -1, -1, -1, -1, -1])
+        position = play_sa(sa, [-1, -1, -1, -1, -1, -1, -1, -1, -1])
         assert position == 4
 
     def test_create_matrix(self) -> None:
-        sa = StatisticalAlgorithm({}, ('X', 1), ('O', 0))
-        matrix = sa.create_matrix([-1, -1, -1, -1, -1, -1, -1, -1, -1])
+        matrix = create_matrix(sa, [-1, -1, -1, -1, -1, -1, -1, -1, -1])
         assert len(matrix) == 126
 
     def test_count_victories(self) -> None:
-        sa = StatisticalAlgorithm({}, ('X', 1), ('O', 0))
-        matrix = sa.create_matrix([-1, -1, -1, -1, -1, -1, -1, -1, -1])
-        nVictories = sa.count_victories(matrix)
+        matrix = create_matrix(sa, [-1, -1, -1, -1, -1, -1, -1, -1, -1])
+        nVictories = count_victories(sa, matrix)
         assert nVictories == 120
 
     def test_count_defeats(self) -> None:
-        sa = StatisticalAlgorithm({}, ('X', 1), ('O', 0))
-        matrix = sa.create_matrix([-1, -1, -1, -1, -1, -1, -1, -1, -1])
-        nDefeats = sa.count_defeats(matrix)
+        matrix = create_matrix(sa, [-1, -1, -1, -1, -1, -1, -1, -1, -1])
+        nDefeats = count_defeats(sa, matrix)
         assert nDefeats == 48
 
     def test_check_win(self) -> None:
-        sa = StatisticalAlgorithm({}, ('X', 1), ('O', 0))
-        position = sa.check_win([-1, 0, 1, 0, 0, 1, 0, -1, -1])
+        position = check_win(sa, [-1, 0, 1, 0, 0, 1, 0, -1, -1])
         assert position == 8
 
     def test_check_lose(self) -> None:
-        sa = StatisticalAlgorithm({}, ('X', 1), ('O', 0))
-        position = sa.check_lose([-1, 0, 1, 0, -1, 1, 0, -1, -1])
+        position = check_lose(sa, [-1, 0, 1, 0, -1, 1, 0, -1, -1])
         assert position == 0
 
     def test_sequence_list(self) -> None:
-        sa = StatisticalAlgorithm({}, ('X', 1), ('O', 0))
-        ret = sa.sequence_list([-1, 0, 1, 0, -1, 1, 0, -1, -1])
+        ret = sequence_list([-1, 0, 1, 0, -1, 1, 0, -1, -1])
         res = [[-1, 0, 1], [0, -1, 1], [0, -1, -1],
                [-1, 0, 0], [0, -1, -1], [1, 1, -1],
                [-1, -1, -1],   [1, -1, 0]]
