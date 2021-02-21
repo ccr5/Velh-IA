@@ -8,7 +8,7 @@ class TestDatabase:
     obj_id = ''
     obj = {}
 
-    def test_create(self):
+    def test_create(self) -> None:
         obj = {"birth": "Thu Jan 05 2017 22:12:46 GMT-0100 (CET)",
                "memory": [{
                    "isLearner": True,
@@ -29,15 +29,15 @@ class TestDatabase:
         self.obj = alg.json()
         assert alg.status_code == 200
 
-    def test_get_one(self):
+    def test_get_one(self) -> None:
         alg = self.db.get_one(self.obj_id)
         assert alg.status_code == 200
 
-    def test_get_last(self):
+    def test_get_last(self) -> None:
         limit = 1
         alg = self.db.get_last(limit)
         assert alg.text != '[]'
 
-    def test_update(self):
+    def test_update(self) -> None:
         alg = self.db.update(object_id=self.obj_id, obj=json.dumps(self.obj))
         assert alg.status_code == 200

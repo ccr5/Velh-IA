@@ -14,8 +14,8 @@ def previous_match_validate(match: Match, sa: StatisticalAlgorithmAdapter,
 
     check_match_status(match, mas, 'previous', ['DRAW', 'WINNER'])
     check_match_id(match, mas, 'previous')
-    # check_match_game(current_game_status(match, sa['id']),
-    #                  match, mas, 'previous')
+    check_match_game(current_game_status(match, sa['_id']),
+                     match, mas, 'previous')
     check_sa_matchs(sa)
     map(check_agent_matchs, [
         mas['family_leader'], mas['family_learner'],
@@ -29,8 +29,8 @@ def current_match_validate(match: Match, sa: StatisticalAlgorithmAdapter,
 
     check_match_status(match, mas, 'current', ['PENDENT'])
     check_match_id(match, mas, 'current')
-    # check_match_game(current_game_status(match, sa['id']),
-    #                  match, mas, 'current')
+    check_match_game(current_game_status(match, sa['_id']),
+                     match, mas, 'current')
     check_sa_matchs(sa)
     map(check_agent_matchs, [
         mas['family_leader'], mas['family_learner'],

@@ -43,9 +43,9 @@ def get_valid_agents(agent_repository: DatabaseRepositoryType) -> Tuple[Agent, A
                 leader: Agent = suitor_leader
                 learner: Agent = suitor_learner
             else:
-                dead_leader: Agent = alter('kill')(suitor_leader)
+                dead_leader: Agent = alter_agent('kill')(suitor_leader)
                 update_agent(agent_repository, dead_leader)
-                new_leader: Agent = alter('promote')(suitor_learner)
+                new_leader: Agent = alter_agent('promote')(suitor_learner)
                 update_agent(agent_repository, new_leader)
                 leader: Agent = new_leader
                 learner: Agent = create_learner(
@@ -69,7 +69,7 @@ def alter_agent(operation: str) -> Callable:
         None
 
 
-def check_agent(agent: Union[AgentAdapter, Agent], validation: str):
+def check_agent(agent: Union[AgentAdapter, Agent], validation: str) -> bool:
 
     if validation == 'life':
         return agent['life'] > 0

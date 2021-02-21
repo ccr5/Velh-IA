@@ -1,3 +1,4 @@
+from typing import List
 from entities.agent.agent import Agent
 from usecases.agent.agent_adapter_type import AgentAdapter
 from shared.objects import create_object
@@ -5,7 +6,7 @@ from shared.objects import create_object
 
 def agent_to_entity(agent_adapter: AgentAdapter) -> Agent:
 
-    items: list = list(agent_adapter.items())
+    items: List = list(agent_adapter.items())
     return Agent(create_object(
         key_list=items,
         lenght=len(items),
@@ -15,7 +16,7 @@ def agent_to_entity(agent_adapter: AgentAdapter) -> Agent:
 
 def agent_to_adapter(agent: Agent) -> AgentAdapter:
 
-    items: list = list(agent.items())
+    items: List = list(agent.items())
     return AgentAdapter(create_object(
         key_list=items,
         lenght=len(items),

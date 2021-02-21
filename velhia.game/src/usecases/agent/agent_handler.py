@@ -1,5 +1,5 @@
-from typing import List, Callable, Union, Any
 from datetime import datetime
+from typing import List, Callable, Union, Any, Dict
 from entities.agent.agent import Agent
 from entities.agent.memory import Memory
 from entities.agent.choices import Choices
@@ -51,7 +51,7 @@ def create_learner(agent_repository: DatabaseRepositoryType, progenitor: str) ->
 
 
 def kill_agent(agent: Union[AgentAdapter, Agent]) -> Union[AgentAdapter, Agent]:
-    death_obj: dict = {'death': datetime.now().ctime()}
+    death_obj: Dict = {'death': datetime.now().ctime()}
 
     if isinstance(agent, Agent):
         return agent_to_entity(merge_objects(agent, death_obj))
@@ -60,7 +60,7 @@ def kill_agent(agent: Union[AgentAdapter, Agent]) -> Union[AgentAdapter, Agent]:
 
 
 def promote_leader(agent: Union[AgentAdapter, Agent]) -> Union[AgentAdapter, Agent]:
-    obj: dict = {'becomeLeader': datetime.now().ctime()}
+    obj: Dict = {'becomeLeader': datetime.now().ctime()}
 
     if isinstance(agent, Agent):
         return agent_to_entity(merge_objects(agent, obj))
