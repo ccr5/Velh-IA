@@ -68,6 +68,21 @@ def promote_leader(agent: Union[AgentAdapter, Agent]) -> Union[AgentAdapter, Age
         return agent_to_adapter(merge_objects(agent, obj))
 
 
+def update_match_status(memory: Memory, response: str) -> Union[AgentAdapter, Agent]:
+
+    if response == 'winner':
+        obj_to_add: Dict = {'environmentReaction': 'WINNER'}
+        return Memory(merge_objects(memory, obj_to_add))
+    elif response == 'draw':
+        obj_to_add: Dict = {'environmentReaction': 'DRAW'}
+        return Memory(merge_objects(memory, obj_to_add))
+    elif response == 'loser':
+        obj_to_add: Dict = {'environmentReaction': 'LOSER'}
+        return Memory(merge_objects(memory, obj_to_add))
+    else:
+        SystemError
+
+
 def add(agent: Union[AgentAdapter, Agent], field: str, value: Any) -> Union[AgentAdapter, Agent]:
     current_value = agent[field]
     new_value = current_value + value

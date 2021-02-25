@@ -1,6 +1,8 @@
 from datetime import datetime
+from typing import Callable
 from entities.match.match import Match
 from usecases.match.match_database import save_match
+from usecases.match.match_handler import add, insert, change
 from usecases.database.database_types import DatabaseRepositoryType
 from usecases.sa.sa_adapter_type import StatisticalAlgorithmAdapter
 from usecases.mas.mas_adapter_type import MultiAgentSystemAdapter
@@ -27,3 +29,15 @@ def create_new_match(match_db: DatabaseRepositoryType, sa: StatisticalAlgorithmA
             ], 6
         )
     )
+
+
+def alter_match(operation: str) -> Callable:
+
+    if operation == 'add':
+        return add
+    elif operation == 'insert':
+        return insert
+    elif operation == 'change':
+        return change
+    else:
+        raise SystemError

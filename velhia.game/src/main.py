@@ -9,7 +9,8 @@ from system import root_dir, log_file_name, check_dir
 from database_config import load_database_entities
 from adapters.repository.database import database
 from adapters.controllers.database_controller import backup
-from adapters.controllers.match_controller import start, get_last, get_sequence, current_game_status
+from adapters.controllers.match_controller import start, get_last, get_sequence
+from adapters.controllers.match_controller import current_game_status, update_current_match, check_draw
 from adapters.controllers.mas_controller import play_mas
 from adapters.controllers.sa_controller import play_sa
 from adapters.validations.validate import validate
@@ -49,29 +50,28 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
             time = time.microseconds / 1000000
         else:
             begin = datetime.now()
-            position = play_mas(match, game_status)
+            # position = play_mas(match, game_status)
             end = datetime.now()
             time = end - begin
             time = time.microseconds / 1000000
 
-        # vlh.update_match(match, sa, mas,
-        #                  sequence[-1], game_status, position, time)
+        update_current_match(match_db, algorithm_db, family_db, education_db, religion_db,
+                             match, sa, mas, sequence[-1], game_status, position, time)
 
-        # vlh.check_draw(match, sa, mas)
+        check_draw(match_db, algorithm_db, family_db, education_db, religion_db,
+                   match, sa, mas)
 
-        # logging.info(f"match: {match['_id']}")
-        # logging.info(f"sa: {match['sa']}")
-        # logging.info(f"family: {match['mas']['family']}")
-        # logging.info(f"education: {match['mas']['education']}")
-        # logging.info(f"religion: {match['mas']['religion']}")
-        # logging.info(f"seq: {len(match['plays'])}")
-        # logging.info(f"game: {game_status}")
-        # logging.info(f"status: {match['status']}")
+        logging.info(f"match: {match['_id']}")
+        logging.info(f"sa: {match['sa']}")
+        logging.info(f"family: {match['mas']['family']}")
+        logging.info(f"education: {match['mas']['education']}")
+        logging.info(f"religion: {match['mas']['religion']}")
+        logging.info(f"seq: {len(match['plays'])}")
+        logging.info(f"game: {game_status}")
+        logging.info(f"status: {match['status']}")
 
-        # if match['status'] == "WINNER":
-        #     logging.info(f"winner: {match['winner']}")
-
-        # del match, sa, mas, sequence, game_status, start, position, end, time
+        if match['status'] == "WINNER":
+            logging.info(f"winner: {match['winner']}")
 
         return play(match_db, algorithm_db, family_db,
                     education_db, religion_db)

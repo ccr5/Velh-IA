@@ -21,5 +21,5 @@ def agent_to_adapter(agent: Agent) -> AgentAdapter:
         key_list=items,
         lenght=len(items),
         filters=['createdAt', 'updatedAt', '__v'],
-        obj={'char': ['O', 0]}
+        obj={'char': ('O', 0)}
     ))

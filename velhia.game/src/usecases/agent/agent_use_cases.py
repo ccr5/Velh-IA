@@ -6,7 +6,7 @@ from entities.agent.choices import Choices
 from entities.agent.memory import Memory
 from entities.match.match import Match
 from usecases.agent.agent_handler import looking_for_memory, create_new_choice, add_new_choices
-from usecases.agent.agent_handler import kill_agent, add, promote_leader
+from usecases.agent.agent_handler import kill_agent, add, promote_leader, update_match_status
 from usecases.agent.agent_handler import create_leader, create_learner
 from usecases.agent.agent_database import get_last, update_agent
 from usecases.agent.agent_adapter_type import AgentAdapter
@@ -65,6 +65,8 @@ def alter_agent(operation: str) -> Callable:
         return kill_agent
     elif operation == 'promote':
         return promote_leader
+    elif operation == 'match response':
+        return update_match_status
     else:
         None
 

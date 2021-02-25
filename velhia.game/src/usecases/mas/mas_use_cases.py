@@ -104,6 +104,51 @@ def add_new_match(mas: MultiAgentSystemAdapter, match: Match) -> MultiAgentSyste
     )
 
 
+def add_match_response(mas: MultiAgentSystemAdapter, response: str, denominator: int) -> MultiAgentSystemAdapter:
+
+    if response == 'winner':
+        pass
+    elif response == 'loser':
+        pass
+    elif response == 'draw':
+        pass
+    else:
+        raise SystemError
+
+    mas.family_leader.memory[-1]['environmentReaction'] = 'LOSER'
+    mas.education_leader.memory[-1]['environmentReaction'] = 'LOSER'
+    mas.religion_leader.memory[-1]['environmentReaction'] = 'LOSER'
+
+    mas.family_learner.memory[-1]['environmentReaction'] = 'LOSER'
+    mas.education_learner.memory[-1]['environmentReaction'] = 'LOSER'
+    mas.religion_learner.memory[-1]['environmentReaction'] = 'LOSER'
+
+    mas.family_leader.defeats += 1
+    mas.education_leader.defeats += 1
+    mas.religion_leader.defeats += 1
+
+    mas.family_leader.life -= len(
+        mas.family_leader.memory[-1]['choices']) / plays
+    mas.education_leader.life -= len(
+        mas.education_leader.memory[-1]['choices']) / plays
+    mas.religion_leader.life -= len(
+        mas.religion_leader.memory[-1]['choices']) / plays
+
+    return MultiAgentSystemAdapter(
+        create_object(
+            [
+                ('char', ('O', 0)),
+                ('family_leader', add_empty_memory_family_leader),
+                ('family_learner', add_empty_memory_family_learner),
+                ('education_leader', add_empty_memory_education_leader),
+                ('education_learner', add_empty_memory_education_learner),
+                ('religion_leader', add_empty_memory_religion_leader),
+                ('religion_learner', add_empty_memory_religion_learner),
+            ], 7
+        )
+    )
+
+
 def create_mas(family: DatabaseRepositoryType,
                religion: DatabaseRepositoryType,
                education: DatabaseRepositoryType) -> MultiAgentSystemAdapter:

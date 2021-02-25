@@ -3,22 +3,22 @@ from datetime import datetime
 from entities.match.match import Match
 from entities.match.play import Play
 from entities.algorithm.sa import StatisticalAlgorithm
-from usecases.agent.agent_use_cases import get_valid_agents
+from usecases.agent.agent_use_cases import get_valid_agents, alter_agent, update_match_status
 from usecases.agent.agent_database import get_by_id, get_by_progenitor
 from usecases.agent.agent_adapter_type import AgentAdapter
 from usecases.mas.mas_dto import convert_mas
 from usecases.mas.mas_adapter_type import MultiAgentSystemAdapter
-from usecases.mas.mas_use_cases import add_new_match, complete_mas, create_mas, update_mas
+from usecases.mas.mas_use_cases import add_new_match, complete_mas, create_mas, update_mas, add_match_response
 from usecases.sa.sa_dto import sa_to_entity, sa_to_adapter
 from usecases.sa.sa_use_cases import get_valid_sa, alter_sa
 from usecases.sa.sa_database import update_sa
 from usecases.sa.sa_adapter_type import StatisticalAlgorithmAdapter
-from usecases.match.match_use_cases import create_new_match
-from usecases.match.match_database import get_current_match, get_last
+from usecases.match.match_use_cases import create_new_match, alter_match
+from usecases.match.match_database import get_current_match, get_last, update_match
 from usecases.match.match_dto import match_to_entity
 from usecases.database.database_types import DatabaseRepositoryType
 from shared.list import merge_list
-from shared.objects import create_object
+from shared.objects import create_object, merge_objects
 from shared.types.game_status import GameStatus
 
 
@@ -70,6 +70,121 @@ def start(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType
         return create_match(match_db, algorithm_db, family_db, education_db, religion_db)
     else:
         return complete_match(algorithm_db, family_db, education_db, religion_db, last_match)
+
+
+def update_current_match(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
+                         family_db: DatabaseRepositoryType, education_db: DatabaseRepositoryType,
+                         religion_db: DatabaseRepositoryType, match, sa, mas, sequence, game_status, position, time):
+    """ Update a Match object after a play """
+
+    if sequence == 'SA':
+
+        results = sequence_list(merge_list(
+            game_status, position, sa['char'][1]
+        ))
+
+        if check_win(sa, results, len(results)):
+
+            match_new_play = alter_match('add')(match, 'plays', {
+                'seq': len(match['plays']) + 1,
+                'player': sa['_id'],
+                'time': time,
+                'position': position
+            })
+
+            match_end = alter_match('add')(
+                match_new_play, 'end',
+                datetime.now().ctime()
+            )
+
+            match_status = alter_match('change')(match_end, 'status', 'WINNER')
+            final_match = alter_match('insert')(match_status, 'winner', 'SA')
+            updated_sa = alter_sa('add')(sa, 'victories', 1)
+            plays = 5 if match.plays[0]['player'] == 'MAS' else 4
+            updated_mas = add_match_response(mas, 'loser', plays)
+            update_mas(family_db, religion_db, education_db, updated_mas)
+
+        else:
+            final_match = alter_match('add')(match, 'plays', {
+                'seq': len(match['plays']) + 1,
+                'player': sa['_id'],
+                'time': time,
+                'position': position
+            })
+
+        update_sa(algorithm_db, updated_sa)
+        update_match(match_db, final_match)
+
+    elif sequence == 'MAS':
+
+        results = sequence_list(merge_list(
+            game_status, position, sa['char'][1]
+        ))
+
+        if check_win(mas, results, len(results)):
+
+            match_new_play = alter_match('add')(match, 'plays', {
+                'seq': len(match['plays']) + 1,
+                'player': 'MAS',
+                'time': time,
+                'position': position
+            })
+
+            match_end = alter_match('add')(
+                match_new_play, 'end',
+                datetime.now().ctime()
+            )
+
+            match_status = alter_match('change')(match_end, 'status', 'WINNER')
+            final_match = alter_match('insert')(match_status, 'winner', 'MAS')
+            updated_sa = alter_sa('add')(sa, 'defeats', 1)
+            updated_mas = add_match_response(mas, 'winner', 0)
+            update_sa(algorithm_db, updated_sa)
+
+        else:
+            final_match = alter_match('add')(match, 'plays', {
+                'seq': len(match['plays']) + 1,
+                'player': 'MAS',
+                'time': time,
+                'position': position
+            })
+
+        update_mas(family_db, religion_db, education_db, updated_mas)
+        update_match(match_db, final_match)
+
+    else:
+        raise SystemError
+
+
+def check_draw(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
+               family_db: DatabaseRepositoryType, education_db: DatabaseRepositoryType,
+               religion_db: DatabaseRepositoryType, match: Match,
+               sa: StatisticalAlgorithmAdapter, mas: MultiAgentSystemAdapter) -> NoReturn:
+    """
+    Check if the match is draw and update all datas
+    :param match: `Match` a Match object
+    :param sa: `Statistical Algorithm` a Statistical Algorithm object
+    :param mas: `Multi Agent System` a Multi Agent System object
+
+    usage
+    >>> from velhia import Velhia
+    >>> velhia.check_draw(match, sa, mas)
+    """
+
+    if len(match['plays']) == 9 and match['status'] == 'PENDENT':
+        match_end = alter_match('add')(
+            match, 'end',
+            datetime.now().ctime()
+        )
+        final_match = alter_match('change')(match_end, 'status', 'DRAW')
+        updated_sa = alter_sa('add')(sa, 'draw', 1)
+        updated_mas = add_match_response(mas, 'draw', 0)
+        update_mas(family_db, religion_db, education_db, updated_mas)
+        update_sa(algorithm_db, updated_sa)
+        update_match(match_db, final_match)
+
+    else:
+        pass
 
 
 def check_win(player: Union[AgentAdapter, StatisticalAlgorithmAdapter],
