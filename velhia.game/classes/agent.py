@@ -67,8 +67,8 @@ class Agent:
                     return r.choice([0, 1, 2, 3, 4, 5, 6, 7, 8])
 
                 else:
-                    # return r.choice([position, r.choice([0, 1, 2, 3, 4, 5, 6, 7, 8])])
-                    return position
+                    return r.choice([position, r.choice([0, 1, 2, 3, 4, 5, 6, 7, 8])])
+                    # return position
 
         else:
             raise RememberError
