@@ -5,7 +5,6 @@ from entities.agent.choices import Choices
 from usecases.agent.agent_adapter_type import AgentAdapter
 from usecases.mas.mas_adapter_type import MultiAgentSystemAdapter
 from shared.types.game_status import GameStatus
-from shared.list import merge_list
 from shared.errors.validation.validation_error import ValidationError
 from shared.errors.validation.match.match_pendent_error import CurrentyMatchIsNotPendent
 from shared.errors.validation.match.match_status_error import PreviousMatchHasInvalidStatus

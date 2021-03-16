@@ -1,5 +1,4 @@
-import json
-from typing import Dict, List, Callable, NoReturn, Union, Tuple
+from typing import Callable, NoReturn, Union, Tuple
 from entities.algorithm.sa import StatisticalAlgorithm
 from entities.match.match import Match
 from entities.agent.agent import Agent
@@ -8,9 +7,7 @@ from usecases.mas.mas_use_cases import update_mas, complete_mas
 from usecases.database.database_types import DatabaseRepositoryType
 from usecases.match.match_database import get_current_match, delete_match, update_match
 from usecases.sa.sa_database import get_sa, delete_sa, update_sa
-from usecases.agent.agent_database import get_by_id, get_by_progenitor, delete_agent
-from usecases.agent.agent_dto import agent_to_entity
-from shared.errors.handler.mas.update_mas_error import UpdateMASError
+from usecases.agent.agent_database import delete_agent
 
 
 def backup(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,

@@ -4,7 +4,6 @@ from typing import Union, Tuple, List, Dict
 from entities.agent.agent import Agent
 from usecases.agent.agent_dto import agent_to_entity
 from usecases.database.database_types import DatabaseRepositoryType
-from shared.objects import create_object
 
 
 def save_agent(agent_repository: DatabaseRepositoryType, agent: Agent) -> Agent:

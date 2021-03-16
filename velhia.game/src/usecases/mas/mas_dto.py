@@ -1,6 +1,5 @@
 from usecases.mas.mas_adapter_type import MultiAgentSystemAdapter
 from usecases.agent.agent_dto import agent_to_entity, agent_to_adapter
-from shared.objects import create_object
 
 
 def convert_mas(mas: MultiAgentSystemAdapter, to: str) -> MultiAgentSystemAdapter:

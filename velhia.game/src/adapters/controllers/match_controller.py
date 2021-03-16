@@ -9,16 +9,14 @@ from usecases.agent.agent_adapter_type import AgentAdapter
 from usecases.mas.mas_dto import convert_mas
 from usecases.mas.mas_adapter_type import MultiAgentSystemAdapter
 from usecases.mas.mas_use_cases import add_new_match, complete_mas, create_mas, update_mas, add_match_response
-from usecases.sa.sa_dto import sa_to_entity, sa_to_adapter
+from usecases.sa.sa_mapper import sa_to_entity, sa_to_adapter
 from usecases.sa.sa_use_cases import get_valid_sa, alter_sa
 from usecases.sa.sa_database import update_sa
 from usecases.sa.sa_adapter_type import StatisticalAlgorithmAdapter
 from usecases.match.match_use_cases import create_new_match, alter_match
 from usecases.match.match_database import get_current_match, get_last, update_match
-from usecases.match.match_dto import match_to_entity
+from usecases.match.match_mapper import match_to_entity
 from usecases.database.database_types import DatabaseRepositoryType
-from shared.list import merge_list
-from shared.objects import create_object, merge_objects
 from shared.types.game_status import GameStatus
 
 

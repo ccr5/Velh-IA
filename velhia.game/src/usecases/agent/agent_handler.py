@@ -8,7 +8,6 @@ from usecases.agent.agent_database import save_agent
 from usecases.agent.agent_dto import agent_to_entity, agent_to_adapter
 from usecases.agent.agent_adapter_type import AgentAdapter
 from shared.types.game_status import GameStatus
-from shared.objects import merge_objects, create_object
 
 
 def create_leader(agent_repository: DatabaseRepositoryType) -> Agent:

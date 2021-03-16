@@ -2,9 +2,8 @@ import json
 from typing import Union
 from datetime import datetime
 from entities.algorithm.sa import StatisticalAlgorithm
-from usecases.sa.sa_dto import sa_to_entity
+from usecases.sa.sa_mapper import sa_to_entity
 from usecases.database.database_types import DatabaseRepositoryType
-from shared.objects import create_object
 
 
 def save_sa(sa_repository: DatabaseRepositoryType, obj: StatisticalAlgorithm) -> StatisticalAlgorithm:

@@ -2,21 +2,18 @@ from adapters.controllers.sa_controller import play_sa
 from usecases.sa.sa_adapter_type import StatisticalAlgorithmAdapter
 from usecases.sa.sa_use_cases import check_win, check_lose
 from usecases.sa.sa_handler import create_matrix, count_defeats, count_victories, sequence_list
-from shared.objects import create_object
 
 
-sa: StatisticalAlgorithmAdapter = create_object(
-    [
-        ('birth', '2021-02-21 14:32:09.000Z'),
-        ('matchs', 0),
-        ('victories', 0),
-        ('defeats', 0),
-        ('draw', 0),
-        ('char', ['X', 1]),
-        ('enemy', ['O', 0]),
-        ('empty', ['O', 0])
-    ], 8
-)
+sa: StatisticalAlgorithmAdapter = dict([
+    ('birth', '2021-02-21 14:32:09.000Z'),
+    ('matchs', 0),
+    ('victories', 0),
+    ('defeats', 0),
+    ('draw', 0),
+    ('char', ['X', 1]),
+    ('enemy', ['O', 0]),
+    ('empty', ['O', 0])
+])
 
 
 class TestSA:

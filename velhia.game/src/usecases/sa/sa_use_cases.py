@@ -6,10 +6,8 @@ from usecases.database.database_types import DatabaseRepositoryType
 from usecases.sa.sa_handler import create_sa, add, highlights, move_options, find_best_ratio, sequence_list
 from usecases.sa.sa_adapter_type import StatisticalAlgorithmAdapter
 from usecases.sa.sa_database import get_sa
-from usecases.sa.sa_dto import sa_to_entity
+from usecases.sa.sa_mapper import sa_to_entity
 from shared.types.game_status import GameStatus
-from shared.errors.statistical_algorithm.play_error import PlayError
-from shared.errors.statistical_algorithm.strategy_plan_error import StrategyPlanError
 
 
 def get_valid_sa(sa_repository: DatabaseRepositoryType) -> StatisticalAlgorithm:
@@ -32,8 +30,8 @@ def strategy_plan(sa: StatisticalAlgorithmAdapter, moves: GameStatus) -> int:
     """ Find the best position to play using game status """
 
     options = move_options(moves, len(moves), sa['char'][-1])
-    moves_options = list(map(lambda x: x[1], options))
     positions_options = list(map(lambda x: x[0], options))
+    moves_options = list(map(lambda x: x[1], options))
 
     results: List[Tuple[int, int, int, GameStatus]] = list(
         map(highlights, repeat(sa), moves_options, positions_options)
@@ -59,6 +57,9 @@ def check_win(sa: StatisticalAlgorithmAdapter, moves: GameStatus) -> int:
     >>> position
     8
     """
+
+    match_list = [sa['char'][1], sa['char'][1], sa['char'][1]]
+    len([filter(lambda y: y == match_list, sequence_list(x)) for x in moves])
 
     for x in range(0, len(moves)):
 

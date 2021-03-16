@@ -12,7 +12,6 @@ from usecases.agent.agent_database import get_last, update_agent
 from usecases.agent.agent_adapter_type import AgentAdapter
 from usecases.database.database_types import DatabaseRepositoryType
 from shared.types.game_status import GameStatus
-from shared.objects import merge_objects
 from shared.errors.agent.remember_error import RememberError
 from shared.errors.agent.memorize_error import MemorizeError
 from shared.errors.agent.learn_error import LearnError

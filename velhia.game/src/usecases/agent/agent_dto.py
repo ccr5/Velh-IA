@@ -1,7 +1,6 @@
 from typing import List
 from entities.agent.agent import Agent
 from usecases.agent.agent_adapter_type import AgentAdapter
-from shared.objects import create_object
 
 
 def agent_to_entity(agent_adapter: AgentAdapter) -> Agent:

@@ -9,7 +9,7 @@ from system import root_dir, log_file_name, check_dir
 from database_config import load_database_entities
 from adapters.repository.database import database
 from adapters.controllers.database_controller import backup
-from adapters.controllers.match_controller import start, get_last, get_sequence
+from adapters.controllers.match_controller import start, get_sequence
 from adapters.controllers.match_controller import current_game_status, update_current_match, check_draw
 from adapters.controllers.mas_controller import play_mas
 from adapters.controllers.sa_controller import play_sa
@@ -75,19 +75,20 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
 
         return play(match_db, algorithm_db, family_db,
                     education_db, religion_db)
-
     except Exception as e:
+
         if match is None or sa is None or mas is None:
             logging.info('There is no objects to Rollback')
         else:
             bckp(match, sa, mas)
             logging.info('Rollback function is successfully')
+
         raise e
 
 
-def main() -> Callable[
-    [DatabaseRepositoryType, DatabaseRepositoryType, DatabaseRepositoryType,
-     DatabaseRepositoryType, DatabaseRepositoryType], NoReturn]:
+def main() -> Callable[[DatabaseRepositoryType, DatabaseRepositoryType,
+                        DatabaseRepositoryType, DatabaseRepositoryType,
+                        DatabaseRepositoryType], NoReturn]:
     """
     Velh-IA's Main function.\n
     Load environment variables, check requirements and connections before to start the game
@@ -126,10 +127,7 @@ def main() -> Callable[
 
         logging.info('Databases was created!')
         logging.info('Starting Velh-IA Game')
-
-        return play(match_db, algorithm_db,
-                    family_db, education_db,
-                    religion_db)
+        return play(match_db, algorithm_db, family_db, education_db, religion_db)
 
     except exceptions.ConnectionError:
         print("Can't connect with Velh-IA API")
