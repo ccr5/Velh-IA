@@ -1,7 +1,9 @@
 import math as m
 import random as r
+import pandas as pd
 import operator as op
 import functools as fct
+import ttg
 from typing import Union, Any, Tuple, List, Generator
 from datetime import datetime
 from entities.algorithm.sa import StatisticalAlgorithm
@@ -27,8 +29,7 @@ def create_sa(sa_repository: DatabaseRepositoryType) -> StatisticalAlgorithm:
 def add(sa: Union[StatisticalAlgorithmAdapter, StatisticalAlgorithm], field: str,
         value: Any) -> Union[StatisticalAlgorithmAdapter, StatisticalAlgorithm]:
 
-    obj = {field: sa[field] + value}
-    return sa | obj
+    return sa | {field: sa[field] + value}
 
 
 def sequence_list(game_status: GameStatus) -> List[Tuple[int, int, int]]:
@@ -47,27 +48,26 @@ def sequence_list(game_status: GameStatus) -> List[Tuple[int, int, int]]:
 def create_matrix(sa: StatisticalAlgorithmAdapter, moves: GameStatus) -> List[GameStatus]:
     """ all possible game variations """
 
-    def load_matrix(ret=[]) -> List[GameStatus]:
+    def valid_game(game: GameStatus) -> Union[GameStatus, str]:
 
-        if len(ret) < number_variations:
-            new_moves = list(map(lambda x: r.choice(
-                [sa['char'][1], sa['enemy'][1]]) if x == -1 else x, moves))
+        values = [moves[x] for x in filled_positions]
+        checklist = [int(game[x]) for x in filled_positions]
 
-            if new_moves not in ret:
-                return load_matrix(op.add(ret, new_moves))
-            else:
-                return load_matrix(ret)
-
+        if checklist == values:
+            return game
         else:
-            return ret
+            return 'invalid'
 
-    empty_position = len([x for x in moves if x == -1])
+    columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
+    matrix = ttg.Truths(columns).as_pandas().astype(str).values.sum(axis=1)
+    filled_positions = [x for x in range(0, len(moves)) if moves[x] != -1]
+    filter_matrix = list(x for x in [valid_game(game) for game in matrix]
+                         if x != 'invalid')
+    final_matrix = list([int(x) for x in game] for game in filter_matrix)
     enemy_positions = len([x for x in moves if x == sa['enemy'][1]])
     my_positions = len([x for x in moves if x == sa['char'][1]])
     who_begin = sa['enemy'] if enemy_positions > my_positions else sa['char']
-    number_variations = op.sub(1,  m.pow(2, empty_position))
-    matrix = load_matrix()
-    return [move for move in matrix if len([x for x in move if x == who_begin[1]]) == 5 and
+    return [move for move in final_matrix if len([x for x in move if x == who_begin[1]]) == 5 and
             len([o for o in move if o != who_begin[1] and o != -1]) == 4]
 
 
@@ -87,8 +87,9 @@ def count_victories(sa: StatisticalAlgorithmAdapter, matrix: List[GameStatus]) -
     """
 
     match_list = [sa['char'][1], sa['char'][1], sa['char'][1]]
-    return len([filter(lambda y: y == match_list, sequence_list(x))
-                for x in matrix])
+    return len(list(filter(lambda y: y == match_list,
+                           [sequence for game in matrix
+                            for sequence in sequence_list(game)])))
 
 
 def count_defeats(sa: StatisticalAlgorithmAdapter, matrix: List[GameStatus]) -> int:
@@ -107,8 +108,9 @@ def count_defeats(sa: StatisticalAlgorithmAdapter, matrix: List[GameStatus]) -> 
     """
 
     match_list = [sa['enemy'][1], sa['enemy'][1], sa['enemy'][1]]
-    return len([filter(lambda y: y == match_list, sequence_list(x))
-                for x in matrix])
+    return len(list(filter(lambda y: y == match_list,
+                           [sequence for game in matrix
+                            for sequence in sequence_list(game)])))
 
 
 def highlights(sa: StatisticalAlgorithmAdapter, moves: GameStatus, position: int) -> Tuple[int, int, int, float]:
@@ -116,7 +118,7 @@ def highlights(sa: StatisticalAlgorithmAdapter, moves: GameStatus, position: int
     matrix = create_matrix(sa, moves)
     victories = count_victories(sa, matrix)
     defeats = count_defeats(sa, matrix)
-    ratio = (victories / 1) if defeats == 0 else (victories / defeats)
+    ratio = victories / 1 if defeats == 0 else victories / defeats
     return (position, victories, defeats, ratio)
 
 

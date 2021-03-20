@@ -1,8 +1,8 @@
+from requests import Response
 from typing import TypedDict, Callable, Union
 from entities.match.match import Match
 from entities.algorithm.sa import StatisticalAlgorithm
 from entities.agent.agent import Agent
-from requests import Response
 
 
 class DatabaseType(TypedDict):

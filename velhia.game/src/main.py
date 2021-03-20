@@ -1,12 +1,12 @@
 import os
 import sys
 import logging
+from itertools import repeat
 from datetime import datetime
 from requests import request, exceptions, Response
 from dotenv import load_dotenv, find_dotenv
 from typing import Callable, NoReturn
 from system import root_dir, log_file_name, check_dir
-from database_config import load_database_entities
 from adapters.repository.database import database
 from adapters.controllers.database_controller import backup
 from adapters.controllers.match_controller import start, get_sequence
@@ -15,6 +15,8 @@ from adapters.controllers.mas_controller import play_mas
 from adapters.controllers.sa_controller import play_sa
 from adapters.validations.validate import validate
 from usecases.database.database_types import DatabaseRepositoryType
+from usecases.sa.sa_database import get_sa
+from usecases.sa.sa_mapper import sa_to_adapter
 
 
 load_dotenv(find_dotenv())
@@ -119,10 +121,15 @@ def main() -> Callable[[DatabaseRepositoryType, DatabaseRepositoryType,
 
         [match_db, family_db, education_db, religion_db, algorithm_db] = list(map(
             database,
-            load_database_entities(
-                os.getenv('API_ADDRESS'),
-                os.getenv('API_VERSION'),
-                os.getenv('COLLECTIONS').split(','))
+            list(map(
+                lambda address, version, collection: {'address': address,
+                                                      'version': version,
+                                                      'collection': collection,
+                                                      'url': f"{address}api/{version}/{collection}/"},
+                repeat(os.getenv('API_ADDRESS')),
+                repeat(os.getenv('API_VERSION')),
+                repeat(os.getenv('COLLECTIONS').split(','))
+            ))
         ))
 
         logging.info('Databases was created!')

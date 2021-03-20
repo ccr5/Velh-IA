@@ -5,8 +5,7 @@ from usecases.match.match_mapper import match_to_entity
 
 def add(match: Match, field: str, value: Any) -> Match:
 
-    obj = {field: match[field] + value}
-    return match | obj
+    return match | {field: match[field] + value}
 
 
 def insert_or_change(match: Match, field: str, value: Any) -> Match:

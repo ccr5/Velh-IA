@@ -1,3 +1,4 @@
+import random as r
 from datetime import datetime
 from typing import Union, Callable, List, Tuple
 from itertools import repeat
@@ -59,22 +60,20 @@ def check_win(sa: StatisticalAlgorithmAdapter, moves: GameStatus) -> int:
     """
 
     match_list = [sa['char'][1], sa['char'][1], sa['char'][1]]
-    len([filter(lambda y: y == match_list, sequence_list(x)) for x in moves])
+    sequence_matrix = list(sequence_list(
+        list(map(lambda z: sa['char'][1] if z == x and moves[z] == -1 else moves[z],
+                 range(0, len(moves)))))
+        for x in range(0, len(moves))
+    )
+    positions = list(filter(lambda x: x is not False,
+                            [isequence if x == match_list else False
+                             for isequence in range(0, len(sequence_matrix))
+                             for x in sequence_matrix[isequence]]))
 
-    for x in range(0, len(moves)):
-
-        if moves[x] == -1:
-            moves[x] = sa['char'][1]
-            checklist = sequence_list(moves)
-
-            for y in checklist:
-
-                if y == [sa['char'][1], sa['char'][1], sa['char'][1]]:
-                    return x
-                else:
-                    moves[x] = -1
-        else:
-            pass
+    if len(positions) > 0:
+        return r.choice(positions)
+    else:
+        return None
 
 
 def check_lose(sa: StatisticalAlgorithmAdapter, moves: GameStatus):
@@ -91,17 +90,18 @@ def check_lose(sa: StatisticalAlgorithmAdapter, moves: GameStatus):
     0
     """
 
-    for x in range(0, len(moves)):
+    match_list = [sa['enemy'][1], sa['enemy'][1], sa['enemy'][1]]
+    sequence_matrix = list(sequence_list(
+        list(map(lambda z: sa['enemy'][1] if z == x and moves[z] == -1 else moves[z],
+                 range(0, len(moves)))))
+        for x in range(0, len(moves))
+    )
+    positions = list(filter(lambda x: x is not False,
+                            [isequence if x == match_list else False
+                             for isequence in range(0, len(sequence_matrix))
+                             for x in sequence_matrix[isequence]]))
 
-        if moves[x] == -1:
-            moves[x] = sa['enemy'][1]
-            checklist = sequence_list(moves)
-
-            for y in checklist:
-
-                if y == [sa['enemy'][1], sa['enemy'][1], sa['enemy'][1]]:
-                    return x
-                else:
-                    moves[x] = -1
-        else:
-            pass
+    if len(positions) > 0:
+        return r.choice(positions)
+    else:
+        return None
