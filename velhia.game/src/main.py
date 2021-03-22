@@ -128,7 +128,7 @@ def main() -> Callable[[DatabaseRepositoryType, DatabaseRepositoryType,
                                                       'url': f"{address}api/{version}/{collection}/"},
                 repeat(os.getenv('API_ADDRESS')),
                 repeat(os.getenv('API_VERSION')),
-                repeat(os.getenv('COLLECTIONS').split(','))
+                os.getenv('COLLECTIONS').split(',')
             ))
         ))
 
