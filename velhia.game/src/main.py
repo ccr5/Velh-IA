@@ -17,14 +17,14 @@ from adapters.validations.validate import validate
 from usecases.database.database_types import DatabaseRepositoryType
 from usecases.sa.sa_database import get_sa
 from usecases.sa.sa_mapper import sa_to_adapter
+from ovomaltino.ovomaltino import Ovomaltino
 
 
 load_dotenv(find_dotenv())
 
 
 def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
-         family_db: DatabaseRepositoryType, education_db: DatabaseRepositoryType,
-         religion_db: DatabaseRepositoryType) -> NoReturn:
+         mas: Ovomaltino) -> NoReturn:
     """
     Velh-IA Flow Control.\n
     Execute and control each step of Velh-IA workflow.
@@ -119,7 +119,7 @@ def main() -> Callable[[DatabaseRepositoryType, DatabaseRepositoryType,
         logging.info("Connected with Velhia's API")
         logging.info('Check all requirements to starting Velh-IA Game')
 
-        [match_db, family_db, education_db, religion_db, algorithm_db] = list(map(
+        [match_db, algorithm_db] = list(map(
             database,
             list(map(
                 lambda address, version, collection: {'address': address,
@@ -132,9 +132,17 @@ def main() -> Callable[[DatabaseRepositoryType, DatabaseRepositoryType,
             ))
         ))
 
+        mas = Ovomaltino(os.getenv('OVOMALTINO_API_ADDRESS'),
+                         os.getenv('OVOMALTINO_API_PORT'),
+                         os.getenv('OVOMALTINO_API_VERSION'))
+
+        mas.load(5, [0, 1, 2, 3, 4, 5, 6, 7, 8], {'WINNER': {'consequence': 0},
+                                                  'DRAW': {'consequence': 0},
+                                                  'LOSER': {'consequence': -1}})
+
         logging.info('Databases was created!')
         logging.info('Starting Velh-IA Game')
-        return play(match_db, algorithm_db, family_db, education_db, religion_db)
+        return play(match_db, algorithm_db, mas)
 
     except exceptions.ConnectionError:
         print("Can't connect with Velh-IA API")
