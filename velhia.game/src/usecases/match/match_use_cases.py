@@ -18,13 +18,8 @@ def create_new_match(match_db: DatabaseRepositoryType, sa: StatisticalAlgorithmA
             "playerId": sa['_id'],
             "symbol": sa['char'][0]
         }),
-        ("mas", [
-            {"playerId": mas['family_leader']
-                ['_id'], "symbol": mas['char'][0]},
-            {"playerId": mas['religion_leader']
-                ['_id'], "symbol": mas['char'][0]},
-            {"playerId": mas['education_leader']
-                ['_id'], "symbol": mas['char'][0]}]),
+        ("mas", [{'playerId': x, 'symbol': mas['char'][0]}
+                 for x in mas['agents']]),
         ("plays", []),
         ("status", "PENDENT")
     ])

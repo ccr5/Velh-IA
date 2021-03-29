@@ -18,56 +18,43 @@ from usecases.match.match_database import get_current_match, get_last, update_ma
 from usecases.match.match_mapper import match_to_entity
 from usecases.database.database_types import DatabaseRepositoryType
 from shared.types.game_status import GameStatus
+from ovomaltino.ovomaltino import Ovomaltino
 
 
-def complete_match(algorithm_db: DatabaseRepositoryType, family_db: DatabaseRepositoryType,
-                   education_db: DatabaseRepositoryType, religion_db: DatabaseRepositoryType,
-                   match: Match) -> Tuple[Match, StatisticalAlgorithmAdapter, MultiAgentSystemAdapter]:
+def complete_match(algorithm_db: DatabaseRepositoryType, match: Match
+                   ) -> Tuple[Match, StatisticalAlgorithmAdapter, MultiAgentSystemAdapter]:
 
     sa: StatisticalAlgorithmAdapter = sa_to_adapter(
         get_valid_sa(algorithm_db)
     )
 
-    mas: MultiAgentSystemAdapter = complete_mas(
-        family_db, religion_db,
-        education_db, match, 'adapter'
-    )
-
-    return (match, sa, mas)
+    return (match, sa)
 
 
 def create_match(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
-                 family_db: DatabaseRepositoryType, education_db: DatabaseRepositoryType,
-                 religion_db: DatabaseRepositoryType) -> Tuple[
-                     Match, StatisticalAlgorithmAdapter, MultiAgentSystemAdapter]:
+                 mas: Ovomaltino) -> Tuple[Match, StatisticalAlgorithmAdapter]:
 
     sa: StatisticalAlgorithmAdapter = sa_to_adapter(get_valid_sa(algorithm_db))
-    mas: MultiAgentSystemAdapter = convert_mas(
-        create_mas(family_db, religion_db, education_db),
-        'adapter'
-    )
-    match: Match = create_new_match(match_db, sa, mas)
+    mas_agents: MultiAgentSystemAdapter = {'char': ('O', 0),
+                                           'agents': [agent.data['_id'] for agent in mas.get_leaders()]}
+    match: Match = create_new_match(match_db, sa, mas_agents)
     updated_sa: StatisticalAlgorithmAdapter = alter_sa('add')(
         sa, 'matchs', 1
     )
-    updated_mas: MultiAgentSystemAdapter = add_new_match(mas, match)
     update_sa(algorithm_db, sa_to_entity(updated_sa))
-    update_mas(family_db, religion_db, education_db,
-               convert_mas(updated_mas, 'agent'))
-    return (match, updated_sa, updated_mas)
+    return (match, updated_sa)
 
 
 def start(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
-          family_db: DatabaseRepositoryType, education_db: DatabaseRepositoryType,
-          religion_db: DatabaseRepositoryType) -> Tuple[Match, StatisticalAlgorithmAdapter, MultiAgentSystemAdapter]:
+          mas: Ovomaltino) -> Tuple[Match, StatisticalAlgorithmAdapter]:
     """ Prepare all objects to start the game """
 
     last_match: Union[Match, None] = get_current_match(match_db)
 
     if last_match is None or last_match['status'] != 'PENDENT':
-        return create_match(match_db, algorithm_db, family_db, education_db, religion_db)
+        return create_match(match_db, algorithm_db, mas)
     else:
-        return complete_match(algorithm_db, family_db, education_db, religion_db, last_match)
+        return complete_match(algorithm_db, last_match)
 
 
 def update_current_match(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
@@ -77,9 +64,10 @@ def update_current_match(match_db: DatabaseRepositoryType, algorithm_db: Databas
 
     if sequence == 'SA':
 
-        results = sequence_list(merge_list(
-            game_status, position, sa['char'][1]
-        ))
+        results = sequence_list(list(map(
+            lambda x: sa['char'][1] if x == position else game_status[x],
+            range(0, len(game_status) - 1)
+        )))
 
         if check_win(sa, results, len(results)):
 
@@ -115,9 +103,10 @@ def update_current_match(match_db: DatabaseRepositoryType, algorithm_db: Databas
 
     elif sequence == 'MAS':
 
-        results = sequence_list(merge_list(
-            game_status, position, sa['char'][1]
-        ))
+        results = sequence_list(list(map(
+            lambda x: sa['enemy'][1] if x == position else game_status[x],
+            range(0, len(game_status) - 1)
+        )))
 
         if check_win(mas, results, len(results)):
 
@@ -240,14 +229,14 @@ def current_game_status(match: Match, saId: str):
             index = lenght - 1
             if plays[index]['player'] == saId:
                 position = plays[index]['position']
-                return fill_game_status(plays, index, merge_list(
-                    game, len(game), position, 1
-                ))
+                new_game = list(map(lambda x: 1 if x == position else game[x],
+                                    range(0, len(game) - 1)))
+                return fill_game_status(plays, index, new_game)
             else:
                 position = plays[index]['position']
-                return fill_game_status(plays, index, merge_list(
-                    game, len(game), position, 0
-                ))
+                new_game = list(map(lambda x: 0 if x == position else game[x],
+                                    range(0, len(game) - 1)))
+                return fill_game_status(plays, index, new_game)
         else:
             return game
 

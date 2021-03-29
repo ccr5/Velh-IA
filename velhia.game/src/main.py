@@ -31,14 +31,12 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
     """
 
     try:
-        bckp = backup(match_db, algorithm_db, family_db,
-                      education_db, religion_db)
-
-        (match, sa, mas) = start(match_db, algorithm_db, family_db,
-                                 education_db, religion_db)
-
-        validate(match_db, algorithm_db, family_db, education_db,
-                 religion_db, match, sa, mas)
+        bckp = backup(match_db, algorithm_db)
+        mas.load(5, [0, 1, 2, 3, 4, 5, 6, 7, 8], {'WINNER': {'consequence': 0},
+                                                  'DRAW': {'consequence': 0},
+                                                  'LOSER': {'consequence': -1}})
+        (match, sa) = start(match_db, algorithm_db, mas)
+        validate(match_db, algorithm_db, match, sa)
 
         logging.info('All informations was validated')
         sequence = get_sequence(match_db, match)
@@ -57,17 +55,14 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
             time = end - begin
             time = time.microseconds / 1000000
 
-        update_current_match(match_db, algorithm_db, family_db, education_db, religion_db,
-                             match, sa, mas, sequence[-1], game_status, position, time)
+        # update_current_match(match_db, algorithm_db, family_db, education_db, religion_db,
+        #                      match, sa, mas, sequence[-1], game_status, position, time)
 
-        check_draw(match_db, algorithm_db, family_db, education_db, religion_db,
-                   match, sa, mas)
+        # check_draw(match_db, algorithm_db, family_db, education_db, religion_db,
+        #            match, sa, mas)
 
         logging.info(f"match: {match['_id']}")
         logging.info(f"sa: {match['sa']}")
-        logging.info(f"family: {match['mas']['family']}")
-        logging.info(f"education: {match['mas']['education']}")
-        logging.info(f"religion: {match['mas']['religion']}")
         logging.info(f"seq: {len(match['plays'])}")
         logging.info(f"game: {game_status}")
         logging.info(f"status: {match['status']}")
@@ -75,8 +70,7 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
         if match['status'] == "WINNER":
             logging.info(f"winner: {match['winner']}")
 
-        return play(match_db, algorithm_db, family_db,
-                    education_db, religion_db)
+        return play(match_db, algorithm_db, mas)
     except Exception as e:
 
         if match is None or sa is None or mas is None:
@@ -89,8 +83,7 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
 
 
 def main() -> Callable[[DatabaseRepositoryType, DatabaseRepositoryType,
-                        DatabaseRepositoryType, DatabaseRepositoryType,
-                        DatabaseRepositoryType], NoReturn]:
+                        Ovomaltino], NoReturn]:
     """
     Velh-IA's Main function.\n
     Load environment variables, check requirements and connections before to start the game
@@ -104,6 +97,7 @@ def main() -> Callable[[DatabaseRepositoryType, DatabaseRepositoryType,
                                 format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                                 level=logging.DEBUG)
             logging.info(f'log file {log_file} was created')
+
         except:
             path = f'{root_dir()}/logs/app.log'
 
@@ -132,15 +126,18 @@ def main() -> Callable[[DatabaseRepositoryType, DatabaseRepositoryType,
             ))
         ))
 
+        logging.info('Databases was created!')
+
         mas = Ovomaltino(os.getenv('OVOMALTINO_API_ADDRESS'),
                          os.getenv('OVOMALTINO_API_PORT'),
                          os.getenv('OVOMALTINO_API_VERSION'))
 
-        mas.load(5, [0, 1, 2, 3, 4, 5, 6, 7, 8], {'WINNER': {'consequence': 0},
-                                                  'DRAW': {'consequence': 0},
-                                                  'LOSER': {'consequence': -1}})
+        if mas.isconnected():
+            pass
+        else:
+            raise SystemError
 
-        logging.info('Databases was created!')
+        logging.info('Ovomaltino is loaded!')
         logging.info('Starting Velh-IA Game')
         return play(match_db, algorithm_db, mas)
 
