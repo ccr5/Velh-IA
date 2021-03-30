@@ -1,9 +1,6 @@
 from typing import NoReturn, List
 from adapters.controllers.match_controller import check_win
 from entities.match.match import Match
-from entities.agent.choices import Choices
-from usecases.agent.agent_adapter_type import AgentAdapter
-from usecases.mas.mas_adapter_type import MultiAgentSystemAdapter
 from shared.types.game_status import GameStatus
 from shared.errors.validation.validation_error import ValidationError
 from shared.errors.validation.match.match_pendent_error import CurrentyMatchIsNotPendent

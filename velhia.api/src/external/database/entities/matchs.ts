@@ -18,30 +18,12 @@ const matchSchema: Schema = new Schema<iMatchDB> (
       }
     },
     mas: {
-      family: [{
-        playerId: { type: String, required: true },
-        symbol: {
-          type: String,
-          required: true,
-          enum: Object.values(symbolEnvironment)
-        }
-      }],
-      religion: [{
-        playerId: { type: String, required: true },
-        symbol: {
-          type: String,
-          required: true,
-          enum: Object.values(symbolEnvironment)
-        }
-      }],
-      education: [{
-        playerId: { type: String, required: true },
-        symbol: {
-          type: String,
-          required: true,
-          enum: Object.values(symbolEnvironment)
-        }
-      }]
+      agents: [{ type: String, required: true }],
+      symbol: {
+        type: String,
+        required: true,
+        enum: Object.values(symbolEnvironment)
+      }
     },
     plays: [{
       seq: { type: Number, required: true },

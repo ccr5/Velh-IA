@@ -1,6 +1,5 @@
 from typing import NoReturn
 from usecases.sa.sa_adapter_type import StatisticalAlgorithmAdapter
-from usecases.agent.agent_adapter_type import AgentAdapter
 from shared.errors.validation.validation_error import ValidationError
 from shared.errors.validation.player.sa_match_error import SAMatchError
 from shared.errors.validation.player.agent_match_error import AgentMatchError

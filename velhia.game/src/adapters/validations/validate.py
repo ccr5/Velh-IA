@@ -4,7 +4,6 @@ from adapters.validations.match_validate import check_match_status
 from adapters.validations.player_validate import check_sa_matchs
 from entities.match.match import Match
 from usecases.sa.sa_adapter_type import StatisticalAlgorithmAdapter
-from usecases.mas.mas_adapter_type import MultiAgentSystemAdapter
 from usecases.match.match_database import get_last
 from usecases.database.database_types import DatabaseRepositoryType
 

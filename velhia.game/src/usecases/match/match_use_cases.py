@@ -1,15 +1,15 @@
 from datetime import datetime
 from typing import Callable
 from entities.match.match import Match
+from entities.match.mas import MultiAgentSystem
 from usecases.match.match_database import save_match
 from usecases.match.match_handler import add, insert_or_change
 from usecases.database.database_types import DatabaseRepositoryType
 from usecases.sa.sa_adapter_type import StatisticalAlgorithmAdapter
-from usecases.mas.mas_adapter_type import MultiAgentSystemAdapter
 
 
 def create_new_match(match_db: DatabaseRepositoryType, sa: StatisticalAlgorithmAdapter,
-                     mas: MultiAgentSystemAdapter) -> Match:
+                     mas: MultiAgentSystem) -> Match:
 
     empty_match: Match = dict([
         ("begin", datetime.now().ctime()),
@@ -18,8 +18,8 @@ def create_new_match(match_db: DatabaseRepositoryType, sa: StatisticalAlgorithmA
             "playerId": sa['_id'],
             "symbol": sa['char'][0]
         }),
-        ("mas", [{'playerId': x, 'symbol': mas['char'][0]}
-                 for x in mas['agents']]),
+        ("mas", {'agents': [x for x in mas['agents']],
+                 'symbol': mas['symbol']}),
         ("plays", []),
         ("status", "PENDENT")
     ])

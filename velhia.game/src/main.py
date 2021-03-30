@@ -11,7 +11,6 @@ from adapters.repository.database import database
 from adapters.controllers.database_controller import backup
 from adapters.controllers.match_controller import start, get_sequence
 from adapters.controllers.match_controller import current_game_status, update_current_match, check_draw
-from adapters.controllers.mas_controller import play_mas
 from adapters.controllers.sa_controller import play_sa
 from adapters.validations.validate import validate
 from usecases.database.database_types import DatabaseRepositoryType
@@ -35,7 +34,7 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
         mas.load(5, [0, 1, 2, 3, 4, 5, 6, 7, 8], {'WINNER': {'consequence': 0},
                                                   'DRAW': {'consequence': 0},
                                                   'LOSER': {'consequence': -1}})
-        (match, sa) = start(match_db, algorithm_db, mas)
+        (match, sa, mas_agents) = start(match_db, algorithm_db, mas)
         validate(match_db, algorithm_db, match, sa)
 
         logging.info('All informations was validated')
@@ -55,11 +54,11 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
             time = end - begin
             time = time.microseconds / 1000000
 
-        # update_current_match(match_db, algorithm_db, family_db, education_db, religion_db,
-        #                      match, sa, mas, sequence[-1], game_status, position, time)
+        update_current_match(match_db, algorithm_db, match, sa,
+                             mas_agents, sequence[-1], game_status,
+                             position, time)
 
-        # check_draw(match_db, algorithm_db, family_db, education_db, religion_db,
-        #            match, sa, mas)
+        check_draw(match_db, algorithm_db, match, sa)
 
         logging.info(f"match: {match['_id']}")
         logging.info(f"sa: {match['sa']}")
