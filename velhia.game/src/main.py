@@ -6,7 +6,7 @@ from datetime import datetime
 from requests import request, exceptions, Response
 from dotenv import load_dotenv, find_dotenv
 from typing import Callable, NoReturn
-from system import root_dir, log_file_name, check_dir
+from system import root_dir, log_file_name, check_dir, load_mas_object
 from adapters.repository.database import database
 from adapters.controllers.database_controller import backup
 from adapters.controllers.match_controller import start, get_sequence
@@ -22,6 +22,18 @@ from ovomaltino.ovomaltino import Ovomaltino
 load_dotenv(find_dotenv())
 
 
+def mas_play(game_status, mas):
+
+    mas_action = mas.process(game_status)
+    if game_status[mas_action['response']] == -1:
+        mas_action['save']()
+        return mas_action['response']
+    else:
+        del mas
+        mas = load_mas_object()
+        return mas_play(game_status, mas)
+
+
 def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
          mas: Ovomaltino) -> NoReturn:
     """
@@ -31,9 +43,6 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
 
     try:
         bckp = backup(match_db, algorithm_db)
-        mas.load(5, [0, 1, 2, 3, 4, 5, 6, 7, 8], {'WINNER': {'consequence': 0},
-                                                  'DRAW': {'consequence': 0},
-                                                  'LOSER': {'consequence': -1}})
         (match, sa, mas_agents) = start(match_db, algorithm_db, mas)
         validate(match_db, algorithm_db, match, sa)
 
@@ -44,21 +53,22 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
         if sequence[-1] == 'SA':
             begin = datetime.now()
             position = play_sa(sa, game_status)
+            mas.observe(game_status, position, 1, 0)
             end = datetime.now()
             time = end - begin
             time = time.microseconds / 1000000
         else:
             begin = datetime.now()
-            # position = play_mas(match, game_status)
+            position = mas_play(game_status, mas)
             end = datetime.now()
             time = end - begin
             time = time.microseconds / 1000000
 
         update_current_match(match_db, algorithm_db, match, sa,
                              mas_agents, sequence[-1], game_status,
-                             position, time)
+                             position, time, mas)
 
-        check_draw(match_db, algorithm_db, match, sa)
+        check_draw(match_db, algorithm_db, match, sa, mas)
 
         logging.info(f"match: {match['_id']}")
         logging.info(f"sa: {match['sa']}")
@@ -75,7 +85,7 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
         if match is None or sa is None or mas is None:
             logging.info('There is no objects to Rollback')
         else:
-            bckp(match, sa, mas)
+            bckp(match, sa)
             logging.info('Rollback function is successfully')
 
         raise e
@@ -127,9 +137,7 @@ def main() -> Callable[[DatabaseRepositoryType, DatabaseRepositoryType,
 
         logging.info('Databases was created!')
 
-        mas = Ovomaltino(os.getenv('OVOMALTINO_API_ADDRESS'),
-                         os.getenv('OVOMALTINO_API_PORT'),
-                         os.getenv('OVOMALTINO_API_VERSION'))
+        mas = load_mas_object()
 
         if mas.isconnected():
             pass

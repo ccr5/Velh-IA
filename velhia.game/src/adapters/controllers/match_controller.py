@@ -55,8 +55,9 @@ def start(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType
 
 
 def update_current_match(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
-                         match: Match, sa: StatisticalAlgorithmAdapter, mas: MultiAgentSystem,
-                         sequence: str, game_status: GameStatus, position: int, time: float):
+                         match: Match, sa: StatisticalAlgorithmAdapter, mas_agent: MultiAgentSystem,
+                         sequence: str, game_status: GameStatus, position: int, time: float,
+                         mas: Ovomaltino):
     """ Update a Match object after a play """
 
     if sequence == 'SA':
@@ -75,7 +76,7 @@ def update_current_match(match_db: DatabaseRepositoryType, algorithm_db: Databas
                 'position': position
             })
 
-            match_end = alter_match('add')(
+            match_end = alter_match('insert')(
                 match_new_play, 'end',
                 datetime.now().ctime()
             )
@@ -84,6 +85,7 @@ def update_current_match(match_db: DatabaseRepositoryType, algorithm_db: Databas
             final_match = alter_match('insert')(match_status, 'winner', 'SA')
             updated_sa = alter_sa('add')(sa, 'victories', 1)
             update_sa(algorithm_db, updated_sa)
+            mas.consequence('LOSER')['save']()
         else:
             final_match = alter_match('add')(match, 'plays', {
                 'seq': len(match['plays']) + 1,
@@ -97,11 +99,11 @@ def update_current_match(match_db: DatabaseRepositoryType, algorithm_db: Databas
     elif sequence == 'MAS':
 
         results = sequence_list(list(map(
-            lambda x: mas['char'][1] if x == position else game_status[x],
+            lambda x: sa['enemy'][1] if x == position else game_status[x],
             range(0, len(game_status))
         )))
 
-        if check_win(mas, results, len(results)):
+        if check_win(mas_agent | {'char': ['O', 0]}, results, len(results)):
 
             match_new_play = alter_match('add')(match, 'plays', {
                 'seq': len(match['plays']) + 1,
@@ -119,6 +121,7 @@ def update_current_match(match_db: DatabaseRepositoryType, algorithm_db: Databas
             final_match = alter_match('insert')(match_status, 'winner', 'MAS')
             updated_sa = alter_sa('add')(sa, 'defeats', 1)
             update_sa(algorithm_db, updated_sa)
+            mas.consequence('WINNER')['save']()
 
         else:
             final_match = alter_match('add')(match, 'plays', {
@@ -135,7 +138,7 @@ def update_current_match(match_db: DatabaseRepositoryType, algorithm_db: Databas
 
 
 def check_draw(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
-               match: Match, sa: StatisticalAlgorithmAdapter) -> NoReturn:
+               match: Match, sa: StatisticalAlgorithmAdapter, mas: Ovomaltino) -> NoReturn:
     """
     Check if the match is draw and update all datas
     :param match: `Match` a Match object
@@ -156,6 +159,7 @@ def check_draw(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositor
         updated_sa = alter_sa('add')(sa, 'draw', 1)
         update_sa(algorithm_db, updated_sa)
         update_match(match_db, final_match)
+        mas.consequence('DRAW')['save']()
 
     else:
         pass

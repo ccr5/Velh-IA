@@ -137,8 +137,8 @@ def move_options(moves: GameStatus, lenght: int, value: int,
             )
             return move_options(moves, index, value, new_move_list)
         else:
-            new_move_list = op.add(move_list, [(index, moves[index])])
-            return move_options(moves, index, value, new_move_list)
+            # new_move_list = op.add(move_list, [(index, moves[index])])
+            return move_options(moves, index, value, move_list)
 
     else:
         return move_list

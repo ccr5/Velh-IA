@@ -22,7 +22,7 @@ def backup(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryTyp
         def rollback(match: Match, sa: StatisticalAlgorithm) -> NoReturn:
             """ Rollback function to restore database object if something is wrong """
 
-            if [None, None, None] != [match_backup, sa_backup]:
+            if [None, None] != [match_backup, sa_backup]:
 
                 if sa['_id'] != sa_backup['_id']:
                     delete_sa(algorithm_db, sa['_id'])

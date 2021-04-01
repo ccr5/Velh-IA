@@ -45,7 +45,8 @@ def validate(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryT
         raise SystemError
 
     elif len(matchs) > 1:
-        (previous_match, previous_sa) = complete_match(algorithm_db, matchs[0])
+        (previous_match, previous_sa, previous_mas) = complete_match(
+            algorithm_db, matchs[1])
         previous_match_validate(previous_match, previous_sa)
         current_match_validate(match, sa)
 
