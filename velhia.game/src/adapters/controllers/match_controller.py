@@ -150,9 +150,11 @@ def check_draw(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositor
     >>> velhia.check_draw(match, sa, mas)
     """
 
-    if len(match['plays']) == 9 and match['status'] == 'PENDENT':
-        match_end = alter_match('add')(
-            match, 'end',
+    current_match = get_current_match(match_db)
+
+    if len(current_match['plays']) == 9 and current_match['status'] == 'PENDENT':
+        match_end = alter_match('insert')(
+            current_match, 'end',
             datetime.now().ctime()
         )
         final_match = alter_match('change')(match_end, 'status', 'DRAW')

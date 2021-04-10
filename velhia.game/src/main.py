@@ -79,7 +79,6 @@ def play(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
         if match['status'] == "WINNER":
             logging.info(f"winner: {match['winner']}")
 
-        return play(match_db, algorithm_db, mas)
     except Exception as e:
 
         if match is None or sa is None or mas is None:
@@ -146,7 +145,9 @@ def main() -> Callable[[DatabaseRepositoryType, DatabaseRepositoryType,
 
         logging.info('Ovomaltino is loaded!')
         logging.info('Starting Velh-IA Game')
-        return play(match_db, algorithm_db, mas)
+
+        while True:
+            play(match_db, algorithm_db, mas)
 
     except exceptions.ConnectionError:
         print("Can't connect with Velh-IA API")
