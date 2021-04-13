@@ -1,48 +1,27 @@
 from typing import NoReturn, Union, List
 from adapters.controllers.match_controller import complete_match, current_game_status
-from adapters.validations.match_validate import check_match_status, check_match_id, check_match_game
-from adapters.validations.player_validate import check_sa_matchs, check_agent_matchs
+from adapters.validations.match_validate import check_match_status
+from adapters.validations.player_validate import check_sa_matchs
 from entities.match.match import Match
 from usecases.sa.sa_adapter_type import StatisticalAlgorithmAdapter
-from usecases.mas.mas_adapter_type import MultiAgentSystemAdapter
 from usecases.match.match_database import get_last
 from usecases.database.database_types import DatabaseRepositoryType
 
 
-def previous_match_validate(match: Match, sa: StatisticalAlgorithmAdapter,
-                            mas: MultiAgentSystemAdapter) -> NoReturn:
+def previous_match_validate(match: Match, sa: StatisticalAlgorithmAdapter) -> NoReturn:
 
-    check_match_status(match, mas, 'previous', ['DRAW', 'WINNER'])
-    check_match_id(match, mas, 'previous')
-    check_match_game(current_game_status(match, sa['_id']),
-                     match, mas, 'previous')
+    check_match_status(match, 'previous', ['DRAW', 'WINNER'])
     check_sa_matchs(sa)
-    map(check_agent_matchs, [
-        mas['family_leader'], mas['family_learner'],
-        mas['religion_leader'], mas['religion_learner'],
-        mas['education_leader'], mas['education_learner'],
-    ])
 
 
-def current_match_validate(match: Match, sa: StatisticalAlgorithmAdapter,
-                           mas: MultiAgentSystemAdapter) -> NoReturn:
+def current_match_validate(match: Match, sa: StatisticalAlgorithmAdapter) -> NoReturn:
 
-    check_match_status(match, mas, 'current', ['PENDENT'])
-    check_match_id(match, mas, 'current')
-    check_match_game(current_game_status(match, sa['_id']),
-                     match, mas, 'current')
+    check_match_status(match, 'current', ['PENDENT'])
     check_sa_matchs(sa)
-    map(check_agent_matchs, [
-        mas['family_leader'], mas['family_learner'],
-        mas['religion_leader'], mas['religion_learner'],
-        mas['education_leader'], mas['education_learner'],
-    ])
 
 
 def validate(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryType,
-             family_db: DatabaseRepositoryType, education_db: DatabaseRepositoryType,
-             religion_db: DatabaseRepositoryType, match: Match, sa: StatisticalAlgorithmAdapter,
-             mas: MultiAgentSystemAdapter) -> NoReturn:
+             match: Match, sa: StatisticalAlgorithmAdapter) -> NoReturn:
     """
     Check if everything ran correctly
 
@@ -67,11 +46,9 @@ def validate(match_db: DatabaseRepositoryType, algorithm_db: DatabaseRepositoryT
 
     elif len(matchs) > 1:
         (previous_match, previous_sa, previous_mas) = complete_match(
-            algorithm_db, family_db, education_db, religion_db, matchs[0]
-        )
-
-        previous_match_validate(previous_match, previous_sa, previous_mas)
-        current_match_validate(match, sa, mas)
+            algorithm_db, matchs[1])
+        previous_match_validate(previous_match, previous_sa)
+        current_match_validate(match, sa)
 
     else:
-        current_match_validate(match, sa, mas)
+        current_match_validate(match, sa)

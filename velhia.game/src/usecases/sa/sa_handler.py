@@ -125,7 +125,7 @@ def highlights(sa: StatisticalAlgorithmAdapter, moves: GameStatus, position: int
 def move_options(moves: GameStatus, lenght: int, value: int,
                  move_list: List[Tuple[int, GameStatus]] = []) -> List[Tuple[int, GameStatus]]:
 
-    if len(move_list) < len(moves):
+    if len(move_list) < len(moves) and lenght > 0:
         index: int = lenght - 1
 
         if moves[index] == -1:
@@ -137,8 +137,8 @@ def move_options(moves: GameStatus, lenght: int, value: int,
             )
             return move_options(moves, index, value, new_move_list)
         else:
-            new_move_list = op.add(move_list, [(index, moves[index])])
-            return move_options(moves, index, value, new_move_list)
+            # new_move_list = op.add(move_list, [(index, moves[index])])
+            return move_options(moves, index, value, move_list)
 
     else:
         return move_list

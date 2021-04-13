@@ -3,7 +3,6 @@ from typing import TypedDict, List, Union
 from requests import request, Response
 from entities.match.match import Match
 from entities.algorithm.sa import StatisticalAlgorithm
-from entities.agent.agent import Agent
 from usecases.database.database_types import DatabaseType, DatabaseRepositoryType
 from shared.errors.database.invalid_response import InvalidResponse
 
@@ -91,7 +90,7 @@ def database(db: DatabaseType) -> DatabaseRepositoryType:
         else:
             raise SystemError
 
-    def create(obj: Union[Agent, Match, StatisticalAlgorithm]) -> Response:
+    def create(obj: Union[Match, StatisticalAlgorithm]) -> Response:
         """
         Insert a object in a collection
         :param obj: `list` List of objects
@@ -116,7 +115,7 @@ def database(db: DatabaseType) -> DatabaseRepositoryType:
         else:
             raise InvalidResponse(response.status_code, 200)
 
-    def update(object_id: str, obj: Union[Agent, Match, StatisticalAlgorithm]) -> Response:
+    def update(object_id: str, obj: Union[Match, StatisticalAlgorithm]) -> Response:
         """
         Update a object in a collection
         :param object_id: `str` ObjectId
