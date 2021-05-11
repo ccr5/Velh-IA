@@ -25,3 +25,4 @@ zipp==3.4.0
 pylint==2.7.2
 truth-table-generator==1.1.2
 pytest-dotenv==0.5.2
+ovomaltino==0.0.14
