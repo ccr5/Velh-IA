@@ -1,14 +1,26 @@
 version: '3'
-    
+
 services:
   db:
     image: mongo
     restart: always
-    ports: 
+    ports:
       - "27017:27017"
     volumes:
-      - ./data/db:/data/db 
-  api:
+      - ./data/db:/data/db
+    networks:
+      - velhia
+  ovomaltino-api:
+    image: ovomaltino/api-mongo:1.0.0
+    ports:
+      - "3005:3000"
+    links:
+      - db
+    depends_on:
+      - db
+    networks:
+      - velhia
+  velhia-api:
     build: ./velhia.api
     ports:
       - "3000:3000"
@@ -16,17 +28,18 @@ services:
       - db
     depends_on:
       - db
-  web:
-    build:
-      context: ./velhia.web
-    ports:
-      - "5000:5000"
-    depends_on: 
-      - api
-  play:
+    networks:
+      - velhia
+  velhia-play:
     build: ./velhia.game
-    command: python main.py
     links:
-      - api
-    depends_on: 
-      - api
+      - velhia-api
+      - ovomaltino-api
+    depends_on:
+      - velhia-api
+      - ovomaltino-api
+    networks:
+      - velhia
+
+networks:
+  velhia:

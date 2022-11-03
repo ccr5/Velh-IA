@@ -4,4 +4,5 @@ WORKDIR /Velh-IA
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
-WORKDIR /Velh-IA
+WORKDIR /Velh-IA/src
+CMD [ "python", "main.py" ]
