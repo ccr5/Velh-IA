@@ -1,0 +1,9 @@
+{
+  "binary": "/home/ccr5/Documents/GITs/Velh-IA/velhia.game/venv/bin/pyre.bin",
+  "source_directories": [
+    "./src/"
+  ],
+  "taint_models_path": "/home/ccr5/Documents/GITs/Velh-IA/velhia.game/venv/lib",
+  "typeshed": "/home/ccr5/Documents/GITs/Velh-IA/velhia.game/venv/lib/pyre_check/typeshed",
+  "strict": true
+}
