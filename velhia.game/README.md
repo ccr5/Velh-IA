@@ -1,15 +1,7 @@
 # Velh-IA GAME
 
-Where all data is managed
+Where all magic happens
 
-### Sumary
-1. [Description](https://github.com/ccr5/Velh-IA/tree/master/velhia.game#description "Description")
-2. [Structure](https://github.com/ccr5/Velh-IA/tree/master/velhia.game#structure "Structure")
-3. [Language and tools](https://github.com/ccr5/Velh-IA/tree/master/velhia.game#langauge-and-tools "Language and tools")
-4. [Requirements](https://github.com/ccr5/Velh-IA/tree/master/velhia.game#requirements "Requirements")
-5. [Usage](https://github.com/ccr5/Velh-IA/tree/master/velhia.game#usage "Usage")
-
-------------
 ### Description
 This is a microservice where all magic happens. All scripts, function and flow to simulate the research environment are here. 
 
@@ -23,10 +15,11 @@ This is a microservice where all magic happens. All scripts, function and flow t
 * validations: All functions to validate the project status 
 
 ### Language and Tools
-1. Pandas
-2. Numpy
-3. Pytest
-4. Python
+1. [Pandas](https://pandas.pydata.org/)
+2. [Numpy](https://numpy.org/)
+3. [Pytest](https://docs.pytest.org/)
+4. [Python3.9](https://www.python.org/)
+5. [Ovomaltino](https://pypi.org/project/Ovomaltino/)
 
 ### Requirements
 1. Velh-IA API

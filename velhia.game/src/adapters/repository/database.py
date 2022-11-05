@@ -82,7 +82,7 @@ def database(db: DatabaseType) -> DatabaseRepositoryType:
 
             response: Response = request('GET', url)
 
-            if response.status_code is 200:
+            if response.status_code == 200:
                 return response
             else:
                 raise InvalidResponse(response.status_code, 200)
@@ -110,7 +110,7 @@ def database(db: DatabaseType) -> DatabaseRepositoryType:
                                      data=json.dumps(obj),
                                      headers=head)
 
-        if response.status_code is 200:
+        if response.status_code == 200:
             return response
         else:
             raise InvalidResponse(response.status_code, 200)
@@ -135,7 +135,7 @@ def database(db: DatabaseType) -> DatabaseRepositoryType:
         response: Response = request('PUT', f'{db["url"]}{str(object_id)}',
                                      data=json.dumps(obj), headers=head)
 
-        if response.status_code is 200:
+        if response.status_code == 200:
             return response
         else:
             raise InvalidResponse(response.status_code, 200)
@@ -160,7 +160,7 @@ def database(db: DatabaseType) -> DatabaseRepositoryType:
                                      f'{db["url"]}{str(object_id)}',
                                      headers=head)
 
-        if response.status_code is 200:
+        if response.status_code == 200:
             return response
         else:
             raise InvalidResponse(response.status_code, 200)

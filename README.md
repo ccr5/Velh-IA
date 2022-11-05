@@ -29,6 +29,9 @@ This project has two microservices:
 
 ## Usage
 
+#### Debug
+We can see every event in velhia.game/logs
+
 #### Docker
 We provide docker images on [DockerHub](https://hub.docker.com/u/ccr5) if you want to use it individually and a docker-compose to create all environment.
 ```

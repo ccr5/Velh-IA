@@ -7,7 +7,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./data/db:/data/db
+      - /data/db:/data/db
     networks:
       - velhia
   ovomaltino-api:
@@ -32,6 +32,8 @@ services:
       - velhia
   velhia-play:
     build: ./velhia.game
+    volumes:
+      - /logs/:/src/logs/
     links:
       - velhia-api
       - ovomaltino-api

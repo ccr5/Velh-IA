@@ -7,4 +7,5 @@ requests
 urllib3
 pylint
 pytest-dotenv
-ovomaltino==0.0.14
+ovomaltino==0.0.15
+truth-table-generator
