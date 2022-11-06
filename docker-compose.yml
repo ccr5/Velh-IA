@@ -12,6 +12,7 @@ services:
       - velhia
   ovomaltino-api:
     image: ovomaltino/api-mongo:1.0.0
+    restart: always
     ports:
       - "3005:3000"
     links:
@@ -22,6 +23,7 @@ services:
       - velhia
   velhia-api:
     build: ./velhia.api
+    restart: always
     ports:
       - "3000:3000"
     links:
@@ -32,16 +34,13 @@ services:
       - velhia
   velhia-play:
     build: ./velhia.game
+    restart: always
+    network_mode: host
     volumes:
-      - /logs/:/src/logs/
-    links:
-      - velhia-api
-      - ovomaltino-api
+      - /logs/:/logs/
     depends_on:
       - velhia-api
       - ovomaltino-api
-    networks:
-      - velhia
 
 networks:
   velhia:

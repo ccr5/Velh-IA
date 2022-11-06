@@ -29,8 +29,12 @@ This project has two microservices:
 
 ## Usage
 
-#### Debug
-We can see every event in velhia.game/logs
+### Debug
+- We can see every event in velhia.game/logs
+- You can use a IDE for MongoDB like Robo3T to data management
+- You can connect with other system to data analytics or something else like PowerBI, Python ...
+
+### Deployment
 
 #### Docker
 We provide docker images on [DockerHub](https://hub.docker.com/u/ccr5) if you want to use it individually and a docker-compose to create all environment.
