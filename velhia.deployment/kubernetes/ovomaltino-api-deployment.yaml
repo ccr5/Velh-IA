@@ -2,26 +2,36 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: mongo-db
-  name: mongo-db
+    app: ovomaltino-api
+  name: ovomaltino-api
   namespace: default
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: mongo-db
+      app: ovomaltino-api
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
       labels:
-        app: mongo-db
+        app: ovomaltino-api
     spec:
       containers:
-      - image: mongo
+      - image: ovomaltino/api-mongo:1.0.0
         imagePullPolicy: IfNotPresent
-        name: mongo-db
+        name: ovomaltino-api
         ports:
         - name: liveness-port
-          containerPort: 27017
+          containerPort: 3005
+        env:
+          - name: PORT
+            value: "3005"
+          - name: DATABASE_CONNECTION_STRING
+            value: mongodb://mongo-db/ovomaltino
         readinessProbe:
           httpGet:
             path: /
@@ -42,16 +52,15 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: mongo-db
-  name: mongo-db
+    app: ovomaltino-api
+  name: ovomaltino-api
   namespace: default
 spec:
   ports:
-  - nodePort: 32208
-    port: 27017
+  - port: 3005
     protocol: TCP
-    targetPort: 27017
+    targetPort: 3005
   selector:
-    app: mongo-db
+    app: ovomaltino-api
   sessionAffinity: None
   type: NodePort
