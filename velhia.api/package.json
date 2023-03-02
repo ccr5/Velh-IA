@@ -18,7 +18,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "formidable": "^1.2.2",
-    "keycloak-connect": "^11.0.2",
+    "keycloak-connect": "^21.0.1",
     "mongoose": "^5.9.27",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "^4.3.0",

@@ -3656,10 +3656,10 @@ kareem@2.3.1:
   resolved "https://registry.yarnpkg.com/kareem/-/kareem-2.3.1.tgz#def12d9c941017fabfb00f873af95e9c99e1be87"
   integrity sha512-l3hLhffs9zqoDe8zjmb/mAN4B8VT3L56EUvKNqLFVs9YlFA+zx7ke1DO8STAdDyYNkeSo1nKmjuvQeI12So8Xw==
 
-keycloak-connect@^11.0.2:
-  version "11.0.2"
-  resolved "https://registry.yarnpkg.com/keycloak-connect/-/keycloak-connect-11.0.2.tgz#0b7f3a405084967e0338330403f01fba92009f6d"
-  integrity sha512-pfPnOpoDrkvH2zHyMKOS/H/gagKyXpckqHay9aCuLIEiETEIH0ogSt5JUJ12MFBE8O0wpVYVpz0erFNP01uZGQ==
+keycloak-connect@^21.0.1:
+  version "21.0.1"
+  resolved "https://registry.yarnpkg.com/keycloak-connect/-/keycloak-connect-21.0.1.tgz#22ba0bedd131a8ca8001a8501b87fbc502c95c51"
+  integrity sha512-jCLX1sYQpMb2TYK4H1gd2XOwMLXyzMd+ict+Z7295JtFs7GZ0kfBOT7St/RY/3xjen/zd2bHBlnuUBJVZZrciQ==
   dependencies:
     jwk-to-pem "^2.0.0"
   optionalDependencies:
