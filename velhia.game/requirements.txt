@@ -8,4 +8,4 @@ urllib3
 pylint
 pytest-dotenv
 ovomaltino==0.0.15
-truth-table-generator
+truth-table-generator==1.1.2
